@@ -1,4 +1,4 @@
-//Testing Dex
+//Testing Dexter
 import 'package:flutter/material.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/menu/menu_screen.dart';
