@@ -1,3 +1,4 @@
+//Testing Dex
 import 'package:flutter/material.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/menu/menu_screen.dart';
@@ -18,7 +19,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//fthy
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
 
