@@ -1,8 +1,11 @@
+//Testing Dexter
 import 'package:flutter/material.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/menu/menu_screen.dart';
 import 'screens/rewards/rewards_screen.dart';
 import 'screens/profile/profile_screen.dart';
+
+//testtesttest johny
 
 void main() => runApp(const MyApp());
 
@@ -50,8 +53,14 @@ class _BottomNavState extends State<BottomNav> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.restaurant_menu), label: 'Menu'),
-          BottomNavigationBarItem(icon: Icon(Icons.card_giftcard), label: 'Rewards'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.restaurant_menu),
+            label: 'Menu',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.card_giftcard),
+            label: 'Rewards',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
