@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 //Test 2345678wertyu
+=======
+//Tes45678
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/menu/menu_screen.dart';
