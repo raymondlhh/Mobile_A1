@@ -4,6 +4,8 @@ import 'screens/menu/menu_screen.dart';
 import 'screens/rewards/rewards_screen.dart';
 import 'screens/profile/profile_screen.dart';
 
+//testtesttest johny
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
