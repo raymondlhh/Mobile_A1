@@ -30,7 +30,7 @@ class _BottomNavState extends State<BottomNav> {
         decoration: const BoxDecoration(
           color: Color(0xFFFFF8E5), // Set background color
           border: Border(
-            top: BorderSide(color: Colors.black12, width: 1), // Divider line
+            top: BorderSide(color: Colors.black12, width: 2), // Divider line
           ),
         ),
         child: BottomNavigationBar(
@@ -50,7 +50,10 @@ class _BottomNavState extends State<BottomNav> {
           items: const [
             BottomNavigationBarItem(
               icon: Padding(
-                padding: EdgeInsets.only(top: 6),
+                padding: EdgeInsets.only(
+                  top: 10,
+                  bottom: 1,
+                ),
                 child: ImageIcon(
                   AssetImage('assets/images/icons/Home.png'),
                   size: 20,
@@ -60,7 +63,10 @@ class _BottomNavState extends State<BottomNav> {
             ),
             BottomNavigationBarItem(
               icon: Padding(
-                padding: EdgeInsets.only(top: 6),
+                padding: EdgeInsets.only(
+                  top: 10,
+                  bottom: 1,
+                ),
                 child: ImageIcon(
                   AssetImage('assets/images/icons/Menu.png'),
                   size: 20,
@@ -70,7 +76,10 @@ class _BottomNavState extends State<BottomNav> {
             ),
             BottomNavigationBarItem(
               icon: Padding(
-                padding: EdgeInsets.only(top: 6),
+                padding: EdgeInsets.only(
+                  top: 10,
+                  bottom: 1,
+                ),
                 child: ImageIcon(
                   AssetImage('assets/images/icons/Reward.png'),
                   size: 20,
@@ -80,7 +89,10 @@ class _BottomNavState extends State<BottomNav> {
             ),
             BottomNavigationBarItem(
               icon: Padding(
-                padding: EdgeInsets.only(top: 6),
+                padding: EdgeInsets.only(
+                  top: 10,
+                  bottom: 1,
+                ),
                 child: ImageIcon(
                   AssetImage('assets/images/icons/Profile.png'),
                   size: 20,

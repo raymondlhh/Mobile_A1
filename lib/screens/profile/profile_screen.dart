@@ -11,7 +11,7 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: const Color(0xFFFFF8E5), // match background
         elevation: 0,
         centerTitle: true,
-        title: Padding(
+        title: const Padding(
           padding: EdgeInsets.only(bottom: 20),
           child: Text(
             'MY PROFILE',
@@ -22,6 +22,20 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 16,
+              bottom: 20,
+            ),
+            child: Image.asset(
+              'assets/images/icons/Notification.png',
+              width: 24,
+              height: 24,
+            ),
+
+          ),
+        ],
       ),
       backgroundColor: const Color(0xFFFFF8E5), // also match screen background
       body: const Center(
