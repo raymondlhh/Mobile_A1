@@ -38,8 +38,24 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
       backgroundColor: const Color(0xFFFFF8E5), // also match screen background
-      body: const Center(
-        child: Text('My Profile Page Content'),
+      body: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Image.asset(
+              'assets/images/others/InkPainting.png',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 160,
+            ),
+          ),
+          const Center(
+            child: Text(
+              'My Profile Page Content',
+              style: TextStyle(color: Colors.black),
+            ),
+          )
+        ],
       ),
     );
   }
