@@ -11,13 +11,15 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: const Color(0xFFFFF8E5), // match background
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'MY PROFILE',
-          style: TextStyle(
-            fontFamily: 'GaMaamli', 
-            fontSize: 20,
-            color: Colors.black,
-            letterSpacing: 1.5,
+        title: Padding(
+          padding: EdgeInsets.only(bottom: 20),
+          child: Text(
+            'MY PROFILE',
+            style: TextStyle(
+              fontFamily: 'GaMaamli', 
+              fontSize: 22,
+              color: Colors.black,
+            ),
           ),
         ),
       ),
