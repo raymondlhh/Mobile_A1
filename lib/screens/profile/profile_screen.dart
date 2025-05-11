@@ -48,8 +48,8 @@ Widget _buildProfileHeader(BuildContext context) {
             children: [
               Image.asset(
                 'assets/images/others/ProfilePicBackground.png',
-                width: 150,
-                height: 150,
+                width: 100,
+                height: 100,
               ),
               ClipOval(
                 child: Image.asset(
