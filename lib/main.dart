@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'widgets/bottom_nav.dart';
+import 'screens/profile/edit_screen.dart';
+import 'screens/profile/notification_screen.dart';
 
 void main() {
-  // Set status bar icons to black
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
@@ -20,11 +21,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFFFFF8E5), // 🌕 Set background color here
+        scaffoldBackgroundColor: const Color(0xFFFFF8E5),
       ),
-      home: BottomNav(),
+      home: const BottomNav(),
+      routes: {
+        '/edit': (context) => const EditScreen(),
+        '/notification': (context) => const NotificationScreen(),
+      },
     );
   }
 }
-
-
