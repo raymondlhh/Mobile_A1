@@ -65,6 +65,23 @@ flutter:
   - assets/images/buttons/
   - assets/images/icons/welcome_screen/
 
+  - assets/images/foods/agemono/
+  - assets/images/foods/appetizer/
+  - assets/images/foods/bigPartySet/
+  - assets/images/foods/currySets/
+  - assets/images/foods/dessert/
+  - assets/images/foods/don/
+  - assets/images/foods/dressings/
+  - assets/images/foods/drinks/
+  - assets/images/foods/makimono/
+  - assets/images/foods/moriawase&MakimonoSet/
+  - assets/images/foods/noodles/
+  - assets/images/foods/sideDish/
+  - assets/images/foods/sushiBlack/
+  - assets/images/foods/sushiRed/
+  - assets/images/foods/sushiWhite/
+  - assets/images/foods/temaki/
+  - assets/images/foods/yakimono/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

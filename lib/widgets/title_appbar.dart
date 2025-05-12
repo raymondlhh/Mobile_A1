@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-
 import '../screens/profile/notification_screen.dart';
+
+VoidCallback? onTickPressed;
 
 enum AppBarActionType {
   none,
-  notification,
-  tick,
+  notificationButton,
+  saveProfileButton,
 }
 
-AppBar buildAppBar(BuildContext context, String title, {AppBarActionType actionType = AppBarActionType.notification}) {
+AppBar buildAppBar(BuildContext context, String title, {AppBarActionType actionType = AppBarActionType.notificationButton}) {
   return AppBar(
     backgroundColor: const Color(0xFFFFF8E5),
     elevation: 0,
@@ -30,7 +31,7 @@ AppBar buildAppBar(BuildContext context, String title, {AppBarActionType actionT
 
 List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionType) {
   switch (actionType) {
-    case AppBarActionType.notification:
+    case AppBarActionType.notificationButton:
       return [
         Padding(
           padding: const EdgeInsets.only(right: 16),
@@ -44,13 +45,16 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
           ),
         ),
       ];
-    case AppBarActionType.tick:
+    case AppBarActionType.saveProfileButton:
       return [
         Padding(
           padding: const EdgeInsets.only(right: 16),
           child: IconButton(
             icon: Image.asset('assets/images/icons/Tick.png', width: 24),
             onPressed: () {
+              if (onTickPressed != null) {
+                onTickPressed!();
+              }
             },
           ),
         ),
@@ -59,4 +63,3 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
       return null;
   }
 }
-
