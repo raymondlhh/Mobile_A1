@@ -34,14 +34,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
           height: 118,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                // ignore: deprecated_member_use
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 9,
-                offset: const Offset(5, 4),
-              ),
-            ],
           ),
           child: Image.asset(
             'assets/images/others/ProfilePicBackground.png',
