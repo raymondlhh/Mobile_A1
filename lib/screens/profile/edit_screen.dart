@@ -54,7 +54,7 @@ class _EditScreenState extends State<EditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(context, 'Edit Profile', actionType: AppBarActionType.tick),
+      appBar: buildAppBar(context, 'Edit Profile', actionType: AppBarActionType.saveProfileButton),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
