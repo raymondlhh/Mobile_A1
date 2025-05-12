@@ -18,7 +18,7 @@ class _BottomNavState extends State<BottomNav> {
     HomeScreen(),
     MenuScreen(),
     RewardsScreen(),
-    ProfileScreen(),
+    const NavigatorWrapper(child: ProfileScreen()),
   ];
 
   @override
@@ -103,6 +103,23 @@ class _BottomNavState extends State<BottomNav> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class NavigatorWrapper extends StatelessWidget {
+  final Widget child;
+
+  const NavigatorWrapper({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute(
+          builder: (_) => child,
+        );
+      },
     );
   }
 }

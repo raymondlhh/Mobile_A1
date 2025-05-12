@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import '../../widgets/title_notification.dart';
 import '../../widgets/profile_picture.dart';
 
+import '../profile/favourite_screen.dart';
+import '../profile/balance_screen.dart';
+import '../profile/setting_screen.dart';
+import '../profile/notification_screen.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});  // FIX key constructor
 
@@ -44,7 +49,11 @@ Widget _buildActionButtons(BuildContext context) {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       GestureDetector(
-        onTap: () => Navigator.pushNamed(context, '/favourite'),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const FavouriteScreen()),
+          );
+        },
         child: Image.asset(
           'assets/images/buttons/FavouriteButton.png',
           width: 110,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/profile/edit_screen.dart';
 
 Widget buildProfileHeader(BuildContext context, {bool showDetails = true}) {
   final profileImage = Stack(
@@ -66,7 +67,11 @@ Widget buildProfileHeader(BuildContext context, {bool showDetails = true}) {
                       ),
                       const SizedBox(height: 5),
                       GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/edit'),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => const EditScreen()),
+                          );
+                        },
                         child: Image.asset(
                           'assets/images/buttons/EditButton.png',
                           width: 150,
