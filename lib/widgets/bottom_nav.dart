@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/home/welcome_screen.dart';
+import '../screens/home/home_screen.dart';
 import '../screens/menu/menu_screen.dart';
 import '../screens/rewards/rewards_screen.dart';
 import '../screens/profile/profile_screen.dart';
@@ -15,7 +15,7 @@ class _BottomNavState extends State<BottomNav> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    WelcomeScreen(),
+    HomeScreen(),
     MenuScreen(),
     RewardsScreen(),
     const NavigatorWrapper(child: ProfileScreen()),

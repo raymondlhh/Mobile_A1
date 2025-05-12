@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 //import 'widgets/bottom_nav.dart';
+import 'screens/home/home_screen.dart';
 
 import 'screens/profile/edit_screen.dart';
 import 'screens/profile/notification_screen.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignUpScreen(),
         '/login': (context) => const LoginScreen(),
         '/forgot': (context) => const ForgotPasswordScreen(),
+        '/home': (context) => const HomeScreen(),
         '/edit': (context) => const EditScreen(),
         '/notification': (context) => const NotificationScreen(),
         '/favourite': (context) => const FavouriteScreen(),
