@@ -55,8 +55,8 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         ),
         // Edit profile button overlaid
         Positioned(
-          bottom: -10,
-          right: -10,
+          bottom: -30,
+          right: -30,
           child: GestureDetector(
             onTap: _pickImage,
             child: Image.asset(
