@@ -29,8 +29,8 @@ class ProfileScreen extends StatelessWidget {
             _buildActionButtons(context),
             const SizedBox(height: 60),
             _buildLogoutButton(context),
-            // const SizedBox(height: 50),
-            // _buildFooterImage(context),
+            const SizedBox(height: 50),
+            _buildFooterImage(context),
           ],
         ),
       ),
@@ -165,11 +165,11 @@ Widget _buildLogoutButton(BuildContext context) {
   );
 }
 
-// Widget _buildFooterImage(BuildContext context) {
-//   return Image.asset(
-//     'assets/images/others/footer.png', // Replace with your footer image asset path
-//     height: 120,
-//     fit: BoxFit.cover,
-//   );
-// }
+Widget _buildFooterImage(BuildContext context) {
+  return Image.asset(
+    'assets/images/others/BottomLogo.png', // Replace with your footer image asset path
+    height: 180,
+    fit: BoxFit.cover,
+  );
+}
 
