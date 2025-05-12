@@ -40,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
 
 Widget _buildProfileHeader(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+      padding: const EdgeInsets.only(top: 35, left: 30, right: 50),
       child: Row(
         children: [
           Stack(
@@ -48,20 +48,20 @@ Widget _buildProfileHeader(BuildContext context) {
             children: [
               Image.asset(
                 'assets/images/others/ProfilePicBackground.png',
-                width: 100,
-                height: 100,
+                width: 118,
+                height: 118,
               ),
               ClipOval(
                 child: Image.asset(
                   'assets/images/others/Profile.png',
-                  width: 75,
-                  height: 75,
+                  width: 100,
+                  height: 100,
                   fit: BoxFit.cover,
                 ),
               ),
             ],
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 30),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,8 +70,8 @@ Widget _buildProfileHeader(BuildContext context) {
                   'Raymond Ling',
                   style: TextStyle(
                     fontFamily: 'Inter',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20, 
+                    fontWeight: FontWeight.w900,
+                    fontSize: 25, 
                   ),
                 ),
                 const Text(
@@ -79,7 +79,7 @@ Widget _buildProfileHeader(BuildContext context) {
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w500,
-                    fontSize: 14, 
+                    fontSize: 12, 
                   ),
                 ),
                 GestureDetector(
