@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
 import '../screens/profile/notification_screen.dart';
+
+VoidCallback? onTickPressed;
 
 enum AppBarActionType {
   none,
@@ -51,6 +52,9 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
           child: IconButton(
             icon: Image.asset('assets/images/icons/Tick.png', width: 24),
             onPressed: () {
+              if (onTickPressed != null) {
+                onTickPressed!();
+              }
             },
           ),
         ),
@@ -59,4 +63,3 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
       return null;
   }
 }
-

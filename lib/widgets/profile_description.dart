@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import '../screens/profile/edit_screen.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
+import '../screens/profile/edit_screen.dart';
+
+import '../models/user_profile.dart';
 
 class ProfileHeader extends StatefulWidget {
   final bool showDetails;
@@ -74,8 +78,8 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Raymond Ling',
+                        Text(
+                          UserProfile.name,
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w900,
@@ -83,8 +87,8 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                           ),
                         ),
                         const SizedBox(height: 2),
-                        const Text(
-                          'dmt2209669@xmu.edu.my',
+                        Text(
+                          UserProfile.email,
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
@@ -93,10 +97,11 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                         ),
                         const SizedBox(height: 5),
                         GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
+                          onTap: () async {
+                            await Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => const EditScreen()),
                             );
+                            setState(() {}); // ⬅ Rebuilds with updated name/email
                           },
                           child: Image.asset(
                             'assets/images/buttons/EditButton.png',
