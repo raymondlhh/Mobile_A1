@@ -8,6 +8,10 @@ import 'screens/profile/notification_screen.dart';
 import 'screens/profile/favourite_screen.dart';
 import 'screens/profile/balance_screen.dart';
 import 'screens/profile/setting_screen.dart';
+import 'screens/home/welcome_screen.dart';
+import 'screens/home/signup_screen.dart';
+import 'screens/home/login_screen.dart';
+import 'screens/home/forgot_password_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -28,8 +32,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFFFF8E5),
       ),
-      home: const BottomNav(),
+      initialRoute: '/',
       routes: {
+        '/': (context) => const WelcomeScreen(),
+        '/signup': (context) => const SignUpScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/forgot': (context) => const ForgotPasswordScreen(),
         '/edit': (context) => const EditScreen(),
         '/notification': (context) => const NotificationScreen(),
         '/favourite': (context) => const FavouriteScreen(),
