@@ -6,7 +6,7 @@ AppBar buildAppBar(BuildContext context, String title, {bool showNotification = 
     elevation: 0,
     centerTitle: true,
     title: Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: 0),
       child: Text(
         title,
         style: const TextStyle(
@@ -19,7 +19,7 @@ AppBar buildAppBar(BuildContext context, String title, {bool showNotification = 
     actions: showNotification
     ? [
         Padding(
-          padding: const EdgeInsets.only(right: 16, bottom: 20),
+          padding: const EdgeInsets.only(right: 16, bottom: 0),
           child: IconButton(
             icon: Image.asset('assets/images/icons/Notification.png', width: 24),
             onPressed: () => Navigator.pushNamed(context, '/notification'),

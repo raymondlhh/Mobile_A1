@@ -25,8 +25,8 @@ class ProfileScreen extends StatelessWidget {
                 _buildProfileHeader(context),
               ],
             ),
-            // const SizedBox(height: 30),
-            // _buildActionButtons(context),
+            const SizedBox(height: 30),
+            _buildActionButtons(context),
             // const SizedBox(height: 30),
             // _buildLogoutButton(context),
             // const SizedBox(height: 50),
@@ -46,10 +46,24 @@ Widget _buildProfileHeader(BuildContext context) {
           Stack(
             alignment: Alignment.center,
             children: [
-              Image.asset(
-                'assets/images/others/ProfilePicBackground.png',
+              // Shadowed profile background
+              Container(
                 width: 118,
                 height: 118,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      blurRadius: 9,
+                      offset: const Offset(5, 4),
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  'assets/images/others/ProfilePicBackground.png',
+                  fit: BoxFit.cover,
+                ),
               ),
               ClipOval(
                 child: Image.asset(
@@ -63,35 +77,41 @@ Widget _buildProfileHeader(BuildContext context) {
           ),
           const SizedBox(width: 30),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Raymond Ling',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w900,
-                    fontSize: 25, 
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Raymond Ling',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w900,
+                      fontSize: 25, 
+                    ),
                   ),
-                ),
-                const Text(
-                  'dmt2209669@xmu.edu.my',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12, 
+                  SizedBox(height: 2),
+                  const Text(
+                    'dmt2209669@xmu.edu.my',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12, 
+                    ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, '/edit'),
-                  child: Image.asset(
-                    'assets/images/buttons/EditButton.png',
-                    width: 120,
-                    height: 40,
-                    fit: BoxFit.contain,
+                  SizedBox(height: 5),
+                  // Shadowed Edit button
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, '/edit'),
+                    child: Image.asset(
+                      'assets/images/buttons/EditButton.png',
+                      width: 150,
+                      height: 50,
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -99,36 +119,36 @@ Widget _buildProfileHeader(BuildContext context) {
     );
   }
 
-// Widget _buildActionButtons(BuildContext context) {
-//   return Row(
-//     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//     children: [
-//       _actionButton('Favourite', Icons.favorite, () {}),
-//       _actionButton('Balance', Icons.account_balance_wallet, () {}),
-//       _actionButton('Setting', Icons.settings, () {}),
-//     ],
-//   );
-// }
+Widget _buildActionButtons(BuildContext context) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      _actionButton('Favourite', Icons.favorite, () {}),
+      _actionButton('Balance', Icons.account_balance_wallet, () {}),
+      _actionButton('Setting', Icons.settings, () {}),
+    ],
+  );
+}
 
-// Widget _actionButton(String label, IconData icon, VoidCallback onPressed) {
-//   return Column(
-//     children: [
-//       ElevatedButton(
-//         onPressed: onPressed,
-//         style: ElevatedButton.styleFrom(
-//           backgroundColor: const Color(0xFFA6C7A3),
-//           shape: RoundedRectangleBorder(
-//             borderRadius: BorderRadius.circular(12),
-//           ),
-//           padding: const EdgeInsets.all(16),
-//         ),
-//         child: Icon(icon, size: 32, color: const Color(0xFFCA3202)),
-//       ),
-//       const SizedBox(height: 8),
-//       Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-//     ],
-//   );
-// }
+Widget _actionButton(String label, IconData icon, VoidCallback onPressed) {
+  return Column(
+    children: [
+      ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFA6C7A3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.all(16),
+        ),
+        child: Icon(icon, size: 32, color: const Color(0xFFCA3202)),
+      ),
+      const SizedBox(height: 8),
+      Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+    ],
+  );
+}
 
 // Widget _buildLogoutButton(BuildContext context) {
 //   return ElevatedButton(
