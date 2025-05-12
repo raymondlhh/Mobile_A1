@@ -1,7 +1,7 @@
 // lib/screens/home/profile_screen.dart
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
-import '../../widgets/profile_picture.dart';
+import '../../widgets/profile_description.dart';
 
 import '../profile/favourite_screen.dart';
 import '../profile/balance_screen.dart';

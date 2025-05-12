@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
-import '../../widgets/profile_picture.dart';
+import '../../widgets/profile_description.dart';
 
 class EditScreen extends StatelessWidget {
   const EditScreen({super.key});
