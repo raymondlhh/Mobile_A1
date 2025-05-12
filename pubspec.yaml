@@ -61,6 +61,7 @@ flutter:
   assets:
   - assets/images/icons/
   - assets/images/others/
+  - assets/images/buttons/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -78,7 +79,11 @@ flutter:
     - family: GaMaamli
       fonts:
         - asset: assets/fonts/GaMaamli.ttf
-
-  #
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter/static/Inter_18pt-Regular.ttf
+        - asset: assets/fonts/Inter/static/Inter_18pt-Bold.ttf
+        - asset: assets/fonts/Inter/static/Inter_18pt-Extrabold.ttf
+  
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

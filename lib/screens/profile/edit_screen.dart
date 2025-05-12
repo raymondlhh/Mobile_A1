@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/title_notification.dart';
 
 class EditScreen extends StatelessWidget {
   const EditScreen({super.key});
@@ -6,10 +7,7 @@ class EditScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Profile'),
-        backgroundColor: Color(0xFFFFF8E5),
-      ),
+      appBar: buildAppBar(context, 'Edit Profile', showNotification: false),
       body: const Center(
         child: Text('Edit Screen Content'),
       ),

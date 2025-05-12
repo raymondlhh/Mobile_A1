@@ -54,8 +54,8 @@ Widget _buildProfileHeader(BuildContext context) {
               ClipOval(
                 child: Image.asset(
                   'assets/images/others/Profile.png',
-                  width: 70,
-                  height: 70,
+                  width: 75,
+                  height: 75,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -68,18 +68,28 @@ Widget _buildProfileHeader(BuildContext context) {
               children: [
                 const Text(
                   'Raymond Ling',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20, 
+                  ),
                 ),
                 const Text(
                   'dmt2209669@xmu.edu.my',
-                  style: TextStyle(fontSize: 14),
-                ),
-                ElevatedButton(
-                  onPressed: () => Navigator.pushNamed(context, '/edit'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFCA3202),
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14, 
                   ),
-                  child: const Text('Edit Profile'),
+                ),
+                GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, '/edit'),
+                  child: Image.asset(
+                    'assets/images/buttons/EditButton.png',
+                    width: 120,
+                    height: 40,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ],
             ),
