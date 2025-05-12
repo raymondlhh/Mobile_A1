@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../widgets/title_notification.dart';
+import '../../widgets/title_appbar.dart';
 import '../../widgets/profile_picture.dart';
 
 class EditScreen extends StatelessWidget {
@@ -8,7 +8,7 @@ class EditScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(context, 'Edit Profile', showNotification: false),
+      appBar: buildAppBar(context, 'Edit Profile', actionType: AppBarActionType.tick),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -21,7 +21,7 @@ class EditScreen extends StatelessWidget {
                   height: 160,
                   fit: BoxFit.cover,
                 ),
-                buildProfileHeader(context, showDetails: false),
+                ProfileHeader(showDetails: false),
               ],
             ),
           ],

@@ -1,6 +1,6 @@
 // lib/screens/home/profile_screen.dart
 import 'package:flutter/material.dart';
-import '../../widgets/title_notification.dart';
+import '../../widgets/title_appbar.dart';
 import '../../widgets/profile_picture.dart';
 
 import '../profile/favourite_screen.dart';
@@ -27,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
                   height: 160,
                   fit: BoxFit.cover,
                 ),
-                buildProfileHeader(context, showDetails: true),
+                ProfileHeader(showDetails: true),
               ],
             ),
             const SizedBox(height: 30),
