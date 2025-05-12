@@ -27,8 +27,8 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             _buildActionButtons(context),
-            // const SizedBox(height: 30),
-            // _buildLogoutButton(context),
+            const SizedBox(height: 60),
+            _buildLogoutButton(context),
             // const SizedBox(height: 50),
             // _buildFooterImage(context),
           ],
@@ -151,16 +151,19 @@ Widget _buildActionButtons(BuildContext context) {
   );
 }
 
-// Widget _buildLogoutButton(BuildContext context) {
-//   return ElevatedButton(
-//     onPressed: () {},
-//     style: ElevatedButton.styleFrom(
-//       backgroundColor: const Color(0xFFCA3202),
-//       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-//     ),
-//     child: const Text('Log Out', style: TextStyle(fontSize: 16)),
-//   );
-// }
+Widget _buildLogoutButton(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+
+    },
+    child: Image.asset(
+      'assets/images/buttons/LogOutButton.png',
+      width: 160, // adjust size as needed
+      height: 50,
+      fit: BoxFit.contain,
+    ),
+  );
+}
 
 // Widget _buildFooterImage(BuildContext context) {
 //   return Image.asset(
