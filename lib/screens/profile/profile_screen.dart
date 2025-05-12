@@ -61,7 +61,11 @@ Widget _buildActionButtons(BuildContext context) {
       ),
       const SizedBox(width: 12),
       GestureDetector(
-        onTap: () => Navigator.pushNamed(context, '/balance'),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const BalanceScreen()),
+          );
+        },
         child: Image.asset(
           'assets/images/buttons/BalanceButton.png',
           width: 110,
@@ -69,7 +73,11 @@ Widget _buildActionButtons(BuildContext context) {
       ),
       const SizedBox(width: 12),
       GestureDetector(
-        onTap: () => Navigator.pushNamed(context, '/setting'),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const SettingScreen()),
+          );
+        },
         child: Image.asset(
           'assets/images/buttons/SettingButton.png',
           width: 110,

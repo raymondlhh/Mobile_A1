@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../screens/profile/notification_screen.dart';
+
+
 AppBar buildAppBar(BuildContext context, String title, {bool showNotification = true}) {
   return AppBar(
     backgroundColor: const Color(0xFFFFF8E5),
@@ -22,7 +25,11 @@ AppBar buildAppBar(BuildContext context, String title, {bool showNotification = 
           padding: const EdgeInsets.only(right: 16, bottom: 0),
           child: IconButton(
             icon: Image.asset('assets/images/icons/Notification.png', width: 24),
-            onPressed: () => Navigator.pushNamed(context, '/notification'),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const NotificationScreen()),
+              );
+            },
           ),
         ),
       ]
