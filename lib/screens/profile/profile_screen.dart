@@ -1,6 +1,7 @@
 // lib/screens/home/profile_screen.dart
 import 'package:flutter/material.dart';
 import '../../widgets/title_notification.dart';
+import '../../widgets/profile_picture.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});  // FIX key constructor
@@ -22,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
                   height: 160,
                   fit: BoxFit.cover,
                 ),
-                _buildProfileHeader(context),
+                buildProfileHeader(context, showDetails: true),
               ],
             ),
             const SizedBox(height: 30),
@@ -37,88 +38,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
-
-Widget _buildProfileHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 35, left: 30, right: 50),
-      child: Row(
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              // Shadowed profile background
-              Container(
-                width: 118,
-                height: 118,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      // ignore: deprecated_member_use
-                      color: Colors.black.withOpacity(0.25),
-                      blurRadius: 9,
-                      offset: const Offset(5, 4),
-                    ),
-                  ],
-                ),
-                child: Image.asset(
-                  'assets/images/others/ProfilePicBackground.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              ClipOval(
-                child: Image.asset(
-                  'assets/images/others/Profile.png',
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 30),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Raymond Ling',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w900,
-                      fontSize: 25, 
-                    ),
-                  ),
-                  SizedBox(height: 2),
-                  const Text(
-                    'dmt2209669@xmu.edu.my',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12, 
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  // Shadowed Edit button
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, '/edit'),
-                    child: Image.asset(
-                      'assets/images/buttons/EditButton.png',
-                      width: 150,
-                      height: 50,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
 Widget _buildActionButtons(BuildContext context) {
   return Row(
