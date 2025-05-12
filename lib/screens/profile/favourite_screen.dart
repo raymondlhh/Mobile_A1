@@ -12,6 +12,7 @@ class FavouriteScreen extends StatefulWidget {
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
   // Start with reversed list: newest on top
+  // ignore: prefer_final_fields
   List<FavouriteFood> _foods = List.from(favouriteFoods.reversed);
 
   void _removeFromFavourites(FavouriteFood food) {
