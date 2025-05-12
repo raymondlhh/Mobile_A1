@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class BalanceScreen extends StatelessWidget {
-  const BalanceScreen({super.key});
+class SettingScreen extends StatelessWidget {
+  const SettingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,12 +11,12 @@ class BalanceScreen extends StatelessWidget {
         backgroundColor: const Color(0xFFFFF8E5),
         elevation: 0,
         title: const Text(
-          'Balance',
+          'Setting',
           style: TextStyle(fontFamily: 'GaMaamli', color: Colors.black),
         ),
         centerTitle: true,
       ),
-      body: const Center(child: Text('Balance Screen')),
+      body: const Center(child: Text('Setting Screen')),
     );
   }
 }

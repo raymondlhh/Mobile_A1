@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'widgets/bottom_nav.dart';
+
 import 'screens/profile/edit_screen.dart';
 import 'screens/profile/notification_screen.dart';
+import 'screens/profile/favourite_screen.dart';
+import 'screens/profile/balance_screen.dart';
+import 'screens/profile/setting_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -27,6 +32,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/edit': (context) => const EditScreen(),
         '/notification': (context) => const NotificationScreen(),
+        '/favourite': (context) => const FavouriteScreen(),
+        '/balance': (context) => const BalanceScreen(),
+        '/setting': (context) => const SettingScreen(),
       },
     );
   }

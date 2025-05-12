@@ -54,6 +54,7 @@ Widget _buildProfileHeader(BuildContext context) {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
+                      // ignore: deprecated_member_use
                       color: Colors.black.withOpacity(0.25),
                       blurRadius: 9,
                       offset: const Offset(5, 4),
@@ -121,31 +122,31 @@ Widget _buildProfileHeader(BuildContext context) {
 
 Widget _buildActionButtons(BuildContext context) {
   return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      _actionButton('Favourite', Icons.favorite, () {}),
-      _actionButton('Balance', Icons.account_balance_wallet, () {}),
-      _actionButton('Setting', Icons.settings, () {}),
-    ],
-  );
-}
-
-Widget _actionButton(String label, IconData icon, VoidCallback onPressed) {
-  return Column(
-    children: [
-      ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFA6C7A3),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.all(16),
+      GestureDetector(
+        onTap: () => Navigator.pushNamed(context, '/favourite'),
+        child: Image.asset(
+          'assets/images/buttons/FavouriteButton.png',
+          width: 110,
         ),
-        child: Icon(icon, size: 32, color: const Color(0xFFCA3202)),
       ),
-      const SizedBox(height: 8),
-      Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+      const SizedBox(width: 12),
+      GestureDetector(
+        onTap: () => Navigator.pushNamed(context, '/balance'),
+        child: Image.asset(
+          'assets/images/buttons/BalanceButton.png',
+          width: 110,
+        ),
+      ),
+      const SizedBox(width: 12),
+      GestureDetector(
+        onTap: () => Navigator.pushNamed(context, '/setting'),
+        child: Image.asset(
+          'assets/images/buttons/SettingButton.png',
+          width: 110,
+        ),
+      ),
     ],
   );
 }
