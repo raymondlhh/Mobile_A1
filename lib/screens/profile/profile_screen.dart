@@ -6,7 +6,6 @@ import '../../widgets/profile_picture.dart';
 import '../profile/favourite_screen.dart';
 import '../profile/balance_screen.dart';
 import '../profile/setting_screen.dart';
-import '../profile/notification_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});  // FIX key constructor
