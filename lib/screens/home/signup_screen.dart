@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/title_appbar.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -6,7 +7,7 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
+      appBar: buildAppBar(context, 'Sign Up', actionType: AppBarActionType.none),
       body: const Center(child: Text('This is the Sign Up screen')),
     );
   }

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-//import 'widgets/bottom_nav.dart';
-import 'screens/home/home_screen.dart';
+import 'widgets/bottom_nav.dart';
+//import 'screens/home/home_screen.dart';
+import 'screens/home/detail_home_screen.dart';
 
 import 'screens/profile/edit_screen.dart';
 import 'screens/profile/notification_screen.dart';
 import 'screens/profile/favourite_screen.dart';
 import 'screens/profile/balance_screen.dart';
 import 'screens/profile/setting_screen.dart';
+
 import 'screens/home/welcome_screen.dart';
 import 'screens/home/signup_screen.dart';
 import 'screens/home/login_screen.dart';
@@ -33,13 +35,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFFFF8E5),
       ),
-      initialRoute: '/',
+      initialRoute: '/welcome',
       routes: {
-        '/': (context) => const WelcomeScreen(),
+        '/': (context) => const BottomNav(),
+        '/welcome': (context) => const WelcomeScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/login': (context) => const LoginScreen(),
         '/forgot': (context) => const ForgotPasswordScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/bottomNav': (context) => const BottomNav(),
+        '/home': (context) => const DetailHomeScreen(),
         '/edit': (context) => const EditScreen(),
         '/notification': (context) => const NotificationScreen(),
         '/favourite': (context) => const FavouriteScreen(),
