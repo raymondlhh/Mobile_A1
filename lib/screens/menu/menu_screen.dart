@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../data/menu_data.dart';
+import 'item_detail_page.dart';
+import '../../models/menu_item.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({super.key});
@@ -14,7 +17,7 @@ class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F3E6),
+      backgroundColor: const Color(0xFFFFF8E5),
       body: SafeArea(
         child: Column(
           children: [
@@ -86,7 +89,7 @@ class MenuScreen extends StatelessWidget {
                   // Side Navigation (Scrollable)
                   Container(
                     width: 90,
-                    color: const Color(0xFFF8F3E6),
+                    color: const Color(0xFF7F7F7F),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -129,7 +132,7 @@ class MenuScreen extends StatelessWidget {
                   const VerticalDivider(
                     width: 1,
                     thickness: 1,
-                    color: Colors.black26,
+                    color: Color(0xFF7F7F7F),
                   ),
                   // Menu Content
                   Expanded(
@@ -174,6 +177,56 @@ class MenuScreen extends StatelessWidget {
                                 image:
                                     'assets/images/foods/appetizers/mochi.png',
                                 name: 'MOCHI (4PCS)',
+                                price: 'RM 6.90',
+                              ),
+                            ],
+                          ),
+                          _MenuCategory(
+                            title: "MAKI ROLL",
+                            items: [
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/maki_rolls/sake_maki.png',
+                                name: 'SAKE MAKI',
+                                price: 'RM 5.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/maki_rolls/tamago_maki.png',
+                                name: 'TAMAGO MAKI',
+                                price: 'RM 4.90',
+                              ),
+                            ],
+                          ),
+                          _MenuCategory(
+                            title: "NIGIRI",
+                            items: [
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/nigiri/kani_mentai.png',
+                                name: 'KANI MENTAI',
+                                price: 'RM 6.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/nigiri/tamago_mentai.png',
+                                name: 'TAMAGO MENTAI',
+                                price: 'RM 6.50',
+                              ),
+                            ],
+                          ),
+                          _MenuCategory(
+                            title: "GUNKAN",
+                            items: [
+                              _MenuItem(
+                                image: 'assets/images/foods/gunkan/ebiko.png',
+                                name: 'EBIKO',
+                                price: 'RM 7.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/gunkan/kani_mayo.png',
+                                name: 'KANI MAYO',
                                 price: 'RM 6.90',
                               ),
                             ],
@@ -272,21 +325,32 @@ class _MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Find the MenuItem instance from dummy data by name (or another unique field)
+    final menuItem = menuItems.firstWhere(
+      (item) => item.name == name,
+      orElse:
+          () => MenuItem(
+            name: name,
+            price: price,
+            imagePath: image,
+            ratings: 5.0,
+            reviews: [],
+            description: '',
+          ),
+    );
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder:
-                (context) =>
-                    ItemDescriptionPage(image: image, name: name, price: price),
+            builder: (context) => ItemDetailPage(menuItem: menuItem),
           ),
         );
       },
       child: Container(
         width: 150,
         decoration: BoxDecoration(
-          color: const Color(0xFFB6C7A8),
+          color: const Color(0xFF8AB98F),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -295,7 +359,7 @@ class _MenuItem extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD35400),
+                  color: const Color(0xFFCA3202),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Padding(
@@ -306,7 +370,7 @@ class _MenuItem extends StatelessWidget {
             ),
             Container(
               decoration: const BoxDecoration(
-                color: Color(0xFFD35400),
+                color: Color(0xFFCA3202),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(16),
                   bottomRight: Radius.circular(16),
@@ -338,51 +402,6 @@ class _MenuItem extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-// Item Description Page
-class ItemDescriptionPage extends StatelessWidget {
-  final String image;
-  final String name;
-  final String price;
-  const ItemDescriptionPage({
-    required this.image,
-    required this.name,
-    required this.price,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(name)),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(image, width: 180, height: 180),
-              const SizedBox(height: 24),
-              Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                price,
-                style: const TextStyle(fontSize: 20, color: Colors.deepOrange),
-              ),
-              // Add more details here as needed
-            ],
-          ),
         ),
       ),
     );

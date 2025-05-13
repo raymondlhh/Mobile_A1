@@ -71,6 +71,8 @@ flutter:
   - assets/images/foods/party_set/
   - assets/images/foods/curry_sets/
   - assets/images/foods/maki_rolls/
+  - assets/images/foods/nigiri/
+  - assets/images/foods/gunkan/
   # - assets/images/foods/agemono/
   # - assets/images/foods/don/
   # - assets/images/foods/dressings/
