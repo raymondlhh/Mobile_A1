@@ -17,59 +17,24 @@ class FavouriteFood {
 // Dummy data
 List<FavouriteFood> favouriteFoods = [
   FavouriteFood(
-    name: 'Chuka Idako',
+    name: 'Party Set A',
     rating: 3.8,
     totalRating: '118+ Rating',
-    imagePath: 'assets/images/foods/appetizer/ChukaIdako.png',
+    imagePath: 'assets/images/foods/party_set/party_set_a.png',
   ),
 
   FavouriteFood(
-    name: 'Sushi Set 1',
+    name: 'Chuka Idako',
     rating: 4.5,
-    totalRating: '200+ Rating',
-    imagePath: 'assets/images/foods/moriawaseMakimonoSet/SushiSet1.png',
+    totalRating: '90+ Rating',
+    imagePath: 'assets/images/foods/appetizers/chuka_idako.png',
   ),
 
   FavouriteFood(
-    name: 'Gunkan Set (26 pcs)',
-    rating: 4.8,
-    totalRating: '230+ Rating',
-    imagePath: 'assets/images/foods/partySet/GunkanSet26pcs.png',
-  ),
-
-  FavouriteFood(
-    name: 'Chuka Kurage',
-    rating: 3.8,
-    totalRating: '100+ Rating',
-    imagePath: 'assets/images/foods/appetizer/ChukaKurage.png',
-  ),
-
-  FavouriteFood(
-    name: 'Sushi Set 2',
-    rating: 4.5,
-    totalRating: '200+ Rating',
-    imagePath: 'assets/images/foods/moriawaseMakimonoSet/SushiSet2.png',
-  ),
-
-  FavouriteFood(
-    name: 'Chuka Hotate',
-    rating: 4.5,
-    totalRating: '200+ Rating',
-    imagePath: 'assets/images/foods/appetizer/ChukaHotate.png',
-  ),
-
-  FavouriteFood(
-    name: 'Chicken Katsu Curry Don',
-    rating: 4.8,
-    totalRating: '230+ Rating',
-    imagePath: 'assets/images/foods/currySets/ChickenKatsuCurryDon.png',
-  ),
-
-  FavouriteFood(
-    name: 'Ebi Curry Don',
-    rating: 4.8,
-    totalRating: '230+ Rating',
-    imagePath: 'assets/images/foods/currySets/EbiCurryDon.png',
+    name: 'Party Set B',
+    rating: 3.5,
+    totalRating: '110+ Rating',
+    imagePath: 'assets/images/foods/party_set/party_set_b.png',
   ),
 
   
