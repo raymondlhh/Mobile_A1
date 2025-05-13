@@ -63,7 +63,8 @@ flutter:
   - assets/images/icons/
   - assets/images/others/
   - assets/images/buttons/
-  - assets/images/icons/welcome_screen/
+  - assets/images/icons/welcome_screen/Logo.png
+  - assets/images/icons/welcome_screen/subtitle.png
 
   - assets/images/foods/agemono/
   - assets/images/foods/appetizer/
