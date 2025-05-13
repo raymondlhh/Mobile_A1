@@ -34,6 +34,7 @@ class RewardsScreen extends StatelessWidget {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: Colors.white.withOpacity(0.7),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: Colors.grey.shade400, width: 2),
@@ -212,6 +213,7 @@ class RewardsScreen extends StatelessWidget {
                   border: Border.all(color: Colors.brown, width: 1),
                 ),
                 child: Text(
+                  // ignore: unnecessary_brace_in_string_interps
                   '${points} pts',
                   style: const TextStyle(
                     color: Colors.brown,
