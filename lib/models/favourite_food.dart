@@ -38,66 +38,38 @@ List<FavouriteFood> favouriteFoods = [
   ),
 
   FavouriteFood(
-    name: 'Chuka Idako',
+    name: 'Chuka Kurage',
     rating: 3.8,
-    totalRating: '118+ Rating',
-    imagePath: 'assets/images/foods/appetizer/ChukaIdako.png',
+    totalRating: '100+ Rating',
+    imagePath: 'assets/images/foods/appetizer/ChukaKurage.png',
   ),
 
   FavouriteFood(
-    name: 'Sushi Set 1',
+    name: 'Sushi Set 2',
     rating: 4.5,
     totalRating: '200+ Rating',
-    imagePath: 'assets/images/foods/moriawaseMakimonoSet/SushiSet1.png',
+    imagePath: 'assets/images/foods/moriawaseMakimonoSet/SushiSet2.png',
   ),
 
   FavouriteFood(
-    name: 'Gunkan Set (26 pcs)',
-    rating: 4.8,
-    totalRating: '230+ Rating',
-    imagePath: 'assets/images/foods/partySet/GunkanSet26pcs.png',
-  ),
-
-  FavouriteFood(
-    name: 'Chuka Idako',
-    rating: 3.8,
-    totalRating: '118+ Rating',
-    imagePath: 'assets/images/foods/appetizer/ChukaIdako.png',
-  ),
-
-  FavouriteFood(
-    name: 'Sushi Set 1',
+    name: 'Chuka Hotate',
     rating: 4.5,
     totalRating: '200+ Rating',
-    imagePath: 'assets/images/foods/moriawaseMakimonoSet/SushiSet1.png',
+    imagePath: 'assets/images/foods/appetizer/ChukaHotate.png',
   ),
 
   FavouriteFood(
-    name: 'Gunkan Set (26 pcs)',
+    name: 'Chicken Katsu Curry Don',
     rating: 4.8,
     totalRating: '230+ Rating',
-    imagePath: 'assets/images/foods/partySet/GunkanSet26pcs.png',
+    imagePath: 'assets/images/foods/currySets/ChickenKatsuCurryDon.png',
   ),
 
   FavouriteFood(
-    name: 'Chuka Idako',
-    rating: 3.8,
-    totalRating: '118+ Rating',
-    imagePath: 'assets/images/foods/appetizer/ChukaIdako.png',
-  ),
-
-  FavouriteFood(
-    name: 'Sushi Set 1',
-    rating: 4.5,
-    totalRating: '200+ Rating',
-    imagePath: 'assets/images/foods/moriawaseMakimonoSet/SushiSet1.png',
-  ),
-
-  FavouriteFood(
-    name: 'Gunkan Set (26 pcs)',
+    name: 'Ebi Curry Don',
     rating: 4.8,
     totalRating: '230+ Rating',
-    imagePath: 'assets/images/foods/partySet/GunkanSet26pcs.png',
+    imagePath: 'assets/images/foods/currySets/EbiCurryDon.png',
   ),
 
   
