@@ -1,42 +1,32 @@
-// lib/screens/home/menu_screen.dart
 import 'package:flutter/material.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({super.key});
 
+  static const List<String> branches = [
+    "AEON Nilai, Negeri Sembilan",
+    "Mid Valley Megamall, Kuala Lumpur",
+    "Sunway Pyramid, Selangor",
+    "Gurney Plaza, Penang",
+    "Paradigm Mall, Johor Bahru",
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F3E6),
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(110),
+      body: SafeArea(
         child: Column(
           children: [
-            AppBar(
-              backgroundColor: const Color(0xFFF8F3E6),
-              elevation: 0,
-              toolbarHeight: 50,
-              title: Row(
+            // Top Row 1: Branch Selector
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Row(
                 children: [
                   const Icon(Icons.location_on, color: Colors.black),
                   const SizedBox(width: 8),
-                  Expanded(
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: "AEON NILAI, NEGERI SEMBILAN",
-                        items: [
-                          DropdownMenuItem(
-                            value: "AEON NILAI, NEGERI SEMBILAN",
-                            child: Text("AEON NILAI, NEGERI SEMBILAN"),
-                          ),
-                        ],
-                        onChanged: (_) {},
-                        style: const TextStyle(color: Colors.black),
-                        icon: const Icon(Icons.arrow_drop_down),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
+                  Expanded(child: _BranchDropdown()),
+                  const SizedBox(width: 12),
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -57,113 +47,147 @@ class MenuScreen extends StatelessWidget {
                 ],
               ),
             ),
+            // Top Row 2: Search Bar
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Search for your favourite sushi",
-                  prefixIcon: Icon(Icons.search),
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 0,
-                    horizontal: 16,
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Search for your favourite sushi",
+                          prefixIcon: Icon(Icons.search),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0,
+                            horizontal: 16,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide.none,
+                ],
+              ),
+            ),
+            // Horizontal Divider
+            const Padding(
+              padding: EdgeInsets.only(top: 12),
+              child: Divider(thickness: 1, height: 1, color: Colors.black26),
+            ),
+            // Main Content: Side Nav + Menu
+            Expanded(
+              child: Row(
+                children: [
+                  // Side Navigation (Scrollable)
+                  Container(
+                    width: 90,
+                    color: const Color(0xFFF8F3E6),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const [
+                          SizedBox(height: 16),
+                          _SideNavItem(
+                            icon:
+                                'assets/images/icons/menu_sidebar/party_set.png',
+                            label: 'PARTY SET',
+                          ),
+                          _SideNavItem(
+                            icon:
+                                'assets/images/icons/menu_sidebar/appetizers.png',
+                            label: 'APPETIZERS',
+                          ),
+                          _SideNavItem(
+                            icon:
+                                'assets/images/icons/menu_sidebar/maki_roll.png',
+                            label: 'MAKI ROLL',
+                          ),
+                          _SideNavItem(
+                            icon: 'assets/images/icons/menu_sidebar/nigiri.png',
+                            label: 'NIGIRI',
+                          ),
+                          _SideNavItem(
+                            icon: 'assets/images/icons/menu_sidebar/gunkan.png',
+                            label: 'GUNKAN',
+                          ),
+                          _SideNavItem(
+                            icon:
+                                'assets/images/icons/menu_sidebar/condiments.png',
+                            label: 'CONDIMENTS',
+                          ),
+                          SizedBox(height: 16),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  // Vertical Divider
+                  const VerticalDivider(
+                    width: 1,
+                    thickness: 1,
+                    color: Colors.black26,
+                  ),
+                  // Menu Content
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          _MenuCategory(
+                            title: "PARTY SET",
+                            items: [
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/party_set/party_set_a.png',
+                                name: 'PARTY SET A (81 PCS)',
+                                price: 'RM 109.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/party_set/party_set_b.png',
+                                name: 'PARTY SET B (74 PCS)',
+                                price: 'RM 99.90',
+                              ),
+                            ],
+                          ),
+                          _MenuCategory(
+                            title: "APPETIZERS",
+                            items: [
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/appetizers/chuka_idako.png',
+                                name: 'CHUKA IDAKO',
+                                price: 'RM 7.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/appetizers/chuka_kurage.png',
+                                name: 'CHUKA KURAGE',
+                                price: 'RM 8.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/appetizers/mochi.png',
+                                name: 'MOCHI (4PCS)',
+                                price: 'RM 6.90',
+                              ),
+                            ],
+                          ),
+                          // Add more categories as needed...
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
-      ),
-      body: Row(
-        children: [
-          // Side Navigation
-          Container(
-            width: 80,
-            color: const Color(0xFFF8F3E6),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
-                _SideNavItem(icon: 'assets/party_set.png', label: 'PARTY SET'),
-                _SideNavItem(
-                  icon: 'assets/appetizers.png',
-                  label: 'APPETIZERS',
-                ),
-                _SideNavItem(icon: 'assets/maki_roll.png', label: 'MAKI ROLL'),
-                _SideNavItem(icon: 'assets/nigiri.png', label: 'NIGIRI'),
-                _SideNavItem(icon: 'assets/gunkan.png', label: 'GUNKAN'),
-                _SideNavItem(
-                  icon: 'assets/condiments.png',
-                  label: 'CONDIMENTS',
-                ),
-              ],
-            ),
-          ),
-          // Menu Content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  _MenuCategory(
-                    title: "PARTY SET",
-                    items: [
-                      _MenuItem(
-                        image: 'assets/party_set_a.png',
-                        name: 'PARTY SET A (81 PCS)',
-                        price: 'RM 109.90',
-                      ),
-                      _MenuItem(
-                        image: 'assets/party_set_b.png',
-                        name: 'PARTY SET B (74 PCS)',
-                        price: 'RM 99.90',
-                      ),
-                    ],
-                  ),
-                  _MenuCategory(
-                    title: "APPETIZERS",
-                    items: [
-                      _MenuItem(
-                        image: 'assets/chiuka_idako.png',
-                        name: 'CHUKA IDAKO',
-                        price: 'RM 7.90',
-                      ),
-                      _MenuItem(
-                        image: 'assets/chiuka_kurage.png',
-                        name: 'CHUKA KURAGE',
-                        price: 'RM 8.90',
-                      ),
-                      _MenuItem(
-                        image: 'assets/mochi.png',
-                        name: 'MOCHI (4PCS)',
-                        price: 'RM 6.90',
-                      ),
-                    ],
-                  ),
-                  // Add more categories as needed...
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
-        ],
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black54,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        backgroundColor: Colors.white,
       ),
     );
   }
@@ -181,11 +205,25 @@ class _SideNavItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         children: [
-          Image.asset(icon, width: 40, height: 40),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black12, width: 2),
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Image.asset(icon, width: 36, height: 36),
+            ),
+          ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'PermanentMarker',
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -234,41 +272,153 @@ class _MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 140,
-      decoration: BoxDecoration(
-        color: const Color(0xFFB6C7A8),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(image, width: 100, height: 100),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) =>
+                    ItemDescriptionPage(image: image, name: name, price: price),
           ),
-          Container(
-            color: const Color(0xFFD35400),
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Column(
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 13,
-                  ),
-                  textAlign: TextAlign.center,
+        );
+      },
+      child: Container(
+        width: 150,
+        decoration: BoxDecoration(
+          color: const Color(0xFFB6C7A8),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD35400),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                Text(
-                  price,
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(image, width: 100, height: 100),
                 ),
-              ],
+              ),
             ),
+            Container(
+              decoration: const BoxDecoration(
+                color: Color(0xFFD35400),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                ),
+              ),
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Column(
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontFamily: 'PermanentMarker',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    price,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontFamily: 'PermanentMarker',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Item Description Page
+class ItemDescriptionPage extends StatelessWidget {
+  final String image;
+  final String name;
+  final String price;
+  const ItemDescriptionPage({
+    required this.image,
+    required this.name,
+    required this.price,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(name)),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(image, width: 180, height: 180),
+              const SizedBox(height: 24),
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                price,
+                style: const TextStyle(fontSize: 20, color: Colors.deepOrange),
+              ),
+              // Add more details here as needed
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+// Add this widget below the MenuScreen class
+class _BranchDropdown extends StatefulWidget {
+  @override
+  State<_BranchDropdown> createState() => _BranchDropdownState();
+}
+
+class _BranchDropdownState extends State<_BranchDropdown> {
+  String selectedBranch = MenuScreen.branches[0];
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        value: selectedBranch,
+        items:
+            MenuScreen.branches
+                .map(
+                  (branch) =>
+                      DropdownMenuItem(value: branch, child: Text(branch)),
+                )
+                .toList(),
+        onChanged: (value) {
+          if (value != null) {
+            setState(() {
+              selectedBranch = value;
+            });
+          }
+        },
+        style: const TextStyle(color: Colors.black),
+        icon: const Icon(Icons.arrow_drop_down),
       ),
     );
   }

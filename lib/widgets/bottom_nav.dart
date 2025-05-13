@@ -48,28 +48,40 @@ class _BottomNavState extends State<BottomNav> {
             BottomNavigationBarItem(
               icon: Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 1),
-                child: ImageIcon(AssetImage('assets/images/icons/Home.png'), size: 20),
+                child: ImageIcon(
+                  AssetImage('assets/images/icons/Home.png'),
+                  size: 20,
+                ),
               ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 1),
-                child: ImageIcon(AssetImage('assets/images/icons/Menu.png'), size: 20),
+                child: ImageIcon(
+                  AssetImage('assets/images/icons/Menu.png'),
+                  size: 20,
+                ),
               ),
               label: 'Menu',
             ),
             BottomNavigationBarItem(
               icon: Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 1),
-                child: ImageIcon(AssetImage('assets/images/icons/Reward.png'), size: 20),
+                child: ImageIcon(
+                  AssetImage('assets/images/icons/Reward.png'),
+                  size: 20,
+                ),
               ),
               label: 'Rewards',
             ),
             BottomNavigationBarItem(
               icon: Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 1),
-                child: ImageIcon(AssetImage('assets/images/icons/Profile.png'), size: 20),
+                child: ImageIcon(
+                  AssetImage('assets/images/icons/Profile.png'),
+                  size: 20,
+                ),
               ),
               label: 'Profile',
             ),
