@@ -16,8 +16,8 @@ class WelcomeScreen extends StatelessWidget {
           children: [
             // Red Logo
             Positioned(
-              left: screenWidth * 42 / 430,
-              top: screenHeight * -48 / 932,
+              left: screenWidth * 41/ 430,
+              top: screenHeight * -50 / 932,
               child: Image.asset(
                 'assets/images/icons/welcome_screen/Logo.png',
                 width: screenWidth * 350 / 430,
@@ -28,10 +28,10 @@ class WelcomeScreen extends StatelessWidget {
             
             // Text Image
             Positioned(
-              left: screenWidth * 55 / 430,
-              top: screenHeight * 339 / 932,
+              left: screenWidth * 65 / 430,
+              top: screenHeight * 320 / 932,
               child: Image.asset(
-                'assets/images/icons/welcome_screen/full_text_image.png',
+                'assets/images/icons/welcome_screen/subtitle.png',
                 width: screenWidth * 294 / 430,
                 fit: BoxFit.contain,
               ),
@@ -40,12 +40,12 @@ class WelcomeScreen extends StatelessWidget {
             // Sign Up Button (Green BG, Black Text, Gray Stroke)
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 583 / 932,
+              top: screenHeight * 600 / 932,
               child: GestureDetector(
                 onTap: () => Navigator.pushNamed(context, '/signup'),
                 child: Container(
                   width: screenWidth * 332 / 430,
-                  height: screenHeight * 58 / 932,
+                  height: screenHeight * 53 / 932,
                   decoration: BoxDecoration(
                     color: const Color(0xFF8AB98F), // Green background
                     border: Border.all(
@@ -56,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
-                        blurRadius: 5,
+                        blurRadius: 4,
                         offset: const Offset(0, 4),
                       ),
                     ],
@@ -67,7 +67,7 @@ class WelcomeScreen extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'InknutAntiqua',
                         fontWeight: FontWeight.bold,
-                        fontSize: screenWidth * 32 / 430,
+                        fontSize: screenWidth * 30 / 430,
                         color: Colors.black, // Black text
                       ),
                     ),
@@ -79,12 +79,12 @@ class WelcomeScreen extends StatelessWidget {
             // Login Button (Black BG, White Text)
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 662 / 932,
+              top: screenHeight * 677/ 932,
               child: GestureDetector(
                 onTap: () => Navigator.pushNamed(context, '/login'),
                 child: Container(
                   width: screenWidth * 337 / 430,
-                  height: screenHeight * 83 / 932,
+                  height: screenHeight * 53 / 932,
                   decoration: BoxDecoration(
                     color: Colors.black, // Black background
                     borderRadius: BorderRadius.circular(12),
@@ -102,7 +102,7 @@ class WelcomeScreen extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'InknutAntiqua',
                         fontWeight: FontWeight.bold,
-                        fontSize: screenWidth * 32 / 430,
+                        fontSize: screenWidth * 30 / 430,
                         color: Colors.white, // White text
                       ),
                     ),
@@ -113,7 +113,7 @@ class WelcomeScreen extends StatelessWidget {
             
             // Forget Password (Underlined, Clickable)
             Positioned(
-              left: screenWidth * 111 / 430,
+              left: screenWidth * 120 / 430,
               top: screenHeight * 760 / 932,
               child: GestureDetector(
                 onTap: () => Navigator.pushNamed(context, '/forgot'),
