@@ -105,6 +105,8 @@ flutter:
         - asset: assets/fonts/Inter/static/Inter_18pt-Regular.ttf
         - asset: assets/fonts/Inter/static/Inter_18pt-Bold.ttf
         - asset: assets/fonts/Inter/static/Inter_18pt-Extrabold.ttf
-  
+    - family: InknutAntiqua
+      fonts:
+        - asset: assets/fonts/welcome_screen/InknutAntiqua-Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
