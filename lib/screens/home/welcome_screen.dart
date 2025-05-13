@@ -27,15 +27,15 @@ class WelcomeScreen extends StatelessWidget {
             ),
             
             // Text Image
-            Positioned(
-              left: screenWidth * 55 / 430,
-              top: screenHeight * 339 / 932,
-              child: Image.asset(
-                'assets/images/icons/welcome_screen/full_text_image.png',
-                width: screenWidth * 294 / 430,
-                fit: BoxFit.contain,
-              ),
-            ),
+            // Positioned(
+            //   left: screenWidth * 55 / 430,
+            //   top: screenHeight * 339 / 932,
+            //   child: Image.asset(
+            //     'assets/images/icons/welcome_screen/full_text_image.png',
+            //     width: screenWidth * 294 / 430,
+            //     fit: BoxFit.contain,
+            //   ),
+            // ),
             
             // Sign Up Button (Green BG, Black Text, Gray Stroke)
             Positioned(
