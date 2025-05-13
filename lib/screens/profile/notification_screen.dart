@@ -78,7 +78,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       appBar: buildAppBar(
         context,
-        'NOTIFICATION',
+        'NOTIFICATIONS',
         actionType: AppBarActionType.readButton,
       ),
       body: ListView.separated(
