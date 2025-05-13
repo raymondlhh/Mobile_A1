@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/title_appbar.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -6,7 +7,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Forgot Password')),
+      appBar: buildAppBar(context, 'Forgot Password', actionType: AppBarActionType.none),
       body: const Center(child: Text('This is the Forgot Password screen')),
     );
   }

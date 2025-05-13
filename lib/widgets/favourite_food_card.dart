@@ -10,17 +10,17 @@ class FavouriteFoodCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 10),
       child: Stack(
         children: [
           Image.asset(
             'assets/images/others/FavouriteFoodBackground.png',
             width: double.infinity,
-            height: 120,
+            height: 130,
             fit: BoxFit.contain,
           ),
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(15),
             child: Row(
               children: [
                 ClipRRect(
@@ -32,7 +32,7 @@ class FavouriteFoodCard extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 15),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,17 +42,17 @@ class FavouriteFoodCard extends StatelessWidget {
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w900,
-                          fontSize: 18,
+                          fontSize: 20,
                           color: Colors.black,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 5),
                       Row(
                         children: [
                           Image.asset(
                             'assets/images/others/Star.png',
-                            width: 17,
-                            height: 17,
+                            width: 20,
+                            height: 20,
                           ),
                           const SizedBox(width: 5),
                           Text(

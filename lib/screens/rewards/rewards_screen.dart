@@ -16,6 +16,8 @@ class RewardsScreen extends StatelessWidget {
 // ... existing code ...
 import 'package:flutter/material.dart';
 
+import '../../widgets/title_appbar.dart';
+
 class RewardsScreen extends StatelessWidget {
   const RewardsScreen({super.key});
 
@@ -23,28 +25,7 @@ class RewardsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F3E7),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'MY REWARDS',
-          style: TextStyle(
-            fontFamily: 'Caveat',
-            fontWeight: FontWeight.bold,
-            fontSize: 26,
-            color: Colors.black,
-            letterSpacing: 2,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
+      appBar: buildAppBar(context, 'MY REWARDS'),
       body: Column(
         children: [
           // Rewards Points Card
