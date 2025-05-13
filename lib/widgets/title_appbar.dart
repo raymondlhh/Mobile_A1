@@ -7,6 +7,7 @@ enum AppBarActionType {
   none,
   notificationButton,
   saveProfileButton,
+  readButton,
 }
 
 AppBar buildAppBar(BuildContext context, String title, {AppBarActionType actionType = AppBarActionType.notificationButton}) {
@@ -31,6 +32,8 @@ AppBar buildAppBar(BuildContext context, String title, {AppBarActionType actionT
 
 List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionType) {
   switch (actionType) {
+    case AppBarActionType.none:
+      return null;
     case AppBarActionType.notificationButton:
       return [
         Padding(
@@ -59,7 +62,20 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
           ),
         ),
       ];
-    case AppBarActionType.none:
-      return null;
+    case AppBarActionType.readButton:
+    return [
+      Padding(
+        padding: const EdgeInsets.only(right: 16),
+        child: IconButton(
+          icon: Image.asset('assets/images/icons/Read.png', width: 24),
+          onPressed: () {
+            if (onTickPressed != null) {
+              onTickPressed!();
+            }
+          },
+        ),
+      ),
+    ];
+    
   }
 }

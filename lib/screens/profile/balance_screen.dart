@@ -45,7 +45,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                 children: [
                   const Text(
                     'RM', 
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Inter',
