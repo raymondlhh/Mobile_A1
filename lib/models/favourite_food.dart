@@ -30,5 +30,12 @@ List<FavouriteFood> favouriteFoods = [
     imagePath: 'assets/images/foods/moriawaseMakimonoSet/SushiSet1.png',
   ),
 
+  FavouriteFood(
+    name: 'Gunkan Set (26 pcs)',
+    rating: 4.8,
+    totalRating: '230+ Rating',
+    imagePath: 'assets/images/foods/partySet/GunkanSet26pcs.png',
+  ),
+
   
 ];
