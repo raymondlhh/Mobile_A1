@@ -27,7 +27,7 @@ class WelcomeScreen extends StatelessWidget {
             ),
             
             // Text Image
-<<<<<<< HEAD
+
 
             Positioned(
               left: screenWidth * 65 / 430,
