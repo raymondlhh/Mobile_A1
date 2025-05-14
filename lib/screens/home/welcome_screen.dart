@@ -27,6 +27,7 @@ class WelcomeScreen extends StatelessWidget {
             ),
             
             // Text Image
+<<<<<<< HEAD
 
             Positioned(
               left: screenWidth * 65 / 430,
@@ -38,6 +39,17 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
 
+=======
+            // Positioned(
+            //   left: screenWidth * 55 / 430,
+            //   top: screenHeight * 339 / 932,
+            //   child: Image.asset(
+            //     'assets/images/icons/welcome_screen/full_text_image.png',
+            //     width: screenWidth * 294 / 430,
+            //     fit: BoxFit.contain,
+            //   ),
+            // ),
+>>>>>>> d057c0f93cfe74b994b57694ea7e2c79338922f8
             
             // Sign Up Button (Green BG, Black Text, Gray Stroke)
             Positioned(
@@ -57,6 +69,7 @@ class WelcomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.2),
                         blurRadius: 4,
                         offset: const Offset(0, 4),
@@ -92,6 +105,7 @@ class WelcomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.2),
                         blurRadius: 5,
                         offset: const Offset(0, 4),
