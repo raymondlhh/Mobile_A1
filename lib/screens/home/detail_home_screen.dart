@@ -59,7 +59,7 @@ class DetailHomeScreen extends StatelessWidget {
               ),
             ),
 
-            // Category Icons
+            // Category Icons with transparent background and horizontal scroll
             Container(
               height: 100,
               margin: const EdgeInsets.symmetric(vertical: 10),
@@ -75,42 +75,6 @@ class DetailHomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Menu Items - Commented out for now
-            /*
-            Expanded(
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  _buildMenuItem(
-                    'PARTY SET A',
-                    '41 PCS',
-                    'RM105.00',
-                    'assets/images/icons/detail_home_screen/party_set_a.png',
-                  ),
-                  _buildMenuItem(
-                    'MAKI SET',
-                    '47 PCS',
-                    'RM50.00',
-                    'assets/images/icons/detail_home_screen/maki_set.png',
-                  ),
-                  _buildMenuItem(
-                    'SUSHI SET',
-                    '12 PCS',
-                    'RM45.00',
-                    'assets/images/icons/detail_home_screen/sushi_set.png',
-                  ),
-                  _buildMenuItem(
-                    'TEMAKI SET',
-                    '6 PCS',
-                    'RM35.00',
-                    'assets/images/icons/detail_home_screen/temaki_set.png',
-                  ),
-                ],
-              ),
-            ),
-            */
           ],
         ),
       ),
@@ -143,6 +107,7 @@ class DetailHomeScreen extends StatelessWidget {
               iconPath,
               width: 36,
               height: 36,
+              fit: BoxFit.contain,
             ),
           ),
           const SizedBox(height: 8),
@@ -153,90 +118,6 @@ class DetailHomeScreen extends StatelessWidget {
               fontSize: 12,
               fontFamily: 'Inter',
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuItem(String title, String pieces, String price, String imagePath) {
-    return Container(
-      width: 280,
-      margin: const EdgeInsets.only(right: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
-                width: double.infinity,
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Inter',
-            ),
-          ),
-          Text(
-            pieces,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-              fontFamily: 'Inter',
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                price,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                  fontFamily: 'Inter',
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  'Description',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ),
-            ],
           ),
         ],
       ),
