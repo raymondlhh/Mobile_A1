@@ -15,6 +15,7 @@ import 'screens/home/welcome_screen.dart';
 import 'screens/home/signup_screen.dart';
 import 'screens/home/login_screen.dart';
 import 'screens/home/forgot_password_screen.dart';
+import 'screens/home/restaurant_menu_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         '/favourite': (context) => const FavouriteScreen(),
         '/balance': (context) => const BalanceScreen(),
         '/setting': (context) => const SettingScreen(),
+        '/restaurant_menu': (context) => const RestaurantMenuScreen(),
       },
     );
   }
