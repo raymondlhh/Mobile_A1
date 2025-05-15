@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-//import '../screens/home/detail_home_screen.dart';
+import '../screens/home/detail_home_screen.dart';
 import '../screens/menu/menu_screen.dart';
 import '../screens/rewards/rewards_screen.dart';
 import '../screens/profile/profile_screen.dart';
-import '../screens/home/forgot_password_screen.dart';
+//import '../screens/home/forgot_password_screen.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -16,8 +16,8 @@ class _BottomNavState extends State<BottomNav> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    //const DetailHomeScreen(),
-    const ForgotPasswordScreen(),
+    const DetailHomeScreen(),
+    //const ForgotPasswordScreen(),
     const MenuScreen(),
     const RewardsScreen(),
     const ProfileScreen(),
