@@ -306,7 +306,7 @@ class DetailHomeScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black12,
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -336,7 +336,7 @@ class DetailHomeScreen extends StatelessWidget {
     List<Map<String, String>> menuItems = [
       {
         'name': 'Party Set A (81 PCS)',
-        'price': 'RM110.00',
+        'price': 'RM109.90',
         'description': 'A large assortment of sushi rolls for your party.',
         'image': 'assets/images/icons/detail_home_screen/partset1.png',
       },

@@ -7,7 +7,7 @@ const menuItems = [
     ratings: 5.0,
     reviews: [
       Review(
-        reviewerName: 'Michaerl See',
+        reviewerName: 'Michael See',
         reviewerAvatar: 'assets/images/avatars/caleb.png',
         comment: 'Sangat sedap dan segar!',
       ),
@@ -18,7 +18,7 @@ const menuItems = [
       ),
     ],
     description:
-        "What's Included\n\nNigiri (35 pcs)\n• Inari x 5\n• Tamago x 5\n• Ika x 5\n• Ebi x 5\n• White Tuna x 5\n• Unagi x 5\n• Kani x 5\n\nGunkan (16 pcs)\n• Ebiko x 8\n• Salmon Mayo x 8\n\nMaki (30 pcs)\n• Kappa Maki x 10\n• Sake Maki x 10\n• Tamago Maki x 10",
+        "Nigiri (35 pcs)\n• Inari x 5\n• Tamago x 5\n• Ika x 5\n• Ebi x 5\n• White Tuna x 5\n• Unagi x 5\n• Kani x 5\n\nGunkan (16 pcs)\n• Ebiko x 8\n• Salmon Mayo x 8\n\nMaki (30 pcs)\n• Kappa Maki x 10\n• Sake Maki x 10\n• Tamago Maki x 10",
     imagePath: 'assets/images/foods/party_set/party_set_a.png',
   ),
   MenuItem(
@@ -38,7 +38,7 @@ const menuItems = [
       ),
     ],
     description:
-        "What's Included\n\nNigiri (30 pcs)\n• Inari x 4\n• Tamago x 4\n• Ika x 4\n• Ebi x 4\n• White Tuna x 4\n• Unagi x 5\n• Kani x 5\n\nGunkan (14 pcs)\n• Ebiko x 7\n• Salmon Mayo x 7\n\nMaki (30 pcs)\n• Kappa Maki x 10\n• Sake Maki x 10\n• Tamago Maki x 10",
+        "Nigiri (30 pcs)\n• Inari x 4\n• Tamago x 4\n• Ika x 4\n• Ebi x 4\n• White Tuna x 4\n• Unagi x 5\n• Kani x 5\n\nGunkan (14 pcs)\n• Ebiko x 7\n• Salmon Mayo x 7\n\nMaki (30 pcs)\n• Kappa Maki x 10\n• Sake Maki x 10\n• Tamago Maki x 10",
     imagePath: 'assets/images/foods/party_set/party_set_b.png',
   ),
   MenuItem(
@@ -213,5 +213,78 @@ const menuItems = [
     ],
     description: 'Gunkan sushi with crab stick and creamy Japanese mayonnaise.',
     imagePath: 'assets/images/foods/gunkan/kani_mayo.png',
+  ),
+  MenuItem(
+    name: 'CHICKEN KATSU CURRY DON',
+    price: 'RM 18.90',
+    ratings: 4.7,
+    reviews: [
+      Review(
+        reviewerName: 'Tommy Lee',
+        reviewerAvatar: 'assets/images/avatars/tommy.png',
+        comment: 'Crispy chicken with rich curry!',
+      ),
+    ],
+    description:
+        'Crispy chicken katsu served with Japanese curry sauce over rice.',
+    imagePath: 'assets/images/foods/curry_sets/chicken_katsu_curry_don.png',
+  ),
+  MenuItem(
+    name: 'EBI CURRY DON',
+    price: 'RM 19.90',
+    ratings: 4.6,
+    reviews: [
+      Review(
+        reviewerName: 'Nina Tan',
+        reviewerAvatar: 'assets/images/avatars/nina.png',
+        comment: 'Prawns are perfectly cooked!',
+      ),
+    ],
+    description: 'Fresh prawns served with Japanese curry sauce over rice.',
+    imagePath: 'assets/images/foods/curry_sets/ebi_curry_don.png',
+  ),
+  MenuItem(
+    name: 'CHICKEN KATSU CURRY UDON',
+    price: 'RM 19.90',
+    ratings: 4.8,
+    reviews: [
+      Review(
+        reviewerName: 'Peter Chen',
+        reviewerAvatar: 'assets/images/avatars/peter.png',
+        comment: 'Perfect comfort food!',
+      ),
+    ],
+    description:
+        'Crispy chicken katsu served with Japanese curry sauce over udon noodles.',
+    imagePath: 'assets/images/foods/curry_sets/chicken_katsu_curry_udon.png',
+  ),
+  MenuItem(
+    name: 'EBI CURRY UDON',
+    price: 'RM 20.90',
+    ratings: 4.7,
+    reviews: [
+      Review(
+        reviewerName: 'Linda Wong',
+        reviewerAvatar: 'assets/images/avatars/linda.png',
+        comment: 'Rich curry with fresh prawns!',
+      ),
+    ],
+    description:
+        'Fresh prawns served with Japanese curry sauce over udon noodles.',
+    imagePath: 'assets/images/foods/curry_sets/ebi_curry_udon.png',
+  ),
+  MenuItem(
+    name: 'OYOSHI',
+    price: 'RM 5.90',
+    ratings: 4.6,
+    reviews: [
+      Review(
+        reviewerName: 'Aisyah Lee',
+        reviewerAvatar: 'assets/images/avatars/aisyah.png',
+        comment: 'Sangat sedap dan segar!',
+      ),
+    ],
+    description: 'Premium Japanese green tea.',
+    imagePath: 'assets/images/foods/drinks/oyoshi.png',
   ),
 ];

@@ -75,11 +75,12 @@ flutter:
   - assets/images/foods/maki_rolls/
   - assets/images/foods/nigiri/
   - assets/images/foods/gunkan/
+  - assets/images/foods/drinks/
+  - assets/images/foods/condiments/
 
   # - assets/images/foods/agemono/
   # - assets/images/foods/don/
   # - assets/images/foods/dressings/
-  # - assets/images/foods/drinks/
   # - assets/images/foods/makimono/
   # - assets/images/foods/moriawaseMakimonoSet/
   # - assets/images/foods/noodles/
