@@ -89,7 +89,7 @@ class MenuScreen extends StatelessWidget {
                   // Side Navigation (Scrollable)
                   Container(
                     width: 90,
-                    color: const Color(0xFF7F7F7F),
+                    color: const Color(0xFFFFF8E5),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -348,7 +348,7 @@ class _MenuItem extends StatelessWidget {
         );
       },
       child: Container(
-        width: 150,
+        width: 125,
         decoration: BoxDecoration(
           color: const Color(0xFF8AB98F),
           borderRadius: BorderRadius.circular(16),
