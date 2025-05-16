@@ -3,6 +3,7 @@ import '../../models/menu_item.dart';
 
 class ItemDetailPage extends StatelessWidget {
   final MenuItem menuItem;
+  // ignore: use_super_parameters
   const ItemDetailPage({required this.menuItem, Key? key}) : super(key: key);
 
   @override

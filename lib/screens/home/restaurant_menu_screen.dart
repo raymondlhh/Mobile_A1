@@ -171,6 +171,7 @@ class RestaurantMenuScreen extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {},
+            // ignore: sort_child_properties_last
             child: const Text('Description'),
             style: TextButton.styleFrom(
               backgroundColor: Colors.red,
