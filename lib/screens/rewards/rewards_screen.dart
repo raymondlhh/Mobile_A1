@@ -159,7 +159,7 @@ class RewardsScreen extends StatelessWidget {
                       ),
                       _howItWorksItem(
                         'assets/images/icons/reward_icon/right_icon.png',
-                        'Enjoy your rewards!',
+                        'Enjoy the amazing\nrewards!',
                       ),
                     ],
                   ),
@@ -291,7 +291,7 @@ class RewardsScreen extends StatelessWidget {
         Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 12, color: Color(0xFF000000)),
+          style: TextStyle(fontSize: 11, color: Color(0xFF000000)),
         ),
       ],
     );
