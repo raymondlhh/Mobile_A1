@@ -78,7 +78,7 @@ class RewardsScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.85,
+                childAspectRatio: 0.75,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
@@ -95,9 +95,9 @@ class RewardsScreen extends StatelessWidget {
                   },
                   {
                     'image':
-                        'assets/images/foods/moriawase_makimono_set/salmon_moriawase.png',
-                    'name': 'Salmon Moriawase',
-                    'description': 'Assorted fresh salmon sashimi.',
+                        'assets/images/foods/curry_sets/ebi_curry_udon.png',
+                    'name': 'Ebi Curry Udon',
+                    'description': 'Curry udon with ebi tempura.',
                     'points': 2000,
                     'validity': 6,
                   },
@@ -226,7 +226,6 @@ class RewardsScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Container(
           width: 100,
-          height: 160,
           decoration: BoxDecoration(
             color: const Color(0xFF8AB98F),
             borderRadius: BorderRadius.circular(20),
@@ -236,11 +235,12 @@ class RewardsScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 8),
               Container(
-                width: 95,
-                height: 85,
+                width: 125,
+                height: 115,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Color(0xFFCA3202), width: 10),
                 ),
                 child: Image.asset(imagePath, fit: BoxFit.cover),
               ),
@@ -251,14 +251,14 @@ class RewardsScreen extends StatelessWidget {
                   vertical: 3,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFCA3202), width: 1),
+                  border: Border.all(color: const Color(0xFF7F7F7F), width: 1),
                 ),
                 child: Text(
                   '${points} pts',
                   style: const TextStyle(
-                    color: Color(0xFFCA3202),
+                    color: Color.fromARGB(255, 0, 0, 0),
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -273,6 +273,8 @@ class RewardsScreen extends StatelessWidget {
                   fontSize: 13,
                 ),
                 textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
