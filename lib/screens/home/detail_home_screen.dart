@@ -28,7 +28,7 @@ class DetailHomeScreen extends StatelessWidget {
                   SizedBox(height: 60 * scaleHeight),
                   // 顶部区域（包含背景图、文字和logo）
                   SizedBox(
-                    height: 180 * scaleHeight,
+                    height: 186 * scaleHeight,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -94,18 +94,14 @@ class DetailHomeScreen extends StatelessWidget {
                         ),
                         // 中间Logo
                         Center(
-                          child: Container(
-                            width: (155 / designWidth) * constraints.maxWidth,
-                            height: (155 / designWidth) * constraints.maxWidth,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color(0xFFCA3202),
-                            ),
-                            child: ClipOval(
-                              child: Image.asset(
-                                'assets/images/icons/detail_home_screen/logo.png',
-                                fit: BoxFit.cover,
-                              ),
+                          child: Transform.translate(
+                            offset: Offset(0, 22),
+                            child: Image.asset(
+                              'assets/images/icons/welcome_screen/Logo.png',
+                              width: (200 / designWidth) * constraints.maxWidth,
+                              height:
+                                  (200 / designWidth) * constraints.maxWidth,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -200,7 +196,7 @@ class DetailHomeScreen extends StatelessWidget {
 
                   // Category Section with title
                   Padding(
-                    padding: EdgeInsets.only(top: 20 * scaleHeight),
+                    padding: EdgeInsets.only(top: 10 * scaleHeight),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -283,7 +279,7 @@ class DetailHomeScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.fromLTRB(
                       16 * scaleWidth,
-                      15 * scaleHeight,
+                      0,
                       16 * scaleWidth,
                       16 * scaleHeight,
                     ),
