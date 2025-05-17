@@ -42,6 +42,65 @@ const menuItems = [
     imagePath: 'assets/images/foods/party_set/party_set_b.png',
   ),
   MenuItem(
+    name: 'PARTY SET C (65 PCS)',
+    price: 'RM 89.90',
+    ratings: 4.7,
+    reviews: [
+      Review(
+        reviewerName: 'Sarah Tan',
+        reviewerAvatar: 'assets/images/avatars/sarah.png',
+        comment: 'Perfect for small gatherings!',
+      ),
+    ],
+    description:
+        "Nigiri (25 pcs)\n• Inari x 3\n• Tamago x 3\n• Ika x 3\n• Ebi x 3\n• White Tuna x 3\n• Unagi x 5\n• Kani x 5\n\nGunkan (10 pcs)\n• Ebiko x 5\n• Salmon Mayo x 5\n\nMaki (30 pcs)\n• Kappa Maki x 10\n• Sake Maki x 10\n• Tamago Maki x 10",
+    imagePath: 'assets/images/foods/party_set/party_set_c.png',
+  ),
+  MenuItem(
+    name: 'MAKI SET (30 PCS)',
+    price: 'RM 49.90',
+    ratings: 4.6,
+    reviews: [
+      Review(
+        reviewerName: 'David Wong',
+        reviewerAvatar: 'assets/images/avatars/david.png',
+        comment: 'Great variety of maki rolls!',
+      ),
+    ],
+    description:
+        "Maki (30 pcs)\n• Kappa Maki x 10\n• Sake Maki x 10\n• Tamago Maki x 10",
+    imagePath: 'assets/images/foods/party_set/maki_set.png',
+  ),
+  MenuItem(
+    name: 'NIGIRI SET (25 PCS)',
+    price: 'RM 59.90',
+    ratings: 4.8,
+    reviews: [
+      Review(
+        reviewerName: 'Lisa Chen',
+        reviewerAvatar: 'assets/images/avatars/lisa.png',
+        comment: 'Fresh and delicious nigiri selection!',
+      ),
+    ],
+    description:
+        "Nigiri (25 pcs)\n• Inari x 3\n• Tamago x 3\n• Ika x 3\n• Ebi x 3\n• White Tuna x 3\n• Unagi x 5\n• Kani x 5",
+    imagePath: 'assets/images/foods/party_set/nigiri_set.png',
+  ),
+  MenuItem(
+    name: 'GUNKAN SET (20 PCS)',
+    price: 'RM 45.90',
+    ratings: 4.5,
+    reviews: [
+      Review(
+        reviewerName: 'Kevin Lim',
+        reviewerAvatar: 'assets/images/avatars/kevin.png',
+        comment: 'Love the variety of gunkan!',
+      ),
+    ],
+    description: "Gunkan (20 pcs)\n• Ebiko x 10\n• Salmon Mayo x 10",
+    imagePath: 'assets/images/foods/party_set/gunkan_set.png',
+  ),
+  MenuItem(
     name: 'CHUKA IDAKO',
     price: 'RM 7.90',
     ratings: 4.5,
@@ -273,9 +332,188 @@ const menuItems = [
         'Fresh prawns served with Japanese curry sauce over udon noodles.',
     imagePath: 'assets/images/foods/curry_sets/ebi_curry_udon.png',
   ),
+
   MenuItem(
-    name: 'OYOSHI',
+    name: 'KAPPA MAKI',
+    price: 'RM 4.90',
+    ratings: 4.3,
+    reviews: [
+      Review(
+        reviewerName: 'Ahmad Zain',
+        reviewerAvatar: 'assets/images/avatars/ahmad.png',
+        comment: 'Fresh cucumber roll!',
+      ),
+    ],
+    description: 'Classic cucumber maki roll with seasoned rice and nori.',
+    imagePath: 'assets/images/foods/maki_rolls/kappa_maki.png',
+  ),
+  MenuItem(
+    name: 'KANI MAKI',
     price: 'RM 5.90',
+    ratings: 4.4,
+    reviews: [
+      Review(
+        reviewerName: 'Mei Ling',
+        reviewerAvatar: 'assets/images/avatars/mei.png',
+        comment: 'Crab stick roll is my favorite!',
+      ),
+    ],
+    description: 'Crab stick maki roll with seasoned rice and nori.',
+    imagePath: 'assets/images/foods/maki_rolls/kani_maki.png',
+  ),
+  MenuItem(
+    name: 'EBI NIGIRI',
+    price: 'RM 6.90',
+    ratings: 4.5,
+    reviews: [
+      Review(
+        reviewerName: 'Raj Kumar',
+        reviewerAvatar: 'assets/images/avatars/raj.png',
+        comment: 'Fresh prawn nigiri!',
+      ),
+    ],
+    description: 'Fresh prawn nigiri with seasoned rice.',
+    imagePath: 'assets/images/foods/nigiri/ebi_nigiri.png',
+  ),
+  MenuItem(
+    name: 'IKA NIGIRI',
+    price: 'RM 6.90',
+    ratings: 4.4,
+    reviews: [
+      Review(
+        reviewerName: 'Yuki Tanaka',
+        reviewerAvatar: 'assets/images/avatars/yuki.png',
+        comment: 'Squid nigiri is delicious!',
+      ),
+    ],
+    description: 'Fresh squid nigiri with seasoned rice.',
+    imagePath: 'assets/images/foods/nigiri/ika_nigiri.png',
+  ),
+  MenuItem(
+    name: 'SAKE NIGIRI',
+    price: 'RM 7.90',
+    ratings: 4.7,
+    reviews: [
+      Review(
+        reviewerName: 'Hana Kim',
+        reviewerAvatar: 'assets/images/avatars/hana.png',
+        comment: 'Fresh salmon nigiri!',
+      ),
+    ],
+    description: 'Fresh salmon nigiri with seasoned rice.',
+    imagePath: 'assets/images/foods/nigiri/sake_nigiri.png',
+  ),
+  MenuItem(
+    name: 'TAKO NIGIRI',
+    price: 'RM 6.90',
+    ratings: 4.3,
+    reviews: [
+      Review(
+        reviewerName: 'Kenji Sato',
+        reviewerAvatar: 'assets/images/avatars/kenji.png',
+        comment: 'Octopus nigiri is great!',
+      ),
+    ],
+    description: 'Fresh octopus nigiri with seasoned rice.',
+    imagePath: 'assets/images/foods/nigiri/tako_nigiri.png',
+  ),
+  MenuItem(
+    name: 'UNAGI NIGIRI',
+    price: 'RM 7.90',
+    ratings: 4.8,
+    reviews: [
+      Review(
+        reviewerName: 'Ming Wei',
+        reviewerAvatar: 'assets/images/avatars/ming.png',
+        comment: 'Grilled eel nigiri is amazing!',
+      ),
+    ],
+    description: 'Grilled eel nigiri with seasoned rice.',
+    imagePath: 'assets/images/foods/nigiri/unagi_nigiri.png',
+  ),
+  MenuItem(
+    name: 'LOBSTER SALAD GUNKAN',
+    price: 'RM 8.90',
+    ratings: 4.6,
+    reviews: [
+      Review(
+        reviewerName: 'Sophie Lee',
+        reviewerAvatar: 'assets/images/avatars/sophie.png',
+        comment: 'Luxurious lobster gunkan!',
+      ),
+    ],
+    description: 'Gunkan sushi with lobster salad and tobiko.',
+    imagePath: 'assets/images/foods/gunkan/lobster_salad_gunkan.png',
+  ),
+  MenuItem(
+    name: 'SOY SAUCE',
+    price: 'RM 0.20',
+    ratings: 5.0,
+    reviews: [],
+    description: 'Traditional Japanese soy sauce.',
+    imagePath: 'assets/images/foods/condiments/soy_sauce.png',
+  ),
+  MenuItem(
+    name: 'WASABI',
+    price: 'RM 0.40',
+    ratings: 5.0,
+    reviews: [],
+    description: 'Japanese horseradish paste.',
+    imagePath: 'assets/images/foods/condiments/wasabi.png',
+  ),
+  MenuItem(
+    name: 'GINGER',
+    price: 'RM 1.00',
+    ratings: 5.0,
+    reviews: [],
+    description: 'Pickled ginger (gari).',
+    imagePath: 'assets/images/foods/condiments/ginger.png',
+  ),
+  MenuItem(
+    name: 'COKE',
+    price: 'RM 3.90',
+    ratings: 4.5,
+    reviews: [
+      Review(
+        reviewerName: 'Alex Tan',
+        reviewerAvatar: 'assets/images/avatars/alex.png',
+        comment: 'Refreshing!',
+      ),
+    ],
+    description: 'Coca-Cola soft drink.',
+    imagePath: 'assets/images/foods/drinks/coke.png',
+  ),
+  MenuItem(
+    name: 'SPRITE',
+    price: 'RM 3.90',
+    ratings: 4.5,
+    reviews: [
+      Review(
+        reviewerName: 'Jenny Wong',
+        reviewerAvatar: 'assets/images/avatars/jenny.png',
+        comment: 'Perfect with sushi!',
+      ),
+    ],
+    description: 'Sprite soft drink.',
+    imagePath: 'assets/images/foods/drinks/sprite.png',
+  ),
+  MenuItem(
+    name: '100PLUS',
+    price: 'RM 3.90',
+    ratings: 4.5,
+    reviews: [
+      Review(
+        reviewerName: 'Mike Chan',
+        reviewerAvatar: 'assets/images/avatars/mike.png',
+        comment: 'Great isotonic drink!',
+      ),
+    ],
+    description: '100PLUS isotonic drink.',
+    imagePath: 'assets/images/foods/drinks/100plus.png',
+  ),
+  MenuItem(
+    name: 'OYOSHI GREEN TEA',
+    price: 'RM 4.90',
     ratings: 4.6,
     reviews: [
       Review(
@@ -285,6 +523,6 @@ const menuItems = [
       ),
     ],
     description: 'Premium Japanese green tea.',
-    imagePath: 'assets/images/foods/drinks/oyoshi.png',
+    imagePath: 'assets/images/foods/drinks/oyoshi_green_tea.png',
   ),
 ];
