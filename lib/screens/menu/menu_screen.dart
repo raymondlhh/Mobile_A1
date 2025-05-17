@@ -4,7 +4,8 @@ import 'item_detail_page.dart';
 import '../../models/menu_item.dart';
 
 class MenuScreen extends StatefulWidget {
-  const MenuScreen({super.key});
+  final String? initialSection;
+  const MenuScreen({this.initialSection, super.key});
 
   static const List<String> branches = [
     "AEON Nilai, Negeri Sembilan",
@@ -36,6 +37,9 @@ class _MenuScreenState extends State<MenuScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _calculateSectionOffsets();
+      if (widget.initialSection != null) {
+        _scrollToSection(widget.initialSection!);
+      }
     });
   }
 

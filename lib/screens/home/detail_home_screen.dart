@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../menu/menu_screen.dart';
+import '../menu/item_detail_page.dart';
+import '../../models/menu_item.dart';
 
 class DetailHomeScreen extends StatelessWidget {
   const DetailHomeScreen({super.key});
@@ -222,32 +225,50 @@ class DetailHomeScreen extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             children: [
                               _buildCategory(
-                                'Teas',
-                                'assets/images/icons/detail_home_screen/tea_icon.png',
+                                'Party Set',
+                                'assets/images/icons/menu_sidebar/party_set.png',
                                 scaleWidth,
                                 scaleHeight,
                               ),
                               _buildCategory(
-                                'Rolls',
-                                'assets/images/icons/detail_home_screen/rolls_icon.png',
+                                'Appetizers',
+                                'assets/images/icons/menu_sidebar/appetizers.png',
                                 scaleWidth,
                                 scaleHeight,
                               ),
                               _buildCategory(
-                                'Salad',
-                                'assets/images/icons/detail_home_screen/salad_icon.png',
+                                'Maki Roll',
+                                'assets/images/icons/menu_sidebar/maki_roll.png',
                                 scaleWidth,
                                 scaleHeight,
                               ),
                               _buildCategory(
-                                'Soup',
-                                'assets/images/icons/detail_home_screen/soup_icon.png',
+                                'Nigiri',
+                                'assets/images/icons/menu_sidebar/nigiri.png',
                                 scaleWidth,
                                 scaleHeight,
                               ),
                               _buildCategory(
-                                'Gyoza',
-                                'assets/images/icons/detail_home_screen/gyoza_icon.png',
+                                'Gunkan',
+                                'assets/images/icons/menu_sidebar/gunkan.png',
+                                scaleWidth,
+                                scaleHeight,
+                              ),
+                              _buildCategory(
+                                'Curry Set',
+                                'assets/images/icons/menu_sidebar/curry_set.png',
+                                scaleWidth,
+                                scaleHeight,
+                              ),
+                              _buildCategory(
+                                'Condiments',
+                                'assets/images/icons/menu_sidebar/condiments.png',
+                                scaleWidth,
+                                scaleHeight,
+                              ),
+                              _buildCategory(
+                                'Drinks',
+                                'assets/images/icons/menu_sidebar/drinks.png',
                                 scaleWidth,
                                 scaleHeight,
                               ),
@@ -272,7 +293,12 @@ class DetailHomeScreen extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       itemCount: 2,
                       itemBuilder: (context, index) {
-                        return _buildMenuItem(index, scaleWidth, scaleHeight);
+                        return _buildMenuItem(
+                          context,
+                          index,
+                          scaleWidth,
+                          scaleHeight,
+                        );
                       },
                     ),
                   ),
@@ -292,14 +318,14 @@ class DetailHomeScreen extends StatelessWidget {
     double scaleHeight,
   ) {
     return Container(
-      width: 80 * scaleWidth,
+      width: 90 * scaleWidth,
       margin: EdgeInsets.symmetric(horizontal: 8 * scaleWidth),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            width: 75 * scaleWidth,
-            height: 75 * scaleWidth,
+            width: 50 * scaleWidth,
+            height: 50 * scaleWidth,
             padding: EdgeInsets.all(2 * scaleWidth),
             decoration: BoxDecoration(
               color: const Color(0xFFFFF8E5),
@@ -322,7 +348,7 @@ class DetailHomeScreen extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 14 * scaleWidth,
+              fontSize: 12 * scaleWidth,
               fontWeight: FontWeight.w500,
               fontFamily: 'Inter',
             ),
@@ -332,84 +358,125 @@ class DetailHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(int index, double scaleWidth, double scaleHeight) {
-    List<Map<String, String>> menuItems = [
-      {
-        'name': 'Party Set A (81 PCS)',
-        'price': 'RM109.90',
-        'description': 'A large assortment of sushi rolls for your party.',
-        'image': 'assets/images/icons/detail_home_screen/partset1.png',
-      },
-      {
-        'name': 'Maki Set (47 PCS)',
-        'price': 'RM59.90',
-        'description':
+  Widget _buildMenuItem(
+    BuildContext context,
+    int index,
+    double scaleWidth,
+    double scaleHeight,
+  ) {
+    List<MenuItem> menuItems = [
+      MenuItem(
+        name: 'Party Set A (81 PCS)',
+        price: 'RM109.90',
+        description: 'A large assortment of sushi rolls for your party.',
+        imagePath: 'assets/images/icons/detail_home_screen/partset1.png',
+        ratings: 5.0,
+        reviews: [
+          Review(
+            reviewerName: 'Michael See',
+            reviewerAvatar: 'assets/images/avatars/caleb.png',
+            comment: 'Sangat sedap dan segar!',
+          ),
+          Review(
+            reviewerName: 'Caleb Martin',
+            reviewerAvatar: 'assets/images/avatars/caleb.png',
+            comment: 'Rasanya padu sgt,akn beli lagi',
+          ),
+        ],
+      ),
+      MenuItem(
+        name: 'Maki Set (30 PCS)',
+        price: 'RM49.90',
+        description:
             'A variety of maki rolls including tuna, salmon, and avocado.',
-        'image': 'assets/images/icons/detail_home_screen/partset2.png',
-      },
+        imagePath: 'assets/images/icons/detail_home_screen/partset2.png',
+        ratings: 4.8,
+        reviews: [
+          Review(
+            reviewerName: 'Aina Rahman',
+            reviewerAvatar: 'assets/images/avatars/aina.png',
+            comment: 'Banyak pilihan, sesuai untuk keluarga!',
+          ),
+          Review(
+            reviewerName: 'Jason Lim',
+            reviewerAvatar: 'assets/images/avatars/jason.png',
+            comment: 'Fresh and delicious, will order again.',
+          ),
+        ],
+      ),
     ];
 
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8 * scaleHeight),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 4,
-      color: const Color(0xFF8AB98F),
-      child: Padding(
-        padding: EdgeInsets.all(12 * scaleWidth),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 90 * scaleWidth,
-              height: 90 * scaleWidth,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                image: DecorationImage(
-                  image: AssetImage(menuItems[index]['image']!),
-                  fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ItemDetailPage(menuItem: menuItems[index]),
+          ),
+        );
+      },
+      child: Card(
+        margin: EdgeInsets.symmetric(vertical: 8 * scaleHeight),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 4,
+        color: const Color(0xFF8AB98F),
+        child: Padding(
+          padding: EdgeInsets.all(12 * scaleWidth),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 90 * scaleWidth,
+                height: 90 * scaleWidth,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    image: AssetImage(menuItems[index].imagePath),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(width: 12 * scaleWidth),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    menuItems[index]['name']!,
-                    style: TextStyle(
-                      fontSize: 16 * scaleWidth,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter',
+              SizedBox(width: 12 * scaleWidth),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      menuItems[index].name,
+                      style: TextStyle(
+                        fontSize: 16 * scaleWidth,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 4 * scaleHeight),
-                  Text(
-                    menuItems[index]['description']!,
-                    style: TextStyle(
-                      fontSize: 13 * scaleWidth,
-                      fontFamily: 'Inter',
-                      color: Colors.grey[700],
+                    SizedBox(height: 4 * scaleHeight),
+                    Text(
+                      menuItems[index].description,
+                      style: TextStyle(
+                        fontSize: 13 * scaleWidth,
+                        fontFamily: 'Inter',
+                        color: Colors.grey[700],
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 6 * scaleHeight),
-                  Text(
-                    menuItems[index]['price']!,
-                    style: TextStyle(
-                      fontSize: 15 * scaleWidth,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF2E7D32),
+                    SizedBox(height: 6 * scaleHeight),
+                    Text(
+                      menuItems[index].price,
+                      style: TextStyle(
+                        fontSize: 15 * scaleWidth,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
