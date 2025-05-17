@@ -169,7 +169,7 @@ class DetailHomeScreen extends StatelessWidget {
                             children: [
                               _buildFeaturedItem(
                                 'Limited Time Offer',
-                                '20% OFF\nParty Set A',
+                                '20% OFF\nParty Set B',
                                 'assets/images/icons/detail_home_screen/partset1.png',
                                 scaleWidth,
                                 scaleHeight,
