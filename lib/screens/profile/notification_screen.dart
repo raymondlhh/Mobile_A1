@@ -105,7 +105,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w900,
-                            fontSize: 20,
+                            fontSize: 16,
                             color: Colors.black,
                             // color: item.name == 'Points Earned'
                             //     ? const Color(0xFFD03E27)
@@ -118,7 +118,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
-                            fontSize: 14,
+                            fontSize: 10,
                             color: Colors.black54,
                           ),
                         ),
@@ -134,7 +134,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w900,
-                          fontSize: 16,
+                          fontSize: 12,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -143,7 +143,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,
-                          fontSize: 14,
+                          fontSize: 12,
                           color: Colors.black54,
                         ),
                       ),
