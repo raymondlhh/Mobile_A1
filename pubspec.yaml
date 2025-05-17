@@ -37,15 +37,23 @@ dependencies:
   image_picker: ^1.1.2
 
 dev_dependencies:
+  
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-  flutter_launcher_icons: ^0.14.3
+  flutter_launcher_icons: "^0.14.3"
+  icons_launcher: ^3.0.1
 
-# flutter_icons:
-#   image_path: "assets/images/others/AppLogo.png"
-#   android: true
-#   ios: true
+# icons_launcher:
+#   image_path: "assets/others/AppLogo.png"
+#   platforms:
+#     android:
+#       enable: true
+#     ios:
+#       enable: true
+
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
