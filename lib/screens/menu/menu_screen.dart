@@ -137,16 +137,16 @@ class _MenuScreenState extends State<MenuScreen> {
           children: [
             // Top Row 1: Branch Selector
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              padding: const EdgeInsets.fromLTRB(6, 6, 6, 0),
               child: Row(
                 children: [
-                  const Icon(Icons.location_on, color: Colors.black),
-                  const SizedBox(width: 12),
+                  const Icon(Icons.location_on, color: Colors.black, size: 20),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
+                        horizontal: 4,
+                        vertical: 1,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -163,11 +163,11 @@ class _MenuScreenState extends State<MenuScreen> {
                       child: _BranchDropdown(),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 6,
+                      horizontal: 12,
+                      vertical: 4,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.green,
@@ -179,6 +179,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
+                        fontSize: 12,
                       ),
                     ),
                   ),
@@ -391,7 +392,7 @@ class _SideNavItem extends StatelessWidget {
             Text(
               label,
               style: const TextStyle(
-                fontSize: 11,
+                fontSize: 9,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'PermanentMarker',
               ),
@@ -483,7 +484,7 @@ class _MenuItem extends StatelessWidget {
         );
       },
       child: Container(
-        width: 100,
+        width: 110,
         decoration: BoxDecoration(
           color: const Color(0xFF8AB98F),
           borderRadius: BorderRadius.circular(16),
@@ -520,7 +521,7 @@ class _MenuItem extends StatelessWidget {
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 14,
+                      fontSize: 12,
                       fontFamily: 'Inter',
                     ),
                     textAlign: TextAlign.center,
@@ -530,7 +531,7 @@ class _MenuItem extends StatelessWidget {
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 14,
+                      fontSize: 12,
                       fontFamily: 'Inter',
                     ),
                   ),
@@ -572,7 +573,11 @@ class _BranchDropdownState extends State<_BranchDropdown> {
             });
           }
         },
-        style: const TextStyle(color: Colors.black),
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 12,
+          fontFamily: 'Inter',
+        ),
         icon: const Icon(Icons.arrow_drop_down),
       ),
     );
