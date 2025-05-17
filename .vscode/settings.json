@@ -2,5 +2,6 @@
     "yaml.schemas": {
         "https://json.schemastore.org/pubspec.json": "file:///e%3A/GitHub/_Flutter/_XMUM%20Assignments/Mobile_A1/pubspec.yaml"
     },
-    "yaml.disableAdditionalProperties": true
+    "yaml.disableAdditionalProperties": true,
+    "cmake.sourceDirectory": "E:/GitHub/_Flutter/_XMUM Assignments/Mobile_A1/linux"
 }
