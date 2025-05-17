@@ -60,6 +60,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+
   - assets/images/icons/
   - assets/images/others/
   - assets/images/buttons/
@@ -67,9 +68,10 @@ flutter:
   - assets/images/icons/welcome_screen/subtitle.png
   - assets/images/icons/detail_home_screen/
   - assets/images/icons/menu_sidebar/
-  - assets/images/rewardsfood/
-
+  - assets/images/icons/reward_icon/
   - assets/images/foods/appetizers/
+  - assets/images/foods/ramen/
+  - assets/images/foods/tempura/
   - assets/images/foods/party_set/
   - assets/images/foods/curry_sets/
   - assets/images/foods/maki_rolls/
@@ -77,6 +79,7 @@ flutter:
   - assets/images/foods/gunkan/
   - assets/images/foods/drinks/
   - assets/images/foods/condiments/
+  - assets/images/foods/moriawase_makimono_set/
 
   # - assets/images/foods/agemono/
   # - assets/images/foods/don/
