@@ -109,8 +109,9 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: const Text(
                       "OPEN",
                       style: TextStyle(
-                        color: Colors.white,
+                        fontFamily: 'Inter',
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -120,28 +121,17 @@ class _MenuScreenState extends State<MenuScreen> {
             // Top Row 2: Search Bar
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Search for your favourite sushi",
-                          prefixIcon: Icon(Icons.search),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                            horizontal: 16,
-                          ),
-                        ),
-                      ),
-                    ),
+              child: SearchBar(
+                leading: const Icon(Icons.search),
+                hintText: 'Find your favourite sushi!',
+                backgroundColor: WidgetStateProperty.all(Colors.grey[100]),
+                shadowColor: WidgetStateProperty.all(Colors.black),
+                elevation: WidgetStateProperty.all(2.0),
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ],
+                ),
               ),
             ),
             // Horizontal Divider
@@ -431,13 +421,13 @@ class _MenuScreenState extends State<MenuScreen> {
                                 image:
                                     'assets/images/foods/condiments/soy_sauce.png',
                                 name: 'SOY SAUCE',
-                                price: 'RM 1.00',
+                                price: 'RM 0.20',
                               ),
                               _MenuItem(
                                 image:
                                     'assets/images/foods/condiments/wasabi.png',
                                 name: 'WASABI',
-                                price: 'RM 1.00',
+                                price: 'RM 0.40',
                               ),
                               _MenuItem(
                                 image:
@@ -550,7 +540,7 @@ class _MenuCategory extends StatelessWidget {
         Text(
           title,
           style: const TextStyle(
-            fontFamily: 'PermanentMarker',
+            fontFamily: 'Inter',
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
@@ -636,7 +626,7 @@ class _MenuItem extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       fontSize: 14,
-                      fontFamily: 'PermanentMarker',
+                      fontFamily: 'Inter',
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -646,7 +636,7 @@ class _MenuItem extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       fontSize: 14,
-                      fontFamily: 'PermanentMarker',
+                      fontFamily: 'Inter',
                     ),
                   ),
                 ],
