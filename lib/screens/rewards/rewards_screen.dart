@@ -139,7 +139,11 @@ class RewardsScreen extends StatelessWidget {
                 children: [
                   const Text(
                     'How It Works',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Color(0xFF000000),
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -159,33 +163,32 @@ class RewardsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  Container(
-                    color: const Color(0xFF8AB98F),
-                    child: ListTile(
-                      title: const Text(
-                        'FAQ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF000000),
-                        ),
-                      ),
-                      trailing: const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 16,
-                        color: Color(0xFF000000),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const FAQScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
                 ],
+              ),
+            ),
+            // FAQ Bar (full width)
+            Container(
+              width: double.infinity,
+              color: const Color(0xFF8AB98F),
+              child: ListTile(
+                title: const Text(
+                  'FAQ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF000000),
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Color(0xFF000000),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FAQScreen()),
+                  );
+                },
               ),
             ),
           ],
