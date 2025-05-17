@@ -3,7 +3,7 @@ import '../../data/menu_data.dart';
 import 'item_detail_page.dart';
 import '../../models/menu_item.dart';
 
-class MenuScreen extends StatelessWidget {
+class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
 
   static const List<String> branches = [
@@ -13,6 +13,53 @@ class MenuScreen extends StatelessWidget {
     "Gurney Plaza, Penang",
     "Paradigm Mall, Johor Bahru",
   ];
+
+  @override
+  State<MenuScreen> createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final Map<String, GlobalKey> _sectionKeys = {
+    'PARTY SET': GlobalKey(),
+    'APPETIZERS': GlobalKey(),
+    'MAKI ROLL': GlobalKey(),
+    'NIGIRI': GlobalKey(),
+    'GUNKAN': GlobalKey(),
+    'CURRY SET': GlobalKey(),
+    'CONDIMENTS': GlobalKey(),
+    'DRINKS': GlobalKey(),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _calculateSectionOffsets();
+    });
+  }
+
+  void _calculateSectionOffsets() {
+    final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    for (final section in _sectionKeys.keys) {
+      _sectionKeys[section] = GlobalKey();
+      // Approximate height of each section (adjust based on your content)
+    }
+  }
+
+  void _scrollToSection(String section) {
+    final key = _sectionKeys[section];
+    if (key?.currentContext != null) {
+      Scrollable.ensureVisible(
+        key!.currentContext!,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+        alignment: 0.0,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +74,28 @@ class MenuScreen extends StatelessWidget {
               child: Row(
                 children: [
                   const Icon(Icons.location_on, color: Colors.black),
-                  const SizedBox(width: 8),
-                  Expanded(child: _BranchDropdown()),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.black12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: _BranchDropdown(),
+                    ),
+                  ),
                   const SizedBox(width: 12),
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -67,7 +134,7 @@ class MenuScreen extends StatelessWidget {
                           prefixIcon: Icon(Icons.search),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
-                            vertical: 0,
+                            vertical: 16,
                             horizontal: 16,
                           ),
                         ),
@@ -89,41 +156,58 @@ class MenuScreen extends StatelessWidget {
                   // Side Navigation (Scrollable)
                   Container(
                     width: 90,
-                    color: const Color(0xFF7F7F7F),
+                    color: const Color(0xFFFFF8E5),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
-                          SizedBox(height: 16),
+                        children: [
+                          const SizedBox(height: 16),
                           _SideNavItem(
                             icon:
                                 'assets/images/icons/menu_sidebar/party_set.png',
                             label: 'PARTY SET',
+                            onTap: () => _scrollToSection('PARTY SET'),
                           ),
                           _SideNavItem(
                             icon:
                                 'assets/images/icons/menu_sidebar/appetizers.png',
                             label: 'APPETIZERS',
+                            onTap: () => _scrollToSection('APPETIZERS'),
                           ),
                           _SideNavItem(
                             icon:
                                 'assets/images/icons/menu_sidebar/maki_roll.png',
                             label: 'MAKI ROLL',
+                            onTap: () => _scrollToSection('MAKI ROLL'),
                           ),
                           _SideNavItem(
                             icon: 'assets/images/icons/menu_sidebar/nigiri.png',
                             label: 'NIGIRI',
+                            onTap: () => _scrollToSection('NIGIRI'),
                           ),
                           _SideNavItem(
                             icon: 'assets/images/icons/menu_sidebar/gunkan.png',
                             label: 'GUNKAN',
+                            onTap: () => _scrollToSection('GUNKAN'),
+                          ),
+                          _SideNavItem(
+                            icon:
+                                'assets/images/icons/menu_sidebar/curry_set.png',
+                            label: 'CURRY SET',
+                            onTap: () => _scrollToSection('CURRY SET'),
                           ),
                           _SideNavItem(
                             icon:
                                 'assets/images/icons/menu_sidebar/condiments.png',
                             label: 'CONDIMENTS',
+                            onTap: () => _scrollToSection('CONDIMENTS'),
                           ),
-                          SizedBox(height: 16),
+                          _SideNavItem(
+                            icon: 'assets/images/icons/menu_sidebar/drinks.png',
+                            label: 'DRINKS',
+                            onTap: () => _scrollToSection('DRINKS'),
+                          ),
+                          const SizedBox(height: 16),
                         ],
                       ),
                     ),
@@ -137,11 +221,13 @@ class MenuScreen extends StatelessWidget {
                   // Menu Content
                   Expanded(
                     child: SingleChildScrollView(
+                      controller: _scrollController,
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           _MenuCategory(
+                            key: _sectionKeys['PARTY SET'],
                             title: "PARTY SET",
                             items: [
                               _MenuItem(
@@ -156,9 +242,34 @@ class MenuScreen extends StatelessWidget {
                                 name: 'PARTY SET B (74 PCS)',
                                 price: 'RM 99.90',
                               ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/party_set/party_set_c.png',
+                                name: 'PARTY SET C (65 PCS)',
+                                price: 'RM 89.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/party_set/maki_set.png',
+                                name: 'MAKI SET (30 PCS)',
+                                price: 'RM 49.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/party_set/nigiri_set.png',
+                                name: 'NIGIRI SET (25 PCS)',
+                                price: 'RM 59.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/party_set/gunkan_set.png',
+                                name: 'GUNKAN SET (20 PCS)',
+                                price: 'RM 45.90',
+                              ),
                             ],
                           ),
                           _MenuCategory(
+                            key: _sectionKeys['APPETIZERS'],
                             title: "APPETIZERS",
                             items: [
                               _MenuItem(
@@ -182,6 +293,7 @@ class MenuScreen extends StatelessWidget {
                             ],
                           ),
                           _MenuCategory(
+                            key: _sectionKeys['MAKI ROLL'],
                             title: "MAKI ROLL",
                             items: [
                               _MenuItem(
@@ -196,9 +308,22 @@ class MenuScreen extends StatelessWidget {
                                 name: 'TAMAGO MAKI',
                                 price: 'RM 4.90',
                               ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/maki_rolls/kappa_maki.png',
+                                name: 'KAPPA MAKI',
+                                price: 'RM 4.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/maki_rolls/kani_maki.png',
+                                name: 'KANI MAKI',
+                                price: 'RM 5.90',
+                              ),
                             ],
                           ),
                           _MenuCategory(
+                            key: _sectionKeys['NIGIRI'],
                             title: "NIGIRI",
                             items: [
                               _MenuItem(
@@ -213,9 +338,40 @@ class MenuScreen extends StatelessWidget {
                                 name: 'TAMAGO MENTAI',
                                 price: 'RM 6.50',
                               ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/nigiri/ebi_nigiri.png',
+                                name: 'EBI NIGIRI',
+                                price: 'RM 6.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/nigiri/ika_nigiri.png',
+                                name: 'IKA NIGIRI',
+                                price: 'RM 6.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/nigiri/sake_nigiri.png',
+                                name: 'SAKE NIGIRI',
+                                price: 'RM 7.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/nigiri/tako_nigiri.png',
+                                name: 'TAKO NIGIRI',
+                                price: 'RM 6.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/nigiri/unagi_nigiri.png',
+                                name: 'UNAGI NIGIRI',
+                                price: 'RM 7.90',
+                              ),
                             ],
                           ),
                           _MenuCategory(
+                            key: _sectionKeys['GUNKAN'],
                             title: "GUNKAN",
                             items: [
                               _MenuItem(
@@ -229,9 +385,95 @@ class MenuScreen extends StatelessWidget {
                                 name: 'KANI MAYO',
                                 price: 'RM 6.90',
                               ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/gunkan/lobster_salad_gunkan.png',
+                                name: 'LOBSTER SALAD GUNKAN',
+                                price: 'RM 8.90',
+                              ),
                             ],
                           ),
-                          // Add more categories as needed...
+                          _MenuCategory(
+                            key: _sectionKeys['CURRY SET'],
+                            title: "CURRY SET",
+                            items: [
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/curry_sets/chicken_katsu_curry_don.png',
+                                name: 'CHICKEN KATSU CURRY DON',
+                                price: 'RM 18.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/curry_sets/ebi_curry_don.png',
+                                name: 'EBI CURRY DON',
+                                price: 'RM 19.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/curry_sets/chicken_katsu_curry_udon.png',
+                                name: 'CHICKEN KATSU CURRY UDON',
+                                price: 'RM 19.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/curry_sets/ebi_curry_udon.png',
+                                name: 'EBI CURRY UDON',
+                                price: 'RM 20.90',
+                              ),
+                            ],
+                          ),
+                          _MenuCategory(
+                            key: _sectionKeys['CONDIMENTS'],
+                            title: "CONDIMENTS",
+                            items: [
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/condiments/soy_sauce.png',
+                                name: 'SOY SAUCE',
+                                price: 'RM 1.00',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/condiments/wasabi.png',
+                                name: 'WASABI',
+                                price: 'RM 1.00',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/condiments/ginger.png',
+                                name: 'GINGER',
+                                price: 'RM 1.00',
+                              ),
+                            ],
+                          ),
+                          _MenuCategory(
+                            key: _sectionKeys['DRINKS'],
+                            title: "DRINKS",
+                            items: [
+                              _MenuItem(
+                                image: 'assets/images/foods/drinks/coke.png',
+                                name: 'COKE',
+                                price: 'RM 3.90',
+                              ),
+                              _MenuItem(
+                                image: 'assets/images/foods/drinks/sprite.png',
+                                name: 'SPRITE',
+                                price: 'RM 3.90',
+                              ),
+                              _MenuItem(
+                                image: 'assets/images/foods/drinks/100plus.png',
+                                name: '100PLUS',
+                                price: 'RM 3.90',
+                              ),
+                              _MenuItem(
+                                image:
+                                    'assets/images/foods/drinks/oyoshi_green_tea.png',
+                                name: 'OYOSHI GREEN TEA',
+                                price: 'RM 4.90',
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -250,36 +492,44 @@ class MenuScreen extends StatelessWidget {
 class _SideNavItem extends StatelessWidget {
   final String icon;
   final String label;
-  const _SideNavItem({required this.icon, required this.label});
+  final VoidCallback onTap;
+  const _SideNavItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12, width: 2),
-              shape: BoxShape.circle,
-              color: Colors.white,
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black12, width: 2),
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Image.asset(icon, width: 36, height: 36),
+              ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Image.asset(icon, width: 36, height: 36),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'PermanentMarker',
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'PermanentMarker',
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -289,7 +539,7 @@ class _SideNavItem extends StatelessWidget {
 class _MenuCategory extends StatelessWidget {
   final String title;
   final List<_MenuItem> items;
-  const _MenuCategory({required this.title, required this.items});
+  const _MenuCategory({super.key, required this.title, required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -348,7 +598,7 @@ class _MenuItem extends StatelessWidget {
         );
       },
       child: Container(
-        width: 150,
+        width: 125,
         decoration: BoxDecoration(
           color: const Color(0xFF8AB98F),
           borderRadius: BorderRadius.circular(16),
@@ -385,7 +635,7 @@ class _MenuItem extends StatelessWidget {
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 13,
+                      fontSize: 14,
                       fontFamily: 'PermanentMarker',
                     ),
                     textAlign: TextAlign.center,
@@ -393,8 +643,9 @@ class _MenuItem extends StatelessWidget {
                   Text(
                     price,
                     style: const TextStyle(
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 12,
+                      fontSize: 14,
                       fontFamily: 'PermanentMarker',
                     ),
                   ),
