@@ -21,6 +21,7 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
   final Map<String, GlobalKey> _sectionKeys = {
     'PARTY SET': GlobalKey(),
     'APPETIZERS': GlobalKey(),
@@ -32,6 +33,10 @@ class _MenuScreenState extends State<MenuScreen> {
     'DRINKS': GlobalKey(),
   };
 
+  // Add a map to store filtered items for each category
+  final Map<String, List<_MenuItem>> _filteredItems = {};
+  bool _isSearching = false;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +46,13 @@ class _MenuScreenState extends State<MenuScreen> {
         _scrollToSection(widget.initialSection!);
       }
     });
+  }
+
+  // dispose TextEditingController for search bar aftter use
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _calculateSectionOffsets() {
@@ -65,6 +77,57 @@ class _MenuScreenState extends State<MenuScreen> {
     }
   }
 
+  void _filterMenuItems(String query) {
+    setState(() {
+      _isSearching = query.isNotEmpty;
+      if (query.isEmpty) {
+        _filteredItems.clear();
+        return;
+      }
+
+      // Filter items in each category
+      for (final category in _sectionKeys.keys) {
+        _filteredItems[category] =
+            menuItems
+                .where((item) {
+                  final isInCategory = item.imagePath.contains(
+                    category.toLowerCase().replaceAll(' ', '_'),
+                  );
+                  final matchesSearch = item.name.toLowerCase().contains(
+                    query.toLowerCase(),
+                  );
+                  return isInCategory && matchesSearch;
+                })
+                .map(
+                  (item) => _MenuItem(
+                    image: item.imagePath,
+                    name: item.name,
+                    price: item.price,
+                  ),
+                )
+                .toList();
+      }
+    });
+  }
+
+  List<_MenuItem> _getCategoryItems(String category) {
+    // Get items from menu_data.dart based on image path
+    return menuItems
+        .where(
+          (item) => item.imagePath.contains(
+            category.toLowerCase().replaceAll(' ', '_'),
+          ),
+        )
+        .map(
+          (item) => _MenuItem(
+            image: item.imagePath,
+            name: item.name,
+            price: item.price,
+          ),
+        )
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,13 +150,13 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: Colors.black12),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black12,
                             blurRadius: 4,
-                            offset: const Offset(0, 2),
+                            offset: Offset(0, 2),
                           ),
                         ],
                       ),
@@ -126,6 +189,7 @@ class _MenuScreenState extends State<MenuScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
               child: SearchBar(
+                controller: _searchController,
                 leading: const Icon(Icons.search),
                 hintText: 'Find your favourite sushi!',
                 backgroundColor: WidgetStateProperty.all(Colors.grey[100]),
@@ -136,6 +200,9 @@ class _MenuScreenState extends State<MenuScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
+                onChanged: _filterMenuItems,
+                onSubmitted: _filterMenuItems,
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
               ),
             ),
             // Horizontal Divider
@@ -223,250 +290,58 @@ class _MenuScreenState extends State<MenuScreen> {
                           _MenuCategory(
                             key: _sectionKeys['PARTY SET'],
                             title: "PARTY SET",
-                            items: [
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/party_set/party_set_a.png',
-                                name: 'PARTY SET A (81 PCS)',
-                                price: 'RM 109.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/party_set/party_set_b.png',
-                                name: 'PARTY SET B (74 PCS)',
-                                price: 'RM 99.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/party_set/party_set_c.png',
-                                name: 'PARTY SET C (65 PCS)',
-                                price: 'RM 89.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/party_set/maki_set.png',
-                                name: 'MAKI SET (30 PCS)',
-                                price: 'RM 49.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/party_set/nigiri_set.png',
-                                name: 'NIGIRI SET (25 PCS)',
-                                price: 'RM 59.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/party_set/gunkan_set.png',
-                                name: 'GUNKAN SET (20 PCS)',
-                                price: 'RM 45.90',
-                              ),
-                            ],
+                            items: _getCategoryItems('PARTY SET'),
+                            isSearching: _isSearching,
+                            filteredItems: _filteredItems['PARTY SET'],
                           ),
                           _MenuCategory(
                             key: _sectionKeys['APPETIZERS'],
                             title: "APPETIZERS",
-                            items: [
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/appetizers/chuka_idako.png',
-                                name: 'CHUKA IDAKO',
-                                price: 'RM 7.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/appetizers/chuka_kurage.png',
-                                name: 'CHUKA KURAGE',
-                                price: 'RM 8.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/appetizers/mochi.png',
-                                name: 'MOCHI (4PCS)',
-                                price: 'RM 6.90',
-                              ),
-                            ],
+                            items: _getCategoryItems('APPETIZERS'),
+                            isSearching: _isSearching,
+                            filteredItems: _filteredItems['APPETIZERS'],
                           ),
                           _MenuCategory(
                             key: _sectionKeys['MAKI ROLL'],
                             title: "MAKI ROLL",
-                            items: [
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/maki_rolls/sake_maki.png',
-                                name: 'SAKE MAKI',
-                                price: 'RM 5.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/maki_rolls/tamago_maki.png',
-                                name: 'TAMAGO MAKI',
-                                price: 'RM 4.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/maki_rolls/kappa_maki.png',
-                                name: 'KAPPA MAKI',
-                                price: 'RM 4.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/maki_rolls/kani_maki.png',
-                                name: 'KANI MAKI',
-                                price: 'RM 5.90',
-                              ),
-                            ],
+                            items: _getCategoryItems('MAKI ROLL'),
+                            isSearching: _isSearching,
+                            filteredItems: _filteredItems['MAKI ROLL'],
                           ),
                           _MenuCategory(
                             key: _sectionKeys['NIGIRI'],
                             title: "NIGIRI",
-                            items: [
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/nigiri/kani_mentai.png',
-                                name: 'KANI MENTAI',
-                                price: 'RM 6.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/nigiri/tamago_mentai.png',
-                                name: 'TAMAGO MENTAI',
-                                price: 'RM 6.50',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/nigiri/ebi_nigiri.png',
-                                name: 'EBI NIGIRI',
-                                price: 'RM 6.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/nigiri/ika_nigiri.png',
-                                name: 'IKA NIGIRI',
-                                price: 'RM 6.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/nigiri/sake_nigiri.png',
-                                name: 'SAKE NIGIRI',
-                                price: 'RM 7.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/nigiri/tako_nigiri.png',
-                                name: 'TAKO NIGIRI',
-                                price: 'RM 6.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/nigiri/unagi_nigiri.png',
-                                name: 'UNAGI NIGIRI',
-                                price: 'RM 7.90',
-                              ),
-                            ],
+                            items: _getCategoryItems('NIGIRI'),
+                            isSearching: _isSearching,
+                            filteredItems: _filteredItems['NIGIRI'],
                           ),
                           _MenuCategory(
                             key: _sectionKeys['GUNKAN'],
                             title: "GUNKAN",
-                            items: [
-                              _MenuItem(
-                                image: 'assets/images/foods/gunkan/ebiko.png',
-                                name: 'EBIKO',
-                                price: 'RM 7.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/gunkan/kani_mayo.png',
-                                name: 'KANI MAYO',
-                                price: 'RM 6.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/gunkan/lobster_salad_gunkan.png',
-                                name: 'LOBSTER SALAD GUNKAN',
-                                price: 'RM 8.90',
-                              ),
-                            ],
+                            items: _getCategoryItems('GUNKAN'),
+                            isSearching: _isSearching,
+                            filteredItems: _filteredItems['GUNKAN'],
                           ),
                           _MenuCategory(
                             key: _sectionKeys['CURRY SET'],
                             title: "CURRY SET",
-                            items: [
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/curry_sets/chicken_katsu_curry_don.png',
-                                name: 'CHICKEN KATSU CURRY DON',
-                                price: 'RM 18.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/curry_sets/ebi_curry_don.png',
-                                name: 'EBI CURRY DON',
-                                price: 'RM 19.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/curry_sets/chicken_katsu_curry_udon.png',
-                                name: 'CHICKEN KATSU CURRY UDON',
-                                price: 'RM 19.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/curry_sets/ebi_curry_udon.png',
-                                name: 'EBI CURRY UDON',
-                                price: 'RM 20.90',
-                              ),
-                            ],
+                            items: _getCategoryItems('CURRY SET'),
+                            isSearching: _isSearching,
+                            filteredItems: _filteredItems['CURRY SET'],
                           ),
                           _MenuCategory(
                             key: _sectionKeys['CONDIMENTS'],
                             title: "CONDIMENTS",
-                            items: [
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/condiments/soy_sauce.png',
-                                name: 'SOY SAUCE',
-                                price: 'RM 0.20',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/condiments/wasabi.png',
-                                name: 'WASABI',
-                                price: 'RM 0.40',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/condiments/ginger.png',
-                                name: 'GINGER',
-                                price: 'RM 1.00',
-                              ),
-                            ],
+                            items: _getCategoryItems('CONDIMENTS'),
+                            isSearching: _isSearching,
+                            filteredItems: _filteredItems['CONDIMENTS'],
                           ),
                           _MenuCategory(
                             key: _sectionKeys['DRINKS'],
                             title: "DRINKS",
-                            items: [
-                              _MenuItem(
-                                image: 'assets/images/foods/drinks/coke.png',
-                                name: 'COKE',
-                                price: 'RM 3.90',
-                              ),
-                              _MenuItem(
-                                image: 'assets/images/foods/drinks/sprite.png',
-                                name: 'SPRITE',
-                                price: 'RM 3.90',
-                              ),
-                              _MenuItem(
-                                image: 'assets/images/foods/drinks/100plus.png',
-                                name: '100PLUS',
-                                price: 'RM 3.90',
-                              ),
-                              _MenuItem(
-                                image:
-                                    'assets/images/foods/drinks/oyoshi_green_tea.png',
-                                name: 'OYOSHI GREEN TEA',
-                                price: 'RM 4.90',
-                              ),
-                            ],
+                            items: _getCategoryItems('DRINKS'),
+                            isSearching: _isSearching,
+                            filteredItems: _filteredItems['DRINKS'],
                           ),
                         ],
                       ),
@@ -533,10 +408,26 @@ class _SideNavItem extends StatelessWidget {
 class _MenuCategory extends StatelessWidget {
   final String title;
   final List<_MenuItem> items;
-  const _MenuCategory({super.key, required this.title, required this.items});
+  final bool isSearching;
+  final List<_MenuItem>? filteredItems;
+
+  const _MenuCategory({
+    super.key,
+    required this.title,
+    required this.items,
+    this.isSearching = false,
+    this.filteredItems,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final displayItems =
+        isSearching && filteredItems != null ? filteredItems! : items;
+
+    if (isSearching && (filteredItems == null || filteredItems!.isEmpty)) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -550,7 +441,7 @@ class _MenuCategory extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Wrap(spacing: 16, runSpacing: 16, children: items),
+        Wrap(spacing: 16, runSpacing: 16, children: displayItems),
       ],
     );
   }
@@ -578,7 +469,7 @@ class _MenuItem extends StatelessWidget {
             price: price,
             imagePath: image,
             ratings: 5.0,
-            reviews: [],
+            reviews: const [],
             description: '',
           ),
     );
@@ -592,7 +483,7 @@ class _MenuItem extends StatelessWidget {
         );
       },
       child: Container(
-        width: 125,
+        width: 100,
         decoration: BoxDecoration(
           color: const Color(0xFF8AB98F),
           borderRadius: BorderRadius.circular(16),
