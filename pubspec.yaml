@@ -41,6 +41,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
   flutter_launcher_icons: ^0.14.3
+  flutter_screenutil: ^5.9.3
 
 # flutter_launcher_icons configuration should be placed outside the main pubspec.yaml structure.
 # You can move it to the end of this file as shown below, or use a separate file (flutter_launcher_icons.yaml).
