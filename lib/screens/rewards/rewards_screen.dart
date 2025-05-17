@@ -17,6 +17,7 @@ class RewardsScreen extends StatelessWidget {
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
 import 'reward_detail_page.dart';
+import 'faq_screen.dart';
 
 class RewardsScreen extends StatelessWidget {
   const RewardsScreen({super.key});
@@ -24,7 +25,7 @@ class RewardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F3E7),
+      backgroundColor: const Color(0xFFFFF8E5),
       appBar: buildAppBar(context, 'MY REWARDS'),
       body: SingleChildScrollView(
         child: Column(
@@ -38,7 +39,7 @@ class RewardsScreen extends StatelessWidget {
                   // ignore: deprecated_member_use
                   color: Colors.white.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: Colors.grey.shade400, width: 2),
+                  border: Border.all(color: const Color(0xFF7F7F7F), width: 2),
                 ),
                 child: Stack(
                   children: [
@@ -85,7 +86,7 @@ class RewardsScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final rewards = [
                   {
-                    'image': 'assets/images/rewardsfood/Reward1.png',
+                    'image': 'assets/images/foods/appetizers/chuka_wakame.png',
                     'name': 'Chuka Wakame',
                     'description':
                         'Seaweed salad with a subtly sweet and savory flavor.',
@@ -93,14 +94,16 @@ class RewardsScreen extends StatelessWidget {
                     'validity': 8,
                   },
                   {
-                    'image': 'assets/images/rewardsfood/Reward2.png',
+                    'image':
+                        'assets/images/foods/moriawase_makimono_set/salmon_moriawase.png',
                     'name': 'Salmon Moriawase',
                     'description': 'Assorted fresh salmon sashimi.',
                     'points': 2000,
                     'validity': 6,
                   },
                   {
-                    'image': 'assets/images/rewardsfood/Reward3.png',
+                    'image':
+                        'assets/images/foods/ramen/chicken_teriyaki_ramen.png',
                     'name': 'Chicken Teriyaki Ramen',
                     'description':
                         'Ramen with chicken teriyaki and vegetables.',
@@ -108,7 +111,7 @@ class RewardsScreen extends StatelessWidget {
                     'validity': 7,
                   },
                   {
-                    'image': 'assets/images/rewardsfood/Reward4.png',
+                    'image': 'assets/images/foods/tempura/ebi_tempura.png',
                     'name': 'Ebi Tempura',
                     'description': 'Crispy battered shrimp tempura.',
                     'points': 1700,
@@ -136,39 +139,56 @@ class RewardsScreen extends StatelessWidget {
                 children: [
                   const Text(
                     'How It Works',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Color(0xFF000000),
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _howItWorksItem(
-                        Icons.shopping_bag,
+                        'assets/images/icons/reward_icon/left_icon.png',
                         'Earn rewards points\nevery order',
                       ),
                       _howItWorksItem(
-                        Icons.redeem,
+                        'assets/images/icons/reward_icon/middle_icon.png',
                         'Redeem rewards with\nyour rewards points',
                       ),
                       _howItWorksItem(
-                        Icons.card_giftcard,
+                        'assets/images/icons/reward_icon/right_icon.png',
                         'Enjoy your rewards!',
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  Container(
-                    color: const Color(0xFFA9CBA0),
-                    child: ListTile(
-                      title: const Text(
-                        'FAQ',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                      onTap: () {},
-                    ),
-                  ),
                 ],
+              ),
+            ),
+            // FAQ Bar (full width)
+            Container(
+              width: double.infinity,
+              color: const Color(0xFF8AB98F),
+              child: ListTile(
+                title: const Text(
+                  'FAQ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF000000),
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Color(0xFF000000),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FAQScreen()),
+                  );
+                },
               ),
             ),
           ],
@@ -202,23 +222,24 @@ class RewardsScreen extends StatelessWidget {
         );
       },
       child: Card(
-        elevation: 8,
+        elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Container(
           width: 100,
           height: 160,
           decoration: BoxDecoration(
-            color: const Color(0xFFA9CBA0),
+            color: const Color(0xFF8AB98F),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 8),
               Container(
-                width: 70,
-                height: 60,
+                width: 95,
+                height: 85,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD24545),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Image.asset(imagePath, fit: BoxFit.cover),
@@ -232,12 +253,12 @@ class RewardsScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.brown, width: 1),
+                  border: Border.all(color: const Color(0xFFCA3202), width: 1),
                 ),
                 child: Text(
                   '${points} pts',
                   style: const TextStyle(
-                    color: Colors.brown,
+                    color: Color(0xFFCA3202),
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -248,8 +269,8 @@ class RewardsScreen extends StatelessWidget {
                 itemName,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                  fontSize: 11,
+                  color: Color(0xFF000000),
+                  fontSize: 13,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -260,15 +281,15 @@ class RewardsScreen extends StatelessWidget {
     );
   }
 
-  Widget _howItWorksItem(IconData icon, String text) {
+  Widget _howItWorksItem(String iconPath, String text) {
     return Column(
       children: [
-        Icon(icon, size: 32, color: Colors.brown),
+        Image.asset(iconPath, width: 32, height: 32),
         const SizedBox(height: 4),
         Text(
           text,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 12, color: Color(0xFF000000)),
         ),
       ],
     );

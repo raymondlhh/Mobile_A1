@@ -116,7 +116,11 @@ class RedeemPage extends StatelessWidget {
                 onPressed: () {},
                 child: const Text(
                   'Redeem',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

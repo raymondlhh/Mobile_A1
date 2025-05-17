@@ -37,15 +37,23 @@ dependencies:
   image_picker: ^1.1.2
 
 dev_dependencies:
+  
   flutter_test:
     sdk: flutter
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: "^0.14.3"
+  icons_launcher: ^3.0.1
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+# icons_launcher:
+#   image_path: "assets/others/AppLogo.png"
+#   platforms:
+#     android:
+#       enable: true
+#     ios:
+#       enable: true
+
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -60,6 +68,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+
   - assets/images/icons/
   - assets/images/others/
   - assets/images/buttons/
@@ -67,9 +76,10 @@ flutter:
   - assets/images/icons/welcome_screen/subtitle.png
   - assets/images/icons/detail_home_screen/
   - assets/images/icons/menu_sidebar/
-  - assets/images/rewardsfood/
-
+  - assets/images/icons/reward_icon/
   - assets/images/foods/appetizers/
+  - assets/images/foods/ramen/
+  - assets/images/foods/tempura/
   - assets/images/foods/party_set/
   - assets/images/foods/curry_sets/
   - assets/images/foods/maki_rolls/
@@ -77,6 +87,7 @@ flutter:
   - assets/images/foods/gunkan/
   - assets/images/foods/drinks/
   - assets/images/foods/condiments/
+  - assets/images/foods/moriawase_makimono_set/
 
   # - assets/images/foods/agemono/
   # - assets/images/foods/don/
