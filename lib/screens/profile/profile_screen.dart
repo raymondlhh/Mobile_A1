@@ -90,7 +90,7 @@ Widget _buildActionButtons(BuildContext context) {
 Widget _buildLogoutButton(BuildContext context) {
   return GestureDetector(
     onTap: () {
-
+      Navigator.pushReplacementNamed(context, '/welcome');
     },
     child: Image.asset(
       'assets/images/buttons/LogOutButton.png',
