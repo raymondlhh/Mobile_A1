@@ -41,13 +41,13 @@ class RewardsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(18),
                   border: Border.all(color: const Color(0xFF7F7F7F), width: 2),
                 ),
-                child: Stack(
+                child: const Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: EdgeInsets.all(12.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'Rewards Point:',
                             style: TextStyle(
@@ -240,7 +240,7 @@ class RewardsScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Color(0xFFCA3202), width: 10),
+                  border: Border.all(color: const Color(0xFFCA3202), width: 10),
                 ),
                 child: Image.asset(imagePath, fit: BoxFit.cover),
               ),
@@ -251,12 +251,12 @@ class RewardsScreen extends StatelessWidget {
                   vertical: 3,
                 ),
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: const Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: const Color(0xFF7F7F7F), width: 1),
                 ),
                 child: Text(
-                  '${points} pts',
+                  '$points pts',
                   style: const TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                     fontWeight: FontWeight.bold,
@@ -291,7 +291,7 @@ class RewardsScreen extends StatelessWidget {
         Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 11, color: Color(0xFF000000)),
+          style: const TextStyle(fontSize: 11, color: Color(0xFF000000)),
         ),
       ],
     );

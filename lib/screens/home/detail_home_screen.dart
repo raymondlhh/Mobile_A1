@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import '../menu/menu_screen.dart';
 import '../menu/item_detail_page.dart';
 import '../../models/menu_item.dart';
@@ -95,7 +96,7 @@ class DetailHomeScreen extends StatelessWidget {
                         // 中间Logo
                         Center(
                           child: Transform.translate(
-                            offset: Offset(0, 22),
+                            offset: const Offset(0, 22),
                             child: Image.asset(
                               'assets/images/icons/welcome_screen/Logo.png',
                               width: (200 / designWidth) * constraints.maxWidth,
@@ -326,11 +327,11 @@ class DetailHomeScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xFFFFF8E5),
               borderRadius: BorderRadius.circular(8),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 4,
-                  offset: const Offset(0, 2),
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
@@ -361,7 +362,7 @@ class DetailHomeScreen extends StatelessWidget {
     double scaleHeight,
   ) {
     List<MenuItem> menuItems = [
-      MenuItem(
+      const MenuItem(
         name: 'Party Set A (81 PCS)',
         price: 'RM109.90',
         description: 'A large assortment of sushi rolls for your party.',
@@ -380,7 +381,7 @@ class DetailHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      MenuItem(
+      const MenuItem(
         name: 'Maki Set (30 PCS)',
         price: 'RM49.90',
         description:

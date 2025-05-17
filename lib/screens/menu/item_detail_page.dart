@@ -67,7 +67,7 @@ class ItemDetailPage extends StatelessWidget {
                         ...List.generate(
                           5,
                           (i) =>
-                              Icon(Icons.star, color: Colors.amber, size: 28),
+                              const Icon(Icons.star, color: Colors.amber, size: 28),
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -147,13 +147,13 @@ class ItemDetailPage extends StatelessWidget {
                   horizontal: 16.0,
                   vertical: 12.0,
                 ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF8E5),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFFF8E5),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 8,
-                      offset: const Offset(0, -2),
+                      offset: Offset(0, -2),
                     ),
                   ],
                 ),

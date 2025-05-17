@@ -28,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
                   height: 160,
                   fit: BoxFit.cover,
                 ),
-                ProfileHeader(showDetails: true),
+                const ProfileHeader(showDetails: true),
               ],
             ),
             const SizedBox(height: 30),

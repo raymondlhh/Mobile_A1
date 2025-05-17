@@ -122,7 +122,7 @@ class WelcomeScreen extends StatelessWidget {
               top: screenHeight * 760 / 932,
               child: GestureDetector(
                 onTap: () => Navigator.pushNamed(context, '/forgot'),
-                child: Text(
+                child: const Text(
                   'Forget your password ?',
                   style: TextStyle(
                     color: Colors.black87,

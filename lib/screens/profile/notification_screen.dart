@@ -102,7 +102,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       children: [
                         Text(
                           item.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w900,
                             fontSize: 20,

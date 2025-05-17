@@ -36,7 +36,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         Container(
           width: 118,
           height: 118,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
           ),
           child: Image.asset(
@@ -80,7 +80,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                       children: [
                         Text(
                           UserProfile.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w900,
                             fontSize: 25,
@@ -89,7 +89,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                         const SizedBox(height: 2),
                         Text(
                           UserProfile.email,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
                             fontSize: 12,
