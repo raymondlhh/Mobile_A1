@@ -70,7 +70,7 @@ class _EditScreenState extends State<EditScreen> {
                 const ProfileHeader(showDetails: false),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 1),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(

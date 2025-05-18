@@ -35,7 +35,7 @@ class ProfileScreen extends StatelessWidget {
             _buildActionButtons(context),
             const SizedBox(height: 60),
             _buildLogoutButton(context),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             _buildFooterImage(context),
           ],
         ),
