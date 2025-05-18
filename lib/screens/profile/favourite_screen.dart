@@ -27,7 +27,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
       appBar: buildAppBar(context, 'Favourites', actionType: AppBarActionType.none),
       body: ListView.builder(
         itemCount: _foods.length,
-        padding: const EdgeInsets.all(25),
+        padding: const EdgeInsets.all(22),
         itemBuilder: (context, index) {
           return FavouriteFoodCard(
             food: _foods[index],

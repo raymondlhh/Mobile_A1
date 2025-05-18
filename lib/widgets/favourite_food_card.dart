@@ -10,7 +10,7 @@ class FavouriteFoodCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 10),
       child: Stack(
         children: [
           Image.asset(
@@ -81,7 +81,8 @@ class FavouriteFoodCard extends StatelessWidget {
                   onTap: onRemove,
                   child: Image.asset(
                     'assets/images/others/FoodSave.png',
-                    width: 53,
+                    height: 40,
+                    width: 40,
                   ),
                 ),
               ],
