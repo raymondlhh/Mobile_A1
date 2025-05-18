@@ -144,8 +144,8 @@ class ItemDetailPage extends StatelessWidget {
               bottom: 0,
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 12.0,
+                  horizontal: 12.0,
+                  vertical: 8.0,
                 ),
                 decoration: const BoxDecoration(
                   color: Color(0xFFFFF8E5),
@@ -164,7 +164,7 @@ class ItemDetailPage extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 22,
+                        fontSize: 18,
                         color: Color(0xFFCA3202),
                         fontFamily: 'Inter',
                       ),
@@ -173,24 +173,37 @@ class ItemDetailPage extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.black12),
                       ),
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.remove, color: Colors.black),
+                            icon: const Icon(
+                              Icons.remove,
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            constraints: const BoxConstraints(),
                             onPressed: () {},
                           ),
-                          const Text('1', style: TextStyle(fontSize: 18)),
+                          const Text('1', style: TextStyle(fontSize: 16)),
                           IconButton(
-                            icon: const Icon(Icons.add, color: Colors.black),
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            constraints: const BoxConstraints(),
                             onPressed: () {},
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFCA3202),
@@ -198,8 +211,8 @@ class ItemDetailPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 14,
+                          horizontal: 12,
+                          vertical: 8,
                         ),
                       ),
                       onPressed: () {},
@@ -208,7 +221,7 @@ class ItemDetailPage extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ),

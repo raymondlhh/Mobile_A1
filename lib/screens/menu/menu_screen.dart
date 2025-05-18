@@ -40,8 +40,12 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   void initState() {
     super.initState();
+    // Initialize section keys once
+    for (final section in _sectionKeys.keys) {
+      _sectionKeys[section] = GlobalKey();
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _calculateSectionOffsets();
       if (widget.initialSection != null) {
         _scrollToSection(widget.initialSection!);
       }
@@ -55,25 +59,27 @@ class _MenuScreenState extends State<MenuScreen> {
     super.dispose();
   }
 
-  void _calculateSectionOffsets() {
-    final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null) return;
-
-    for (final section in _sectionKeys.keys) {
-      _sectionKeys[section] = GlobalKey();
-      // Approximate height of each section (adjust based on your content)
-    }
-  }
-
   void _scrollToSection(String section) {
     final key = _sectionKeys[section];
-    if (key?.currentContext != null) {
+    if (key == null) {
+      debugPrint('Section $section not found');
+      return;
+    }
+
+    if (key.currentContext == null) {
+      debugPrint('Context for section $section is not available');
+      return;
+    }
+
+    try {
       Scrollable.ensureVisible(
-        key!.currentContext!,
+        key.currentContext!,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
         alignment: 0.0,
       );
+    } catch (e) {
+      debugPrint('Error scrolling to section $section: $e');
     }
   }
 
@@ -137,15 +143,15 @@ class _MenuScreenState extends State<MenuScreen> {
           children: [
             // Top Row 1: Branch Selector
             Padding(
-              padding: const EdgeInsets.fromLTRB(6, 6, 6, 0),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
               child: Row(
                 children: [
-                  const Icon(Icons.location_on, color: Colors.black, size: 20),
+                  const Icon(Icons.location_on, color: Colors.black, size: 30),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
+                        horizontal: 16,
                         vertical: 1,
                       ),
                       decoration: BoxDecoration(
@@ -160,29 +166,32 @@ class _MenuScreenState extends State<MenuScreen> {
                           ),
                         ],
                       ),
-                      child: _BranchDropdown(),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      "OPEN",
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 12,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 180),
+                        child: _BranchDropdown(),
                       ),
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(
+                  //     horizontal: 8,
+                  //     vertical: 4,
+                  //   ),
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.green,
+                  //     borderRadius: BorderRadius.circular(20),
+                  //   ),
+                  //   child: const Text(
+                  //     "OPEN",
+                  //     style: TextStyle(
+                  //       fontFamily: 'Inter',
+                  //       fontWeight: FontWeight.bold,
+                  //       color: Colors.white,
+                  //       fontSize: 14,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -484,7 +493,7 @@ class _MenuItem extends StatelessWidget {
         );
       },
       child: Container(
-        width: 110,
+        width: 120,
         decoration: BoxDecoration(
           color: const Color(0xFF8AB98F),
           borderRadius: BorderRadius.circular(16),
@@ -506,7 +515,7 @@ class _MenuItem extends StatelessWidget {
             ),
             Container(
               decoration: const BoxDecoration(
-                color: Color(0xFFCA3202),
+                color: Color(0xFF8AB98F),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(16),
                   bottomRight: Radius.circular(16),
@@ -516,21 +525,27 @@ class _MenuItem extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(
                 children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontFamily: 'Inter',
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Text(
+                        name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   Text(
                     price,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.black,
                       fontSize: 12,
                       fontFamily: 'Inter',
                     ),
