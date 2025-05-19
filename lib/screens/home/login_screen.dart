@@ -77,6 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
+                      // ignore: deprecated_member_use
                       color: Colors.black.withOpacity(0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
@@ -113,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
+                      // ignore: deprecated_member_use
                       color: Colors.black.withOpacity(0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
@@ -157,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
               top: screenHeight * 650 / 932,
               child: GestureDetector(
                 onTap: () {
-                  // TODO: 这里可以添加邮箱和密码的验证逻辑
+                  // Todo: 这里可以添加邮箱和密码的验证逻辑
                   Navigator.pushReplacementNamed(context, '/bottomNav');
                 },
                 child: Container(
@@ -168,6 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.2),
                         blurRadius: 5,
                         offset: const Offset(0, 4),

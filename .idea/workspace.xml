@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="35f91b6d-34a0-407a-8fac-6d891d607f18" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/flutter_application_1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_application_1.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/notification_item" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/user_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/user_profile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/profile/balance_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/profile/balance_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/profile/notification_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/profile/notification_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/screens/profile/profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/profile/profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widgets/favourite_food_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/favourite_food_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widgets/profile_description.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/profile_description.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,9 +38,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2xCtB5Mz8FRNrmti43RXLbltHOe" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" />
@@ -50,6 +56,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Flutter.main.dart.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
     "RunOnceActivity.git.unshallow": "true",

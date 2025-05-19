@@ -125,7 +125,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                   ),
                   const SizedBox(height: 20),
                   Wrap(
-                    spacing: 10,
+                    spacing: 1,
                     runSpacing: 10,
                     children: [
                       for (var amount in [10, 50, 100, 200, 350, 500])
@@ -133,8 +133,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
                           onTap: () => addAmount(amount.toDouble()),
                           child: Image.asset(
                             'assets/images/buttons/${amount}rmButton.png',
-                            width: 110,
-                            height: 70,
+                            width: 100,
+                            height: 40,
                             fit: BoxFit.contain,
                           ),
                         ),

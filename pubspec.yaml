@@ -37,23 +37,14 @@ dependencies:
   image_picker: ^1.1.2
 
 dev_dependencies:
-  
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-  flutter_launcher_icons: "^0.14.3"
-  icons_launcher: ^3.0.1
+  flutter_launcher_icons: ^0.14.3
+  flutter_screenutil: ^5.9.3
 
-# icons_launcher:
-#   image_path: "assets/others/AppLogo.png"
-#   platforms:
-#     android:
-#       enable: true
-#     ios:
-#       enable: true
-
-
-
+# flutter_launcher_icons configuration should be placed outside the main pubspec.yaml structure.
+# You can move it to the end of this file as shown below, or use a separate file (flutter_launcher_icons.yaml).
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,6 +63,7 @@ flutter:
   - assets/images/icons/
   - assets/images/others/
   - assets/images/buttons/
+  - assets/images/logo/app_logo.jpg
   - assets/images/icons/welcome_screen/Logo.png
   - assets/images/icons/welcome_screen/subtitle.png
   - assets/images/icons/detail_home_screen/
@@ -128,3 +120,25 @@ flutter:
         - asset: assets/fonts/welcome_screen/InknutAntiqua-Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+        # see https://flutter.dev/to/font-from-package
+  
+  # flutter_icons configuration should be outside the flutter section.
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo/app_logo.jpg"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/logo/app_logo.jpg"
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/images/logo/app_logo.jpg"
+    background_color: "#FFFFFF"
+    theme_color: "#FFFFFF"
+  windows:
+    generate: true
+    image_path: "assets/images/logo/app_logo.jpg"
+    icon_size: 48
+  macos:
+    generate: true
+    image_path: "assets/images/logo/app_logo.jpg"
