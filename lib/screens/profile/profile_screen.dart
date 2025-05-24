@@ -28,14 +28,14 @@ class ProfileScreen extends StatelessWidget {
                   height: 160,
                   fit: BoxFit.cover,
                 ),
-                ProfileHeader(showDetails: true),
+                const ProfileHeader(showDetails: true),
               ],
             ),
             const SizedBox(height: 30),
             _buildActionButtons(context),
             const SizedBox(height: 60),
             _buildLogoutButton(context),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             _buildFooterImage(context),
           ],
         ),
@@ -56,7 +56,7 @@ Widget _buildActionButtons(BuildContext context) {
         },
         child: Image.asset(
           'assets/images/buttons/FavouriteButton.png',
-          width: 110,
+          width: 90,
         ),
       ),
       const SizedBox(width: 12),
@@ -68,7 +68,7 @@ Widget _buildActionButtons(BuildContext context) {
         },
         child: Image.asset(
           'assets/images/buttons/BalanceButton.png',
-          width: 110,
+          width: 90,
         ),
       ),
       const SizedBox(width: 12),
@@ -80,7 +80,7 @@ Widget _buildActionButtons(BuildContext context) {
         },
         child: Image.asset(
           'assets/images/buttons/SettingButton.png',
-          width: 110,
+          width: 90,
         ),
       ),
     ],
@@ -104,7 +104,7 @@ Widget _buildLogoutButton(BuildContext context) {
 Widget _buildFooterImage(BuildContext context) {
   return Image.asset(
     'assets/images/others/BottomLogo.png', // Replace with your footer image asset path
-    height: 180,
+    height: 150,
     fit: BoxFit.cover,
   );
 }

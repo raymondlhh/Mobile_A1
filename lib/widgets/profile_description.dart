@@ -36,7 +36,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         Container(
           width: 118,
           height: 118,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
           ),
           child: Image.asset(
@@ -80,22 +80,22 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                       children: [
                         Text(
                           UserProfile.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w900,
-                            fontSize: 25,
+                            fontSize: 22,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 4),
                         Text(
                           UserProfile.email,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
-                            fontSize: 12,
+                            fontSize: 8,
                           ),
                         ),
-                        const SizedBox(height: 5),
+                        const SizedBox(height: 6),
                         GestureDetector(
                           onTap: () async {
                             await Navigator.of(context).push(

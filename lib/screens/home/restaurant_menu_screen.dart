@@ -30,7 +30,7 @@ class RestaurantMenuScreen extends StatelessWidget {
                         width: 100,
                         height: 100,
                         margin: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.red,
                           shape: BoxShape.circle,
                         ),

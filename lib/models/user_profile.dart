@@ -1,6 +1,6 @@
 
 class UserProfile {
-  static String name = 'Raymond Ling';
+  static String name = 'Raymond';
   static String email = 'dmt2209669@xmu.edu.my';
   static String password = '12345678';
   static String phone = '168264173';

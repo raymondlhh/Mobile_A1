@@ -18,10 +18,12 @@ import 'screens/home/forgot_password_screen.dart';
 import 'screens/home/restaurant_menu_screen.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
 
   runApp(const MyApp());
 }
@@ -33,9 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFFFF8E5),
-      ),
+      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFFFF8E5)),
       initialRoute: '/welcome',
       routes: {
         '/': (context) => const BottomNav(),

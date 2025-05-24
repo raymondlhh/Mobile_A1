@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
@@ -16,7 +15,7 @@ class WelcomeScreen extends StatelessWidget {
           children: [
             // Red Logo
             Positioned(
-              left: screenWidth * 41/ 430,
+              left: screenWidth * 41 / 430,
               top: screenHeight * -50 / 932,
               child: Image.asset(
                 'assets/images/icons/welcome_screen/Logo.png',
@@ -25,10 +24,8 @@ class WelcomeScreen extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
             ),
-            
+
             // Text Image
-
-
             Positioned(
               left: screenWidth * 65 / 430,
               top: screenHeight * 320 / 932,
@@ -39,7 +36,6 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
 
-            
             // Sign Up Button (Green BG, Black Text, Gray Stroke)
             Positioned(
               left: screenWidth * 41 / 430,
@@ -79,11 +75,11 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Login Button (Black BG, White Text)
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 677/ 932,
+              top: screenHeight * 677 / 932,
               child: GestureDetector(
                 onTap: () => Navigator.pushNamed(context, '/login'),
                 child: Container(
@@ -115,14 +111,14 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Forget Password (Underlined, Clickable)
             Positioned(
               left: screenWidth * 120 / 430,
               top: screenHeight * 760 / 932,
               child: GestureDetector(
                 onTap: () => Navigator.pushNamed(context, '/forgot'),
-                child: Text(
+                child: const Text(
                   'Forget your password ?',
                   style: TextStyle(
                     color: Colors.black87,
