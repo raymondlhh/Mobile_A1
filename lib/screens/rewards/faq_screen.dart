@@ -9,11 +9,11 @@ class FAQScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F3E7),
       appBar: buildAppBar(context, 'REWARDS-FAQ'),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
               'What are reward points?',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
