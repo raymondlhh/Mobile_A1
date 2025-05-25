@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/profile/notification_screen.dart';
-import '../screens/home/home_screen.dart';
+import '../../screens/home/detail_home_screen.dart';
+
 
 
 VoidCallback? onTickPressed;
@@ -25,7 +26,7 @@ AppBar buildAppBar(BuildContext context, String title, {AppBarActionType actionT
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => const DetailHomeScreen()),
           );
         }
       },
