@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/profile/notification_screen.dart';
+import '../screens/home/home_screen.dart';
+
 
 VoidCallback? onTickPressed;
 
@@ -15,6 +17,19 @@ AppBar buildAppBar(BuildContext context, String title, {AppBarActionType actionT
     backgroundColor: const Color(0xFFFFF8E5),
     elevation: 0,
     centerTitle: true,
+    leading: IconButton(
+      icon: const Icon(Icons.arrow_back, color: Colors.black),
+      onPressed: () {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
+      },
+    ),
     title: Padding(
       padding: const EdgeInsets.only(bottom: 0),
       child: Text(
