@@ -27,7 +27,6 @@ class DetailHomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: 60 * scaleHeight),
-                  // 顶部区域（包含背景图、文字和logo）
                   SizedBox(
                     height: 186 * scaleHeight,
                     child: Stack(

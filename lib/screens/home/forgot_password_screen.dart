@@ -9,13 +9,51 @@ class ForgotPasswordScreen extends StatefulWidget {
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  int _selectedMethod = 0; // 0: 手机, 1: 邮箱
+  int _selectedMethod = 0; // 0: Phone, 1: Email
+
+  late AnimationController _animController;
+  late Animation<double> _logoOpacity;
+  late Animation<double> _formOpacity;
+  late Animation<Offset> _formOffset;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
+    _logoOpacity = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _animController,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
+      ),
+    );
+    _formOpacity = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _animController,
+        curve: const Interval(0.4, 1.0, curve: Curves.easeIn),
+      ),
+    );
+    _formOffset = Tween<Offset>(
+      begin: const Offset(0, 0.15),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _animController,
+        curve: const Interval(0.4, 1.0, curve: Curves.easeOut),
+      ),
+    );
+    _animController.forward();
+  }
 
   @override
   void dispose() {
+    _animController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     super.dispose();
@@ -31,18 +69,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Logo
+            // Logo with fade-in
             Positioned(
               left: (screenWidth - (screenWidth * 250 / 430)) / 2,
               top: screenHeight * -20 / 932,
-              child: Image.asset(
-                'assets/images/icons/welcome_screen/Logo.png',
-                width: screenWidth * 250 / 430,
-                height: screenHeight * 375 / 932,
-                fit: BoxFit.contain,
+              child: AnimatedBuilder(
+                animation: _logoOpacity,
+                builder:
+                    (context, child) =>
+                        Opacity(opacity: _logoOpacity.value, child: child),
+                child: Image.asset(
+                  'assets/images/icons/welcome_screen/Logo.png',
+                  width: screenWidth * 250 / 430,
+                  height: screenHeight * 375 / 932,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-            // Subtitle
+            // Subtitle (无动画，和logo一起出现)
             Positioned(
               left: (screenWidth - (screenWidth * 294 / 430)) / 2,
               top: screenHeight * 240 / 932,
@@ -194,7 +238,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               top: screenHeight * 610 / 932,
               child: GestureDetector(
                 onTap: () {
-                  // Todo: 实现发送验证码或重置链接逻辑
+                  // TODO: 实现发送验证码或重置链接逻辑
                 },
                 child: Container(
                   width: screenWidth * 337 / 430,

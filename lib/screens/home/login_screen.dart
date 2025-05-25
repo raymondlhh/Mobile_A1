@@ -159,7 +159,6 @@ class _LoginScreenState extends State<LoginScreen> {
               top: screenHeight * 650 / 932,
               child: GestureDetector(
                 onTap: () {
-                  // Todo: 这里可以添加邮箱和密码的验证逻辑
                   Navigator.pushReplacementNamed(context, '/bottomNav');
                 },
                 child: Container(
