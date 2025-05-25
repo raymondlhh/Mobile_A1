@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 
 class HowItWorksSection extends StatelessWidget {
@@ -10,10 +8,10 @@ class HowItWorksSection extends StatelessWidget {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'How It Works',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -21,7 +19,7 @@ class HowItWorksSection extends StatelessWidget {
               color: Color(0xFF000000),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
