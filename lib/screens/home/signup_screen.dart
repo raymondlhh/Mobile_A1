@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -216,7 +218,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const Text('Already have an account?'),
                   TextButton(
                     onPressed: () {
-                      // TODO: 跳转到登录页面
+                      // Todo: 跳转到登录页面
                     },
                     child: const Text('Login'),
                   ),
