@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, unused_field
 
 import 'package:flutter/material.dart';
 
@@ -238,7 +238,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               top: screenHeight * 610 / 932,
               child: GestureDetector(
                 onTap: () {
-                  // TODO: 实现发送验证码或重置链接逻辑
+                  // Todo: 实现发送验证码或重置链接逻辑
                 },
                 child: Container(
                   width: screenWidth * 337 / 430,
