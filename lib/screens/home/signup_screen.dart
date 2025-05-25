@@ -63,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withAlpha((0.1 * 255).toInt()),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -98,7 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withAlpha((0.1 * 255).toInt()),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -133,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withAlpha((0.1 * 255).toInt()),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -187,7 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withAlpha((0.2 * 255).toInt()),
                         blurRadius: 5,
                         offset: const Offset(0, 4),
                       ),
@@ -207,7 +207,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             ),
-            // 已有账号？登录
+            // Already have an account?
             Positioned(
               left: screenWidth * 110 / 430,
               top: screenHeight * 750 / 932,
@@ -216,7 +216,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const Text('Already have an account?'),
                   TextButton(
                     onPressed: () {
-                      // TODO: 跳转到登录页面
+                      Navigator.pushReplacementNamed(context, '/login');
                     },
                     child: const Text('Login'),
                   ),
