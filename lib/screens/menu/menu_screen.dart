@@ -545,7 +545,7 @@ class _MenuItem extends StatelessWidget {
                     price,
                     style: const TextStyle(
                       fontWeight: FontWeight.w300,
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 12,
                       fontFamily: 'Inter',
                     ),
