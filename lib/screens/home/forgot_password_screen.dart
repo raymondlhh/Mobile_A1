@@ -268,15 +268,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 ),
               ),
             ),
-            // Back to Login Button
+            // Back to Login Button (moved below Send Code and grey)
             Positioned(
-              left: screenWidth * 120 / 430,
-              top: screenHeight * 690 / 932,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/login');
-                },
-                child: const Text('Back to Login'),
+              left: screenWidth * 41 / 430,
+              top: screenHeight * 670 / 932,
+              child: SizedBox(
+                width: screenWidth * 337 / 430,
+                child: Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                    child: const Text(
+                      'Back to Login',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ),
               ),
             ),
           ],

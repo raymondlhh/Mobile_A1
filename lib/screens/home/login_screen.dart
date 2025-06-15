@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final isValid = await _authService.validateUser(email, password);
       if (isValid) {
         if (mounted) {
-          Navigator.pushReplacementNamed(context, '/bottomNav');
+          Navigator.pushReplacementNamed(context, '/videoSplash');
         }
       } else {
         setState(() {
@@ -273,6 +273,44 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                   ),
+                ),
+              ),
+            ),
+
+            // Forgot Password and Sign Up (in English, right below Login button)
+            Positioned(
+              left: screenWidth * 41 / 430,
+              top: screenHeight * 710 / 932, // just below Login button
+              child: SizedBox(
+                width: screenWidth * 337 / 430,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, '/forgot'),
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Don't have an account?"),
+                        TextButton(
+                          onPressed:
+                              () => Navigator.pushReplacementNamed(
+                                context,
+                                '/signup',
+                              ),
+                          child: const Text('Sign Up'),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),

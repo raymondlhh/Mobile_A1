@@ -128,7 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Logo
             Positioned(
               left: (screenWidth - (screenWidth * 250 / 430)) / 2,
-              top: screenHeight * -20 / 932,
+              top: screenHeight * -60 / 932,
               child: Image.asset(
                 'assets/images/icons/welcome_screen/Logo.png',
                 width: screenWidth * 250 / 430,
@@ -139,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Subtitle
             Positioned(
               left: (screenWidth - (screenWidth * 294 / 430)) / 2,
-              top: screenHeight * 240 / 932,
+              top: screenHeight * 200 / 932,
               child: Image.asset(
                 'assets/images/icons/welcome_screen/subtitle.png',
                 width: screenWidth * 294 / 430,
@@ -151,7 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (_errorMessage != null)
               Positioned(
                 left: screenWidth * 41 / 430,
-                top: screenHeight * 400 / 932,
+                top: screenHeight * 360 / 932,
                 child: Container(
                   width: screenWidth * 337 / 430,
                   padding: const EdgeInsets.all(8),
@@ -170,7 +170,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Name Input
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 460 / 932,
+              top: screenHeight * 420 / 932,
               child: Container(
                 width: screenWidth * 337 / 430,
                 decoration: BoxDecoration(
@@ -207,7 +207,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Email Input
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 530 / 932,
+              top: screenHeight * 490 / 932,
               child: Container(
                 width: screenWidth * 337 / 430,
                 decoration: BoxDecoration(
@@ -245,7 +245,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Password Input
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 600 / 932,
+              top: screenHeight * 560 / 932,
               child: Container(
                 width: screenWidth * 337 / 430,
                 decoration: BoxDecoration(
@@ -298,7 +298,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Phone Input
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 670 / 932,
+              top: screenHeight * 630 / 932,
               child: Container(
                 width: screenWidth * 337 / 430,
                 decoration: BoxDecoration(
@@ -336,7 +336,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Address Input
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 740 / 932,
+              top: screenHeight * 700 / 932,
               child: Container(
                 width: screenWidth * 337 / 430,
                 decoration: BoxDecoration(
@@ -353,7 +353,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: TextField(
                   controller: _addressController,
                   enabled: !_isLoading,
-                  maxLines: 2,
+                  maxLines: 1,
                   decoration: InputDecoration(
                     hintText: 'Delivery Address',
                     hintStyle: TextStyle(
@@ -364,7 +364,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: screenWidth * 16 / 430,
-                      vertical: screenHeight * 16 / 932,
+                      vertical: screenHeight * 10 / 932,
                     ),
                   ),
                 ),
@@ -374,7 +374,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Sign Up Button
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 820 / 932,
+              top: screenHeight * 780 / 932,
               child: GestureDetector(
                 onTap: _isLoading ? null : _handleSignUp,
                 child: Container(
@@ -419,7 +419,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Already have an account?
             Positioned(
               left: screenWidth * 110 / 430,
-              top: screenHeight * 890 / 932,
+              top: screenHeight * 850 / 932,
               child: Row(
                 children: [
                   const Text('Already have an account?'),

@@ -17,6 +17,7 @@ import 'screens/home/signup_screen.dart';
 import 'screens/home/login_screen.dart';
 import 'screens/home/forgot_password_screen.dart';
 import 'screens/home/restaurant_menu_screen.dart';
+import 'screens/home/video_splash_screen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 // ignore: unused_import
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
         '/balance': (context) => const BalanceScreen(),
         '/setting': (context) => const SettingScreen(),
         '/restaurant_menu': (context) => const RestaurantMenuScreen(),
+        '/videoSplash': (context) => const VideoSplashScreen(),
       },
     );
   }
