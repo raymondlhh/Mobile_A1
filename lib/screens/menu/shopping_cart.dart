@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../widgets/title_appbar.dart';
 import '../../models/cart_item.dart';
 import '../../providers/cart_provider.dart';
 
@@ -10,22 +11,10 @@ class ShoppingCart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8E5),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFFF8E5),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Shopping Cart',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'Inter',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      appBar: buildAppBar(
+        context,
+        'Shopping Cart',
+        actionType: AppBarActionType.none,
       ),
       body: SafeArea(
         child: Consumer<CartProvider>(
