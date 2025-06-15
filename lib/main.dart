@@ -18,6 +18,7 @@ import 'screens/home/forgot_password_screen.dart';
 import 'screens/home/restaurant_menu_screen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+// ignore: unused_import
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
