@@ -14,7 +14,7 @@ class ItemDetailPage extends StatelessWidget {
       appBar: buildAppBar(
         context,
         'Item Details',
-        actionType: AppBarActionType.none,
+        actionType: AppBarActionType.saveFavButton,
       ),
       //todo: move up the image
       body: SizedBox.expand(
