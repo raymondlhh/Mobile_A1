@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import '../../services/auth_service.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -13,14 +14,105 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final AuthService _authService = AuthService();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleSignUp() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final phone = _phoneController.text.trim();
+    final address = _addressController.text.trim();
+
+    // Validate all fields
+    if (name.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter your name';
+        _isLoading = false;
+      });
+      return;
+    }
+
+    if (!_authService.isValidEmail(email)) {
+      setState(() {
+        _errorMessage = 'Please enter a valid email address';
+        _isLoading = false;
+      });
+      return;
+    }
+
+    if (!_authService.isStrongPassword(password)) {
+      setState(() {
+        _errorMessage = _authService.getPasswordRequirementsMessage();
+        _isLoading = false;
+      });
+      return;
+    }
+
+    if (phone.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter your phone number';
+        _isLoading = false;
+      });
+      return;
+    }
+
+    if (address.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter your address';
+        _isLoading = false;
+      });
+      return;
+    }
+
+    try {
+      await _authService.registerUser(
+        name: name,
+        email: email,
+        password: password,
+        phone: phone,
+        address: address,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registration successful! Please login.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -54,6 +146,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 fit: BoxFit.contain,
               ),
             ),
+
+            // Error Message
+            if (_errorMessage != null)
+              Positioned(
+                left: screenWidth * 41 / 430,
+                top: screenHeight * 400 / 932,
+                child: Container(
+                  width: screenWidth * 337 / 430,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    _errorMessage!,
+                    style: TextStyle(color: Colors.red.shade900, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+
             // Name Input
             Positioned(
               left: screenWidth * 41 / 430,
@@ -65,7 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha((0.1 * 255).toInt()),
+                      color: Colors.black.withOpacity(0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -73,6 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 child: TextField(
                   controller: _nameController,
+                  enabled: !_isLoading,
                   decoration: InputDecoration(
                     hintText: 'Full Name',
                     hintStyle: TextStyle(
@@ -89,6 +203,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             ),
+
             // Email Input
             Positioned(
               left: screenWidth * 41 / 430,
@@ -100,7 +215,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha((0.1 * 255).toInt()),
+                      color: Colors.black.withOpacity(0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -108,6 +223,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 child: TextField(
                   controller: _emailController,
+                  enabled: !_isLoading,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     hintText: 'Email',
                     hintStyle: TextStyle(
@@ -124,6 +241,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             ),
+
             // Password Input
             Positioned(
               left: screenWidth * 41 / 430,
@@ -135,7 +253,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha((0.1 * 255).toInt()),
+                      color: Colors.black.withOpacity(0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -143,6 +261,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 child: TextField(
                   controller: _passwordController,
+                  enabled: !_isLoading,
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     hintText: 'Password',
@@ -157,11 +276,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ? Icons.visibility_off
                             : Icons.visibility,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
+                      onPressed:
+                          _isLoading
+                              ? null
+                              : () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
                     ),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
@@ -172,54 +294,142 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             ),
+
+            // Phone Input
+            Positioned(
+              left: screenWidth * 41 / 430,
+              top: screenHeight * 670 / 932,
+              child: Container(
+                width: screenWidth * 337 / 430,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: _phoneController,
+                  enabled: !_isLoading,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                    hintText: 'Phone Number',
+                    hintStyle: TextStyle(
+                      fontSize: screenWidth * 16 / 430,
+                      color: Colors.grey,
+                    ),
+                    prefixIcon: const Icon(Icons.phone_outlined),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 16 / 430,
+                      vertical: screenHeight * 16 / 932,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Address Input
+            Positioned(
+              left: screenWidth * 41 / 430,
+              top: screenHeight * 740 / 932,
+              child: Container(
+                width: screenWidth * 337 / 430,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: _addressController,
+                  enabled: !_isLoading,
+                  maxLines: 2,
+                  decoration: InputDecoration(
+                    hintText: 'Delivery Address',
+                    hintStyle: TextStyle(
+                      fontSize: screenWidth * 16 / 430,
+                      color: Colors.grey,
+                    ),
+                    prefixIcon: const Icon(Icons.location_on_outlined),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 16 / 430,
+                      vertical: screenHeight * 16 / 932,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
             // Sign Up Button
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 680 / 932,
+              top: screenHeight * 820 / 932,
               child: GestureDetector(
-                onTap: () {
-                  // 这里可以添加注册逻辑
-                  Navigator.pushReplacementNamed(context, '/login');
-                },
+                onTap: _isLoading ? null : _handleSignUp,
                 child: Container(
                   width: screenWidth * 337 / 430,
                   height: screenHeight * 53 / 932,
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: _isLoading ? Colors.grey : Colors.black,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withAlpha((0.2 * 255).toInt()),
+                        color: Colors.black.withOpacity(0.2),
                         blurRadius: 5,
                         offset: const Offset(0, 4),
                       ),
                     ],
                   ),
                   child: Center(
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontFamily: 'InknutAntiqua',
-                        fontWeight: FontWeight.bold,
-                        fontSize: screenWidth * 30 / 430,
-                        color: Colors.white,
-                      ),
-                    ),
+                    child:
+                        _isLoading
+                            ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                            : Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                fontFamily: 'InknutAntiqua',
+                                fontWeight: FontWeight.bold,
+                                fontSize: screenWidth * 30 / 430,
+                                color: Colors.white,
+                              ),
+                            ),
                   ),
                 ),
               ),
             ),
+
             // Already have an account?
             Positioned(
               left: screenWidth * 110 / 430,
-              top: screenHeight * 750 / 932,
+              top: screenHeight * 890 / 932,
               child: Row(
                 children: [
                   const Text('Already have an account?'),
                   TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/login');
-                    },
+                    onPressed:
+                        _isLoading
+                            ? null
+                            : () {
+                              Navigator.pushReplacementNamed(context, '/login');
+                            },
                     child: const Text('Login'),
                   ),
                 ],
