@@ -17,7 +17,10 @@ import 'screens/home/login_screen.dart';
 import 'screens/home/forgot_password_screen.dart';
 import 'screens/home/restaurant_menu_screen.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -25,6 +28,8 @@ void main() {
     ),
   );
 
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
