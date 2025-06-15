@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/menu_data.dart';
 import 'item_detail_page.dart';
 import '../../models/menu_item.dart';
+import 'shopping_cart.dart';
 
 class MenuScreen extends StatefulWidget {
   final String? initialSection;
@@ -180,7 +181,12 @@ class _MenuScreenState extends State<MenuScreen> {
                       size: 30,
                     ),
                     onPressed: () {
-                      // TODO: Implement shopping cart functionality
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ShoppingCart(),
+                        ),
+                      );
                     },
                   ),
                 ],
