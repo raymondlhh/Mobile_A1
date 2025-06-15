@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'services/database_service.dart';
+import 'package:provider/provider.dart';
+import 'providers/cart_provider.dart';
+import 'screens/menu/menu_screen.dart';
 
 import 'widgets/bottom_nav.dart';
 //import 'screens/home/home_screen.dart';
@@ -45,25 +48,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFFFF8E5)),
-      initialRoute: '/welcome',
-      routes: {
-        '/': (context) => const BottomNav(),
-        '/welcome': (context) => const WelcomeScreen(),
-        '/signup': (context) => const SignUpScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/forgot': (context) => const ForgotPasswordScreen(),
-        '/bottomNav': (context) => const BottomNav(),
-        '/home': (context) => const DetailHomeScreen(),
-        '/edit': (context) => const EditScreen(),
-        '/notification': (context) => const NotificationScreen(),
-        '/favourite': (context) => const FavouriteScreen(),
-        '/balance': (context) => const BalanceScreen(),
-        '/setting': (context) => const SettingScreen(),
-        '/restaurant_menu': (context) => const RestaurantMenuScreen(),
-      },
+    return ChangeNotifierProvider(
+      create: (context) => CartProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFFFF8E5)),
+        initialRoute: '/welcome',
+        routes: {
+          '/': (context) => const BottomNav(),
+          '/welcome': (context) => const WelcomeScreen(),
+          '/signup': (context) => const SignUpScreen(),
+          '/login': (context) => const LoginScreen(),
+          '/forgot': (context) => const ForgotPasswordScreen(),
+          '/bottomNav': (context) => const BottomNav(),
+          '/home': (context) => const DetailHomeScreen(),
+          '/edit': (context) => const EditScreen(),
+          '/notification': (context) => const NotificationScreen(),
+          '/favourite': (context) => const FavouriteScreen(),
+          '/balance': (context) => const BalanceScreen(),
+          '/setting': (context) => const SettingScreen(),
+          '/restaurant_menu': (context) => const RestaurantMenuScreen(),
+        },
+      ),
     );
   }
 }
