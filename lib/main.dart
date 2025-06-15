@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'services/database_service.dart';
 
 import 'widgets/bottom_nav.dart';
 //import 'screens/home/home_screen.dart';
@@ -31,6 +32,11 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // Initialize rewards in the database
+  final databaseService = DatabaseService();
+  await databaseService.initializeCurrentRewards();
+
   runApp(const MyApp());
 }
 

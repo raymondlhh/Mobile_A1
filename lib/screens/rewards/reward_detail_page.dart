@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
+import '../../services/database_service.dart';
 
 class RedeemPage extends StatelessWidget {
+  final String id;
   final String imagePath;
   final String itemName;
   final String description;
@@ -10,12 +12,39 @@ class RedeemPage extends StatelessWidget {
 
   const RedeemPage({
     super.key,
+    required this.id,
     required this.imagePath,
     required this.itemName,
     required this.description,
     required this.points,
     required this.validity,
   });
+
+  Future<void> _handleRedeem(BuildContext context) async {
+    try {
+      final databaseService = DatabaseService();
+      await databaseService.redeemReward(id);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Reward redeemed successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error redeeming reward: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +142,7 @@ class RedeemPage extends StatelessWidget {
                   ),
                   minimumSize: const Size.fromHeight(48),
                 ),
-                onPressed: () {},
+                onPressed: () => _handleRedeem(context),
                 child: const Text(
                   'Redeem',
                   style: TextStyle(
