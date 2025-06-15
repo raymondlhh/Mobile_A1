@@ -19,10 +19,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final AuthService _authService = AuthService();
   bool _isPasswordVisible = false;
   bool _isLoading = false;
-<<<<<<< HEAD
   String? _errorMessage;
-=======
->>>>>>> b2e54a01041a7778b2270b24967b6589f023a913
 
   @override
   void dispose() {
@@ -379,44 +376,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               left: screenWidth * 41 / 430,
               top: screenHeight * 820 / 932,
               child: GestureDetector(
-<<<<<<< HEAD
                 onTap: _isLoading ? null : _handleSignUp,
-=======
-                onTap: () async {
-                  if (_nameController.text.isEmpty ||
-                      _emailController.text.isEmpty ||
-                      _passwordController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please fill in all fields')),
-                    );
-                    return;
-                  }
-
-                  setState(() {
-                    _isLoading = true;
-                  });
-
-                  try {
-                    await AuthService().signUp(
-                      name: _nameController.text.trim(),
-                      email: _emailController.text.trim(),
-                      password: _passwordController.text.trim(),
-                    );
-                    if (!mounted) return;
-                    Navigator.pushReplacementNamed(context, '/login');
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Sign up failed: $e')),
-                    );
-                  } finally {
-                    if (mounted) {
-                      setState(() {
-                        _isLoading = false;
-                      });
-                    }
-                  }
-                },
->>>>>>> b2e54a01041a7778b2270b24967b6589f023a913
                 child: Container(
                   width: screenWidth * 337 / 430,
                   height: screenHeight * 53 / 932,
@@ -432,7 +392,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   child: Center(
-<<<<<<< HEAD
                     child:
                         _isLoading
                             ? const SizedBox(
@@ -452,22 +411,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 color: Colors.white,
                               ),
                             ),
-=======
-                    child: _isLoading
-                        ? const CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          )
-                        : Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              fontFamily: 'InknutAntiqua',
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenWidth * 30 / 430,
-                              color: Colors.white,
-                            ),
-                          ),
->>>>>>> b2e54a01041a7778b2270b24967b6589f023a913
                   ),
                 ),
               ),
