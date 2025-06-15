@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/menu_data.dart';
 import 'item_detail_page.dart';
 import '../../models/menu_item.dart';
+import 'shopping_cart.dart';
 
 class MenuScreen extends StatefulWidget {
   final String? initialSection;
@@ -173,25 +174,35 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(
-                  //     horizontal: 8,
-                  //     vertical: 4,
-                  //   ),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.green,
-                  //     borderRadius: BorderRadius.circular(20),
-                  //   ),
-                  //   child: const Text(
-                  //     "OPEN",
-                  //     style: TextStyle(
-                  //       fontFamily: 'Inter',
-                  //       fontWeight: FontWeight.bold,
-                  //       color: Colors.white,
-                  //       fontSize: 14,
-                  //     ),
-                  //   ),
-                  // ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.black12),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.shopping_cart,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ShoppingCart(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

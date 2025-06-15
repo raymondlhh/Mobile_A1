@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../models/menu_item.dart';
+import '../../../providers/cart_provider.dart';
 import '../../../widgets/title_appbar.dart';
 
-class ItemDetailPage extends StatelessWidget {
+class ItemDetailPage extends StatefulWidget {
   final MenuItem menuItem;
-  // ignore: use_super_parameters
-  const ItemDetailPage({required this.menuItem, Key? key}) : super(key: key);
+  const ItemDetailPage({required this.menuItem, super.key});
+
+  @override
+  State<ItemDetailPage> createState() => _ItemDetailPageState();
+}
+
+class _ItemDetailPageState extends State<ItemDetailPage> {
+  int _quantity = 1;
+
+  void _decreaseQuantity() {
+    if (_quantity > 1) {
+      setState(() {
+        _quantity--;
+      });
+    }
+  }
+
+  void _increaseQuantity() {
+    setState(() {
+      _quantity++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +38,6 @@ class ItemDetailPage extends StatelessWidget {
         'Item Details',
         actionType: AppBarActionType.none,
       ),
-      //todo: move up the image
       body: SizedBox.expand(
         child: Stack(
           children: [
@@ -42,7 +63,7 @@ class ItemDetailPage extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(16),
                         child: Image.asset(
-                          menuItem.imagePath,
+                          widget.menuItem.imagePath,
                           width: 200,
                           height: 200,
                           fit: BoxFit.contain,
@@ -51,7 +72,7 @@ class ItemDetailPage extends StatelessWidget {
                     ),
                     // Item Name
                     Text(
-                      menuItem.name,
+                      widget.menuItem.name,
                       style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 30,
@@ -66,12 +87,15 @@ class ItemDetailPage extends StatelessWidget {
                       children: [
                         ...List.generate(
                           5,
-                          (i) =>
-                              const Icon(Icons.star, color: Colors.amber, size: 28),
+                          (i) => const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                            size: 28,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          menuItem.ratings.toStringAsFixed(1),
+                          widget.menuItem.ratings.toStringAsFixed(1),
                           style: const TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 24,
@@ -81,7 +105,7 @@ class ItemDetailPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${menuItem.reviews.length} Reviews',
+                      '${widget.menuItem.reviews.length} Reviews',
                       style: const TextStyle(color: Colors.grey, fontSize: 14),
                     ),
                     const SizedBox(height: 12),
@@ -90,7 +114,7 @@ class ItemDetailPage extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children:
-                            menuItem.reviews
+                            widget.menuItem.reviews
                                 .map((review) => _ReviewCard(review: review))
                                 .toList(),
                       ),
@@ -124,7 +148,7 @@ class ItemDetailPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            menuItem.description,
+                            widget.menuItem.description,
                             textAlign: TextAlign.center,
                             style: const TextStyle(fontSize: 14),
                           ),
@@ -160,7 +184,7 @@ class ItemDetailPage extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      menuItem.price,
+                      widget.menuItem.price,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -187,9 +211,12 @@ class ItemDetailPage extends StatelessWidget {
                             ),
                             padding: const EdgeInsets.all(4),
                             constraints: const BoxConstraints(),
-                            onPressed: () {},
+                            onPressed: _decreaseQuantity,
                           ),
-                          const Text('1', style: TextStyle(fontSize: 16)),
+                          Text(
+                            '$_quantity',
+                            style: const TextStyle(fontSize: 16),
+                          ),
                           IconButton(
                             icon: const Icon(
                               Icons.add,
@@ -198,7 +225,7 @@ class ItemDetailPage extends StatelessWidget {
                             ),
                             padding: const EdgeInsets.all(4),
                             constraints: const BoxConstraints(),
-                            onPressed: () {},
+                            onPressed: _increaseQuantity,
                           ),
                         ],
                       ),
@@ -215,7 +242,19 @@ class ItemDetailPage extends StatelessWidget {
                           vertical: 8,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.read<CartProvider>().addItem(
+                          widget.menuItem,
+                          _quantity,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Item added to cart'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                        Navigator.pop(context);
+                      },
                       child: const Text(
                         'ADD TO CART',
                         style: TextStyle(
