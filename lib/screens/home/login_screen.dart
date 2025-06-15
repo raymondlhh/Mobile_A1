@@ -237,7 +237,14 @@ class _LoginScreenState extends State<LoginScreen> {
               left: screenWidth * 41 / 430,
               top: screenHeight * 650 / 932,
               child: GestureDetector(
+<<<<<<< HEAD
                 onTap: _isLoading ? null : _handleLogin,
+=======
+                onTap: () {
+                  // TODO: integrate FirebaseAuth sign in
+                  Navigator.pushReplacementNamed(context, '/bottomNav');
+                },
+>>>>>>> b2e54a01041a7778b2270b24967b6589f023a913
                 child: Container(
                   width: screenWidth * 337 / 430,
                   height: screenHeight * 53 / 932,

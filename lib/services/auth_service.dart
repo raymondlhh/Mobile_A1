@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_profile.dart';
@@ -116,4 +117,41 @@ class AuthService {
         '• At least one lowercase letter\n'
         '• At least one number';
   }
+=======
+import 'package:firebase_auth/firebase_auth.dart' as fb;
+
+import '../models/user.dart';
+import 'user_service.dart';
+
+class AuthService {
+  final fb.FirebaseAuth _auth = fb.FirebaseAuth.instance;
+  final UserService _userService = UserService();
+
+  Future<void> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final uid = credential.user?.uid;
+      if (uid != null) {
+        final user = User(
+          id: uid,
+          name: name,
+          email: email,
+          password: password,
+          phone: '',
+          address: '',
+        );
+        await _userService.createUser(user);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+>>>>>>> b2e54a01041a7778b2270b24967b6589f023a913
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'services/database_service.dart';
+import 'package:provider/provider.dart';
 
 import 'widgets/bottom_nav.dart';
 //import 'screens/home/home_screen.dart';
@@ -21,7 +22,11 @@ import 'screens/home/restaurant_menu_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 // ignore: unused_import
 import 'package:cloud_firestore/cloud_firestore.dart';
+<<<<<<< HEAD
 import 'firebase_options.dart';
+=======
+import 'providers/cart_provider.dart';
+>>>>>>> b2e54a01041a7778b2270b24967b6589f023a913
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(
@@ -39,6 +44,12 @@ void main() async {
   await databaseService.initializeCurrentRewards();
 
   runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (ctx) => CartProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
