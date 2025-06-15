@@ -48,5 +48,5 @@ flutter {
 dependencies {
     //Add Firebase BoM and Firestore
     implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
-    implementation("com.google.firebase:firebase-firebase)
+    implementation("com.google.firebase:firebase-firestore")
 }
