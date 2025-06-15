@@ -11,6 +11,7 @@ class FavouriteScreen extends StatefulWidget {
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
+  // ignore: prefer_final_fields
   List<FavouriteFood> _foods = [];
 
   @override
