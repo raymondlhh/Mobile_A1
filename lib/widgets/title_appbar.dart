@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../screens/profile/notification_screen.dart';
 import '../../screens/home/detail_home_screen.dart';
 
-
-
 VoidCallback? onTickPressed;
 bool _isBookmarked = false;
 
@@ -15,7 +13,11 @@ enum AppBarActionType {
   readButton,
 }
 
-AppBar buildAppBar(BuildContext context, String title, {AppBarActionType actionType = AppBarActionType.notificationButton}) {
+AppBar buildAppBar(
+  BuildContext context,
+  String title, {
+  AppBarActionType actionType = AppBarActionType.notificationButton,
+}) {
   return AppBar(
     backgroundColor: const Color(0xFFFFF8E5),
     elevation: 0,
@@ -48,7 +50,10 @@ AppBar buildAppBar(BuildContext context, String title, {AppBarActionType actionT
   );
 }
 
-List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionType) {
+List<Widget>? _buildAppBarActions(
+  BuildContext context,
+  AppBarActionType actionType,
+) {
   switch (actionType) {
     case AppBarActionType.none:
       return null;
@@ -57,10 +62,15 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
         Padding(
           padding: const EdgeInsets.only(right: 16),
           child: IconButton(
-            icon: Image.asset('assets/images/icons/Notification.png', width: 24),
+            icon: Image.asset(
+              'assets/images/icons/Notification.png',
+              width: 24,
+            ),
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const NotificationScreen(),
+                ),
               );
             },
           ),
@@ -81,7 +91,7 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
         ),
       ];
     case AppBarActionType.saveFavButton:
-    return [
+      return [
         Padding(
           padding: const EdgeInsets.only(right: 16),
           child: StatefulBuilder(
@@ -89,34 +99,33 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
               return IconButton(
                 icon: Image.asset(
                   _isBookmarked
-                      ? 'assets/images/others/BookmarkOn.png'
-                      : 'assets/images/others/BookmarkOff.png',
+                      ? 'assets/images/others/bookmarkOn.png'
+                      : 'assets/images/others/bookmarkOff.png',
                   width: 24,
                 ),
                 onPressed: () {
                   setState(() {
                     _isBookmarked = !_isBookmarked;
-                  }
-                );
-              },
-            );
-          },
+                  });
+                },
+              );
+            },
+          ),
         ),
-      ),
-    ];
+      ];
     case AppBarActionType.readButton:
-    return [
-      Padding(
-        padding: const EdgeInsets.only(right: 16),
-        child: IconButton(
-          icon: Image.asset('assets/images/icons/Read.png', width: 24),
-          onPressed: () {
-            if (onTickPressed != null) {
-              onTickPressed!();
-            }
-          },
+      return [
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: IconButton(
+            icon: Image.asset('assets/images/icons/Read.png', width: 24),
+            onPressed: () {
+              if (onTickPressed != null) {
+                onTickPressed!();
+              }
+            },
+          ),
         ),
-      ),
-    ];
+      ];
   }
 }
