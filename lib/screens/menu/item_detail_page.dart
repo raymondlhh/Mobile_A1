@@ -36,7 +36,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
       appBar: buildAppBar(
         context,
         'Item Details',
-        actionType: AppBarActionType.none,
+        actionType: AppBarActionType.saveFavButton,
       ),
       body: SizedBox.expand(
         child: Stack(

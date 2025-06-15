@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../screens/rewards/reward_detail_page.dart';
 
 class RewardCard extends StatelessWidget {
+  final String id;
   final String imagePath;
   final String itemName;
   final String description;
@@ -10,6 +11,7 @@ class RewardCard extends StatelessWidget {
 
   const RewardCard({
     super.key,
+    required this.id,
     required this.imagePath,
     required this.itemName,
     required this.description,
@@ -26,6 +28,7 @@ class RewardCard extends StatelessWidget {
           MaterialPageRoute(
             builder:
                 (context) => RedeemPage(
+                  id: id,
                   imagePath: imagePath,
                   itemName: itemName,
                   description: description,

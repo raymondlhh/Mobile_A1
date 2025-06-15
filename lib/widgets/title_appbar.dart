@@ -5,11 +5,13 @@ import '../../screens/home/detail_home_screen.dart';
 
 
 VoidCallback? onTickPressed;
+bool _isBookmarked = false;
 
 enum AppBarActionType {
   none,
   notificationButton,
   saveProfileButton,
+  saveFavButton,
   readButton,
 }
 
@@ -78,6 +80,30 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
           ),
         ),
       ];
+    case AppBarActionType.saveFavButton:
+    return [
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return IconButton(
+                icon: Image.asset(
+                  _isBookmarked
+                      ? 'assets/images/others/BookmarkOn.png'
+                      : 'assets/images/others/BookmarkOff.png',
+                  width: 24,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isBookmarked = !_isBookmarked;
+                  }
+                );
+              },
+            );
+          },
+        ),
+      ),
+    ];
     case AppBarActionType.readButton:
     return [
       Padding(
@@ -92,6 +118,5 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
         ),
       ),
     ];
-    
   }
 }
