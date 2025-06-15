@@ -10,6 +10,7 @@ enum AppBarActionType {
   none,
   notificationButton,
   saveProfileButton,
+  saveFavButton,
   readButton,
 }
 
@@ -78,6 +79,19 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
           ),
         ),
       ];
+    case AppBarActionType.saveFavButton:
+    return [
+      Padding(
+        padding: const EdgeInsets.only(right: 16),
+        child: IconButton(
+          // point this to whatever “save-fav” asset you have
+          icon: Image.asset('assets/images/others/BookmarkOff.png', width: 24),
+          onPressed: () {
+
+          },
+        ),
+      ),
+    ];
     case AppBarActionType.readButton:
     return [
       Padding(
@@ -92,6 +106,8 @@ List<Widget>? _buildAppBarActions(BuildContext context, AppBarActionType actionT
         ),
       ),
     ];
+    
+
     
   }
 }
