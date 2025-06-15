@@ -13,6 +13,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import '../../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,13 +25,67 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    // Validate email format
+    if (!_authService.isValidEmail(email)) {
+      setState(() {
+        _errorMessage = 'Please enter a valid email address';
+        _isLoading = false;
+      });
+      return;
+    }
+
+    // Validate password
+    if (password.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter your password';
+        _isLoading = false;
+      });
+      return;
+    }
+
+    try {
+      final isValid = await _authService.validateUser(email, password);
+      if (isValid) {
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/bottomNav');
+        }
+      } else {
+        setState(() {
+          _errorMessage = 'Invalid email or password';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An error occurred. Please try again.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -66,6 +121,26 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
+            // Error Message
+            if (_errorMessage != null)
+              Positioned(
+                left: screenWidth * 41 / 430,
+                top: screenHeight * 450 / 932,
+                child: Container(
+                  width: screenWidth * 337 / 430,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    _errorMessage!,
+                    style: TextStyle(color: Colors.red.shade900, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+
             // Email Input
             Positioned(
               left: screenWidth * 41 / 430,
@@ -77,7 +152,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      // ignore: deprecated_member_use
                       color: Colors.black.withOpacity(0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
@@ -86,6 +160,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: TextField(
                   controller: _emailController,
+                  enabled: !_isLoading,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     hintText: 'Email',
                     hintStyle: TextStyle(
@@ -114,7 +190,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      // ignore: deprecated_member_use
                       color: Colors.black.withOpacity(0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
@@ -123,6 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: TextField(
                   controller: _passwordController,
+                  enabled: !_isLoading,
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     hintText: 'Password',
@@ -137,11 +213,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             ? Icons.visibility_off
                             : Icons.visibility,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
+                      onPressed:
+                          _isLoading
+                              ? null
+                              : () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
                     ),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
@@ -158,18 +237,15 @@ class _LoginScreenState extends State<LoginScreen> {
               left: screenWidth * 41 / 430,
               top: screenHeight * 650 / 932,
               child: GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, '/bottomNav');
-                },
+                onTap: _isLoading ? null : _handleLogin,
                 child: Container(
                   width: screenWidth * 337 / 430,
                   height: screenHeight * 53 / 932,
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: _isLoading ? Colors.grey : Colors.black,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.2),
                         blurRadius: 5,
                         offset: const Offset(0, 4),
@@ -177,15 +253,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   child: Center(
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontFamily: 'InknutAntiqua',
-                        fontWeight: FontWeight.bold,
-                        fontSize: screenWidth * 30 / 430,
-                        color: Colors.white,
-                      ),
-                    ),
+                    child:
+                        _isLoading
+                            ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                            : Text(
+                              'Login',
+                              style: TextStyle(
+                                fontFamily: 'InknutAntiqua',
+                                fontWeight: FontWeight.bold,
+                                fontSize: screenWidth * 30 / 430,
+                                color: Colors.white,
+                              ),
+                            ),
                   ),
                 ),
               ),
