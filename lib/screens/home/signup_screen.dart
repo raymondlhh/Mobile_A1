@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import '../../services/auth_service.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -14,6 +15,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -177,9 +179,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
               left: screenWidth * 41 / 430,
               top: screenHeight * 680 / 932,
               child: GestureDetector(
-                onTap: () {
-                  // 这里可以添加注册逻辑
-                  Navigator.pushReplacementNamed(context, '/login');
+                onTap: () async {
+                  if (_nameController.text.isEmpty ||
+                      _emailController.text.isEmpty ||
+                      _passwordController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please fill in all fields')),
+                    );
+                    return;
+                  }
+
+                  setState(() {
+                    _isLoading = true;
+                  });
+
+                  try {
+                    await AuthService().signUp(
+                      name: _nameController.text.trim(),
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim(),
+                    );
+                    if (!mounted) return;
+                    Navigator.pushReplacementNamed(context, '/login');
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Sign up failed: $e')),
+                    );
+                  } finally {
+                    if (mounted) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
+                  }
                 },
                 child: Container(
                   width: screenWidth * 337 / 430,
@@ -196,15 +228,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   child: Center(
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontFamily: 'InknutAntiqua',
-                        fontWeight: FontWeight.bold,
-                        fontSize: screenWidth * 30 / 430,
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                        : Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              fontFamily: 'InknutAntiqua',
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenWidth * 30 / 430,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
               ),
