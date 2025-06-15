@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../models/menu_item.dart';
+import '../../../providers/cart_provider.dart';
 import '../../../widgets/title_appbar.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/cart_provider.dart';
@@ -51,7 +53,6 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
         'Item Details',
         actionType: AppBarActionType.saveFavButton,
       ),
-      //todo: move up the image
       body: SizedBox.expand(
         child: Stack(
           children: [
@@ -78,6 +79,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                         borderRadius: BorderRadius.circular(16),
                         child: Image.asset(
                           widget.menuItem.imagePath,
+                          widget.menuItem.imagePath,
                           width: 200,
                           height: 200,
                           fit: BoxFit.contain,
@@ -86,6 +88,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                     ),
                     // Item Name
                     Text(
+                      widget.menuItem.name,
                       widget.menuItem.name,
                       style: const TextStyle(
                         fontFamily: 'Inter',
@@ -106,9 +109,15 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                             color: Colors.amber,
                             size: 28,
                           ),
+                          (i) => const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                            size: 28,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Text(
+                          widget.menuItem.ratings.toStringAsFixed(1),
                           widget.menuItem.ratings.toStringAsFixed(1),
                           style: const TextStyle(
                             fontWeight: FontWeight.w700,
@@ -120,6 +129,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                     const SizedBox(height: 2),
                     Text(
                       '${widget.menuItem.reviews.length} Reviews',
+                      '${widget.menuItem.reviews.length} Reviews',
                       style: const TextStyle(color: Colors.grey, fontSize: 14),
                     ),
                     const SizedBox(height: 12),
@@ -128,6 +138,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children:
+                            widget.menuItem.reviews
                             widget.menuItem.reviews
                                 .map((review) => _ReviewCard(review: review))
                                 .toList(),
@@ -162,6 +173,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                           ),
                           const SizedBox(height: 8),
                           Text(
+                            widget.menuItem.description,
                             widget.menuItem.description,
                             textAlign: TextAlign.center,
                             style: const TextStyle(fontSize: 14),
@@ -199,6 +211,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                   children: [
                     Text(
                       widget.menuItem.price,
+                      widget.menuItem.price,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -225,6 +238,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                             ),
                             padding: const EdgeInsets.all(4),
                             constraints: const BoxConstraints(),
+                            onPressed: _decreaseQuantity,
                             onPressed: _decreaseQuantity,
                           ),
                           Text(

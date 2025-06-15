@@ -24,6 +24,8 @@ import 'screens/home/restaurant_menu_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 // ignore: unused_import
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firebase_options.dart';
+import 'providers/cart_provider.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(
@@ -34,13 +36,19 @@ void main() async {
   );
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize rewards in the database
   final databaseService = DatabaseService();
   await databaseService.initializeCurrentRewards();
 
   runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (ctx) => CartProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
