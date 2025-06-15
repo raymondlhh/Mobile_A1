@@ -173,25 +173,16 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(
-                  //     horizontal: 8,
-                  //     vertical: 4,
-                  //   ),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.green,
-                  //     borderRadius: BorderRadius.circular(20),
-                  //   ),
-                  //   child: const Text(
-                  //     "OPEN",
-                  //     style: TextStyle(
-                  //       fontFamily: 'Inter',
-                  //       fontWeight: FontWeight.bold,
-                  //       color: Colors.white,
-                  //       fontSize: 14,
-                  //     ),
-                  //   ),
-                  // ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.shopping_cart,
+                      color: Colors.black,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      // TODO: Implement shopping cart functionality
+                    },
+                  ),
                 ],
               ),
             ),
