@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/reward.dart';
 
