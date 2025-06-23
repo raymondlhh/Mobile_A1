@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/title_appbar.dart';
 import '../../widgets/profile_description.dart';
+import '../../services/auth_service.dart';
 
 import '../../models/user_profile.dart';
 
@@ -18,6 +19,7 @@ class _EditScreenState extends State<EditScreen> {
   late TextEditingController _passwordController;
   late TextEditingController _phoneController;
   late TextEditingController _addressController;
+  final AuthService _authService = AuthService();
 
   bool _obscurePassword = true;
 
@@ -36,18 +38,42 @@ class _EditScreenState extends State<EditScreen> {
     onTickPressed = saveProfileData;
   }
 
-  void saveProfileData() {
-    UserProfile.name = _nameController.text;
-    UserProfile.email = _emailController.text;
-    UserProfile.password = _passwordController.text;
-    UserProfile.phone = '+60 ${_phoneController.text}';
-    UserProfile.address = _addressController.text;
+  void saveProfileData() async {
+    final name = _nameController.text;
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final phone = '+60 ${_phoneController.text}';
+    final address = _addressController.text;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Profile saved successfully!')),
-    );
+    try {
+      await _authService.updateUserData(
+        currentEmail: UserProfile.email,
+        name: name,
+        email: email,
+        password: password,
+        phone: phone,
+        address: address,
+      );
 
-    Navigator.pop(context); // return to profile screen
+      UserProfile.name = name;
+      UserProfile.email = email;
+      UserProfile.password = password;
+      UserProfile.phone = phone;
+      UserProfile.address = address;
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile saved successfully!')),
+        );
+        Navigator.pop(context); // return to profile screen
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save profile: ${e.toString()}')),
+        );
+      }
+    }
   }
 
 
