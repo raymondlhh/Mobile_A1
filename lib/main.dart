@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'services/database_service.dart';
+import 'package:provider/provider.dart';
+import 'providers/cart_provider.dart';
 
 import 'widgets/bottom_nav.dart';
 //import 'screens/home/home_screen.dart';
@@ -18,6 +20,7 @@ import 'screens/home/login_screen.dart';
 import 'screens/home/forgot_password_screen.dart';
 import 'screens/home/restaurant_menu_screen.dart';
 import 'screens/home/video_splash_screen.dart';
+import 'screens/menu/checkout_page.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 // ignore: unused_import
@@ -38,7 +41,12 @@ void main() async {
   final databaseService = DatabaseService();
   await databaseService.initializeCurrentRewards();
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => CartProvider())],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -65,6 +73,7 @@ class MyApp extends StatelessWidget {
         '/setting': (context) => const SettingScreen(),
         '/restaurant_menu': (context) => const RestaurantMenuScreen(),
         '/videoSplash': (context) => const VideoSplashScreen(),
+        '/checkout': (context) => const CheckoutPage(),
       },
     );
   }
