@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../screens/profile/notification_screen.dart';
 import '../../screens/home/detail_home_screen.dart';
+import '../models/menu_item.dart';
+import '../services/favourite_service.dart';
 
 VoidCallback? onTickPressed;
-bool _isBookmarked = false;
 
 enum AppBarActionType {
   none,
@@ -17,6 +18,8 @@ AppBar buildAppBar(
   BuildContext context,
   String title, {
   AppBarActionType actionType = AppBarActionType.notificationButton,
+  MenuItem? menuItem,
+  FavouriteService? favouriteService,
 }) {
   return AppBar(
     backgroundColor: const Color(0xFFFFF8E5),
@@ -46,13 +49,15 @@ AppBar buildAppBar(
         ),
       ),
     ),
-    actions: _buildAppBarActions(context, actionType),
+    actions: _buildAppBarActions(context, actionType, menuItem, favouriteService),
   );
 }
 
 List<Widget>? _buildAppBarActions(
   BuildContext context,
   AppBarActionType actionType,
+  MenuItem? menuItem,
+  FavouriteService? favouriteService,
 ) {
   switch (actionType) {
     case AppBarActionType.none:
@@ -94,21 +99,15 @@ List<Widget>? _buildAppBarActions(
       return [
         Padding(
           padding: const EdgeInsets.only(right: 16),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return IconButton(
-                icon: Image.asset(
-                  _isBookmarked
-                      ? 'assets/images/others/bookmarkOn.png'
-                      : 'assets/images/others/bookmarkOff.png',
-                  width: 24,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isBookmarked = !_isBookmarked;
-                  });
-                },
-              );
+          child: IconButton(
+            icon: Image.asset(
+              favouriteService!.isFavourite(menuItem!)
+                  ? 'assets/images/others/bookmarkOn.png'
+                  : 'assets/images/others/bookmarkOff.png',
+              width: 24,
+            ),
+            onPressed: () {
+              favouriteService.toggleFavourite(menuItem);
             },
           ),
         ),

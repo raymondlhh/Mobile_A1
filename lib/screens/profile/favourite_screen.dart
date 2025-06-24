@@ -1,7 +1,10 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
-import '../../models/favourite_food.dart';
+import '../../models/menu_item.dart';
+import '../../services/favourite_service.dart';
 import '../../widgets/title_appbar.dart';
-import '../../widgets/favourite_food_card.dart';
+import '../menu/item_detail_page.dart';
 
 class FavouriteScreen extends StatefulWidget {
   const FavouriteScreen({super.key});
@@ -11,22 +14,7 @@ class FavouriteScreen extends StatefulWidget {
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
-  // ignore: prefer_final_fields
-  List<FavouriteFood> _foods = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadFavorites();
-  }
-
-  Future<void> _loadFavorites() async {
-    setState(() {});
-  }
-
-  Future<void> _removeFromFavourites(FavouriteFood food) async {
-    await _loadFavorites(); // Reload the list after deletion
-  }
+  final FavouriteService _favouriteService = FavouriteService();
 
   @override
   Widget build(BuildContext context) {
@@ -36,21 +24,47 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         'Favourites',
         actionType: AppBarActionType.none,
       ),
-      body:
-          _foods.isEmpty
-              ? const Center(
-                child: Text('No favorites yet', style: TextStyle(fontSize: 18)),
-              )
-              : ListView.builder(
-                itemCount: _foods.length,
-                padding: const EdgeInsets.all(22),
-                itemBuilder: (context, index) {
-                  return FavouriteFoodCard(
-                    food: _foods[index],
-                    onRemove: () => _removeFromFavourites(_foods[index]),
-                  );
-                },
-              ),
+      body: ListenableBuilder(
+        listenable: _favouriteService,
+        builder: (context, child) {
+          final favouriteItems = _favouriteService.favouriteItems;
+          if (favouriteItems.isEmpty) {
+            return const Center(
+              child: Text('No favorites yet', style: TextStyle(fontSize: 18)),
+            );
+          }
+          return ListView.builder(
+            itemCount: favouriteItems.length,
+            padding: const EdgeInsets.all(22),
+            itemBuilder: (context, index) {
+              final item = favouriteItems[index];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 16),
+                child: ListTile(
+                  leading: Image.asset(item.imagePath,
+                      width: 50, height: 50, fit: BoxFit.cover),
+                  title: Text(item.name),
+                  subtitle: Text(item.price),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      _favouriteService.toggleFavourite(item);
+                    },
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ItemDetailPage(menuItem: item),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
