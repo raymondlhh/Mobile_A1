@@ -2,6 +2,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/reward.dart';
+import '../models/order.dart' as app_models;
+import '../models/cart_item.dart';
+import '../models/user_profile.dart';
 
 class DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -9,6 +12,10 @@ class DatabaseService {
   // Collection reference
   final CollectionReference _rewardsCollection = FirebaseFirestore.instance
       .collection('rewards');
+
+  // Orders collection reference
+  final CollectionReference _ordersCollection = FirebaseFirestore.instance
+      .collection('orders');
 
   // Initialize current rewards
   Future<void> initializeCurrentRewards() async {
@@ -141,6 +148,15 @@ class DatabaseService {
       await _rewardsCollection.doc(rewardId).update(reward.toMap());
     } catch (e) {
       print('Error updating reward: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> addOrder(app_models.Order order) async {
+    try {
+      await _ordersCollection.add(order.toMap());
+    } catch (e) {
+      print('Error adding order: $e');
       rethrow;
     }
   }
