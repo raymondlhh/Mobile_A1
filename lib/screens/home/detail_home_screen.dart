@@ -3,9 +3,39 @@ import 'package:flutter/material.dart';
 import '../menu/menu_screen.dart';
 import '../menu/item_detail_page.dart';
 import '../../models/menu_item.dart';
+import '../../data/menu_data.dart';
 
-class DetailHomeScreen extends StatelessWidget {
+class DetailHomeScreen extends StatefulWidget {
   const DetailHomeScreen({super.key});
+
+  @override
+  _DetailHomeScreenState createState() => _DetailHomeScreenState();
+}
+
+class _DetailHomeScreenState extends State<DetailHomeScreen> {
+  String selectedCategory = 'Party Set';
+  List<MenuItem> displayedItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _updateDisplayedItems();
+  }
+
+  void _updateDisplayedItems() {
+    final items =
+        menuItems
+            .where(
+              (item) => item.imagePath.toLowerCase().contains(
+                selectedCategory.toLowerCase().replaceAll(' ', '_'),
+              ),
+            )
+            .toList();
+    items.shuffle();
+    setState(() {
+      displayedItems = items.take(2).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -220,53 +250,117 @@ class DetailHomeScreen extends StatelessWidget {
                             physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             children: [
-                              _buildCategory(
-                                'Party Set',
-                                'assets/images/icons/menu_sidebar/party_set.png',
-                                scaleWidth,
-                                scaleHeight,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory = 'Party Set';
+                                    _updateDisplayedItems();
+                                  });
+                                },
+                                child: _buildCategory(
+                                  'Party Set',
+                                  'assets/images/icons/menu_sidebar/party_set.png',
+                                  scaleWidth,
+                                  scaleHeight,
+                                ),
                               ),
-                              _buildCategory(
-                                'Appetizers',
-                                'assets/images/icons/menu_sidebar/appetizers.png',
-                                scaleWidth,
-                                scaleHeight,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory = 'Appetizers';
+                                    _updateDisplayedItems();
+                                  });
+                                },
+                                child: _buildCategory(
+                                  'Appetizers',
+                                  'assets/images/icons/menu_sidebar/appetizers.png',
+                                  scaleWidth,
+                                  scaleHeight,
+                                ),
                               ),
-                              _buildCategory(
-                                'Maki Roll',
-                                'assets/images/icons/menu_sidebar/maki_roll.png',
-                                scaleWidth,
-                                scaleHeight,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory = 'Maki Roll';
+                                    _updateDisplayedItems();
+                                  });
+                                },
+                                child: _buildCategory(
+                                  'Maki Roll',
+                                  'assets/images/icons/menu_sidebar/maki_roll.png',
+                                  scaleWidth,
+                                  scaleHeight,
+                                ),
                               ),
-                              _buildCategory(
-                                'Nigiri',
-                                'assets/images/icons/menu_sidebar/nigiri.png',
-                                scaleWidth,
-                                scaleHeight,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory = 'Nigiri';
+                                    _updateDisplayedItems();
+                                  });
+                                },
+                                child: _buildCategory(
+                                  'Nigiri',
+                                  'assets/images/icons/menu_sidebar/nigiri.png',
+                                  scaleWidth,
+                                  scaleHeight,
+                                ),
                               ),
-                              _buildCategory(
-                                'Gunkan',
-                                'assets/images/icons/menu_sidebar/gunkan.png',
-                                scaleWidth,
-                                scaleHeight,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory = 'Gunkan';
+                                    _updateDisplayedItems();
+                                  });
+                                },
+                                child: _buildCategory(
+                                  'Gunkan',
+                                  'assets/images/icons/menu_sidebar/gunkan.png',
+                                  scaleWidth,
+                                  scaleHeight,
+                                ),
                               ),
-                              _buildCategory(
-                                'Curry Set',
-                                'assets/images/icons/menu_sidebar/curry_set.png',
-                                scaleWidth,
-                                scaleHeight,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory = 'Curry Set';
+                                    _updateDisplayedItems();
+                                  });
+                                },
+                                child: _buildCategory(
+                                  'Curry Set',
+                                  'assets/images/icons/menu_sidebar/curry_set.png',
+                                  scaleWidth,
+                                  scaleHeight,
+                                ),
                               ),
-                              _buildCategory(
-                                'Condiments',
-                                'assets/images/icons/menu_sidebar/condiments.png',
-                                scaleWidth,
-                                scaleHeight,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory = 'Condiments';
+                                    _updateDisplayedItems();
+                                  });
+                                },
+                                child: _buildCategory(
+                                  'Condiments',
+                                  'assets/images/icons/menu_sidebar/condiments.png',
+                                  scaleWidth,
+                                  scaleHeight,
+                                ),
                               ),
-                              _buildCategory(
-                                'Drinks',
-                                'assets/images/icons/menu_sidebar/drinks.png',
-                                scaleWidth,
-                                scaleHeight,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory = 'Drinks';
+                                    _updateDisplayedItems();
+                                  });
+                                },
+                                child: _buildCategory(
+                                  'Drinks',
+                                  'assets/images/icons/menu_sidebar/drinks.png',
+                                  scaleWidth,
+                                  scaleHeight,
+                                ),
                               ),
                             ],
                           ),
@@ -287,11 +381,12 @@ class DetailHomeScreen extends StatelessWidget {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
-                      itemCount: 2,
+                      itemCount: displayedItems.length,
                       itemBuilder: (context, index) {
+                        final item = displayedItems[index];
                         return _buildMenuItem(
                           context,
-                          index,
+                          item,
                           scaleWidth,
                           scaleHeight,
                         );
@@ -356,58 +451,16 @@ class DetailHomeScreen extends StatelessWidget {
 
   Widget _buildMenuItem(
     BuildContext context,
-    int index,
+    MenuItem item,
     double scaleWidth,
     double scaleHeight,
   ) {
-    List<MenuItem> menuItems = [
-      const MenuItem(
-        name: 'Party Set A (81 PCS)',
-        price: 'RM109.90',
-        description: 'A large assortment of sushi rolls for your party.',
-        imagePath: 'assets/images/icons/detail_home_screen/partset1.png',
-        ratings: 5.0,
-        reviews: [
-          Review(
-            reviewerName: 'Michael See',
-            reviewerAvatar: 'assets/images/avatars/caleb.png',
-            comment: 'Sangat sedap dan segar!',
-          ),
-          Review(
-            reviewerName: 'Caleb Martin',
-            reviewerAvatar: 'assets/images/avatars/caleb.png',
-            comment: 'Rasanya padu sgt,akn beli lagi',
-          ),
-        ],
-      ),
-      const MenuItem(
-        name: 'Maki Set (30 PCS)',
-        price: 'RM49.90',
-        description:
-            'A variety of maki rolls including tuna, salmon, and avocado.',
-        imagePath: 'assets/images/icons/detail_home_screen/partset2.png',
-        ratings: 4.8,
-        reviews: [
-          Review(
-            reviewerName: 'Aina Rahman',
-            reviewerAvatar: 'assets/images/avatars/aina.png',
-            comment: 'Banyak pilihan, sesuai untuk keluarga!',
-          ),
-          Review(
-            reviewerName: 'Jason Lim',
-            reviewerAvatar: 'assets/images/avatars/jason.png',
-            comment: 'Fresh and delicious, will order again.',
-          ),
-        ],
-      ),
-    ];
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ItemDetailPage(menuItem: menuItems[index]),
+            builder: (context) => ItemDetailPage(menuItem: item),
           ),
         );
       },
@@ -427,7 +480,7 @@ class DetailHomeScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
-                    image: AssetImage(menuItems[index].imagePath),
+                    image: AssetImage(item.imagePath),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -439,7 +492,7 @@ class DetailHomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      menuItems[index].name,
+                      item.name,
                       style: TextStyle(
                         fontSize: 16 * scaleWidth,
                         fontWeight: FontWeight.bold,
@@ -450,7 +503,7 @@ class DetailHomeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 4 * scaleHeight),
                     Text(
-                      menuItems[index].description,
+                      item.description,
                       style: TextStyle(
                         fontSize: 13 * scaleWidth,
                         fontFamily: 'Inter',
@@ -461,7 +514,7 @@ class DetailHomeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 6 * scaleHeight),
                     Text(
-                      menuItems[index].price,
+                      item.price,
                       style: TextStyle(
                         fontSize: 15 * scaleWidth,
                         fontWeight: FontWeight.bold,
