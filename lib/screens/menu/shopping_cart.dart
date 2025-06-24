@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../models/menu_item.dart';
+import 'package:provider/provider.dart';
+import '../../providers/cart_provider.dart';
+import '../../models/cart_item.dart';
 import '../../../widgets/title_appbar.dart';
+import 'checkout_page.dart';
 
 class ShoppingCart extends StatelessWidget {
   const ShoppingCart({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+    final cartItems = cartProvider.items;
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8E5),
       appBar: buildAppBar(context, 'Shopping Cart'),
@@ -14,13 +19,16 @@ class ShoppingCart extends StatelessWidget {
         children: [
           // Cart Items List
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: 0, // TODO: Replace with actual cart items
-              itemBuilder: (context, index) {
-                return const _CartItem();
-              },
-            ),
+            child:
+                cartItems.isEmpty
+                    ? const Center(child: Text('Your cart is empty'))
+                    : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: cartItems.length,
+                      itemBuilder: (context, index) {
+                        return _CartItem(cartItem: cartItems[index]);
+                      },
+                    ),
           ),
           // Bottom Summary
           Container(
@@ -37,16 +45,16 @@ class ShoppingCart extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Subtotal',
                       style: TextStyle(fontSize: 16, fontFamily: 'Inter'),
                     ),
                     Text(
-                      'RM 0.00', // TODO: Replace with actual subtotal
-                      style: TextStyle(
+                      'RM ${cartProvider.totalAmount.toStringAsFixed(2)}',
+                      style: const TextStyle(
                         fontSize: 16,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.bold,
@@ -58,9 +66,17 @@ class ShoppingCart extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: Implement checkout functionality
-                    },
+                    onPressed:
+                        cartItems.isEmpty
+                            ? null
+                            : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const CheckoutPage(),
+                                ),
+                              );
+                            },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFCA3202),
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -89,10 +105,12 @@ class ShoppingCart extends StatelessWidget {
 }
 
 class _CartItem extends StatelessWidget {
-  const _CartItem();
+  final CartItem cartItem;
+  const _CartItem({required this.cartItem});
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -112,15 +130,24 @@ class _CartItem extends StatelessWidget {
           Container(
             width: 100,
             height: 100,
-            decoration: BoxDecoration(
-              color: const Color(0xFFCA3202),
-              borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+              color: Color(0xFFCA3202),
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(12),
                 bottomLeft: Radius.circular(12),
               ),
             ),
-            child: const Center(
-              child: Icon(Icons.image, color: Colors.white, size: 40),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                bottomLeft: Radius.circular(12),
+              ),
+              child: Image.asset(
+                cartItem.menuItem.imagePath,
+                fit: BoxFit.cover,
+                width: 100,
+                height: 100,
+              ),
             ),
           ),
           // Item Details
@@ -130,18 +157,18 @@ class _CartItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Item Name', // TODO: Replace with actual item name
-                    style: TextStyle(
+                  Text(
+                    cartItem.menuItem.name,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'RM 0.00', // TODO: Replace with actual price
-                    style: TextStyle(
+                  Text(
+                    cartItem.menuItem.price,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontFamily: 'Inter',
                       color: Color(0xFFCA3202),
@@ -153,12 +180,19 @@ class _CartItem extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.remove_circle_outline),
                         onPressed: () {
-                          // TODO: Implement decrease quantity
+                          if (cartItem.quantity > 1) {
+                            cartProvider.updateQuantity(
+                              cartItem.menuItem.name,
+                              cartItem.quantity - 1,
+                            );
+                          } else {
+                            cartProvider.removeItem(cartItem.menuItem.name);
+                          }
                         },
                       ),
-                      const Text(
-                        '1', // TODO: Replace with actual quantity
-                        style: TextStyle(
+                      Text(
+                        cartItem.quantity.toString(),
+                        style: const TextStyle(
                           fontSize: 16,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.bold,
@@ -167,7 +201,10 @@ class _CartItem extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.add_circle_outline),
                         onPressed: () {
-                          // TODO: Implement increase quantity
+                          cartProvider.updateQuantity(
+                            cartItem.menuItem.name,
+                            cartItem.quantity + 1,
+                          );
                         },
                       ),
                     ],
@@ -180,7 +217,7 @@ class _CartItem extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.delete_outline, color: Colors.red),
             onPressed: () {
-              // TODO: Implement remove item
+              cartProvider.removeItem(cartItem.menuItem.name);
             },
           ),
         ],
