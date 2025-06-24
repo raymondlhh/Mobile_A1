@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use, unused_field
 
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -12,8 +14,9 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  int _selectedMethod = 0; // 0: Phone, 1: Email
+  final TextEditingController _newPasswordController = TextEditingController();
+  bool _emailFound = false;
+  String? _userDocId;
 
   late AnimationController _animController;
   late Animation<double> _logoOpacity;
@@ -55,7 +58,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   void dispose() {
     _animController.dispose();
     _emailController.dispose();
-    _phoneController.dispose();
+    _newPasswordController.dispose();
     super.dispose();
   }
 
@@ -96,182 +99,203 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 fit: BoxFit.contain,
               ),
             ),
-            // Method Switch Buttons
-            Positioned(
-              left: screenWidth * 41 / 430,
-              top: screenHeight * 460 / 932,
-              child: Container(
-                width: screenWidth * 337 / 430,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedMethod = 0;
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color:
-                                _selectedMethod == 0
-                                    ? const Color(0xFF8AB98F)
-                                    : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            'By Phone',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color:
-                                  _selectedMethod == 0
-                                      ? Colors.white
-                                      : Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedMethod = 1;
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color:
-                                _selectedMethod == 1
-                                    ? const Color(0xFF8AB98F)
-                                    : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            'By Email',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color:
-                                  _selectedMethod == 1
-                                      ? Colors.white
-                                      : Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            // Input Field
+            // 邮箱输入框
             Positioned(
               left: screenWidth * 41 / 430,
               top: screenHeight * 530 / 932,
-              child: Container(
-                width: screenWidth * 337 / 430,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: screenWidth * 337 / 430,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child:
-                    _selectedMethod == 0
-                        ? TextField(
-                          controller: _phoneController,
-                          keyboardType: TextInputType.phone,
-                          decoration: InputDecoration(
-                            hintText: 'Phone Number',
-                            hintStyle: TextStyle(
-                              fontSize: screenWidth * 16 / 430,
-                              color: Colors.grey,
-                            ),
-                            prefixIcon: const Icon(Icons.phone_outlined),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: screenWidth * 16 / 430,
-                              vertical: screenHeight * 16 / 932,
-                            ),
+                    child: TextField(
+                      controller: _emailController,
+                      enabled: !_emailFound,
+                      decoration: InputDecoration(
+                        hintText: 'Email',
+                        hintStyle: TextStyle(
+                          fontSize: screenWidth * 16 / 430,
+                          color: Colors.grey,
+                        ),
+                        prefixIcon: const Icon(Icons.email_outlined),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 16 / 430,
+                          vertical: screenHeight * 16 / 932,
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (_emailFound) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      width: screenWidth * 337 / 430,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
                           ),
-                        )
-                        : TextField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            hintText: 'Email',
-                            hintStyle: TextStyle(
-                              fontSize: screenWidth * 16 / 430,
-                              color: Colors.grey,
-                            ),
-                            prefixIcon: const Icon(Icons.email_outlined),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: screenWidth * 16 / 430,
-                              vertical: screenHeight * 16 / 932,
-                            ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: _newPasswordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          hintText: 'New Password',
+                          hintStyle: TextStyle(
+                            fontSize: screenWidth * 16 / 430,
+                            color: Colors.grey,
+                          ),
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 16 / 430,
+                            vertical: screenHeight * 16 / 932,
                           ),
                         ),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
-            // Send Button
-            Positioned(
-              left: screenWidth * 41 / 430,
-              top: screenHeight * 610 / 932,
-              child: GestureDetector(
-                onTap: () {
-                  // Todo: 实现发送验证码或重置链接逻辑
-                },
-                child: Container(
-                  width: screenWidth * 337 / 430,
-                  height: screenHeight * 53 / 932,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 5,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      _selectedMethod == 0 ? 'Send Code' : 'Send Reset Link',
-                      style: TextStyle(
-                        fontFamily: 'InknutAntiqua',
-                        fontWeight: FontWeight.bold,
-                        fontSize: screenWidth * 22 / 430,
-                        color: Colors.white,
+            // 查找邮箱按钮
+            if (!_emailFound)
+              Positioned(
+                left: screenWidth * 41 / 430,
+                top: screenHeight * 610 / 932,
+                child: GestureDetector(
+                  onTap: () async {
+                    final email = _emailController.text.trim();
+                    if (email.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter your email'),
+                        ),
+                      );
+                      return;
+                    }
+                    final users =
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .where('email', isEqualTo: email)
+                            .get();
+                    if (users.docs.isNotEmpty) {
+                      setState(() {
+                        _emailFound = true;
+                        _userDocId = users.docs.first.id;
+                      });
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Email not registered')),
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: screenWidth * 337 / 430,
+                    height: screenHeight * 53 / 932,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 5,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Find Email',
+                        style: TextStyle(
+                          fontFamily: 'InknutAntiqua',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            // Back to Login Button (moved below Send Code and grey)
+            // Reset Password 按钮
+            if (_emailFound)
+              Positioned(
+                left: screenWidth * 41 / 430,
+                top: screenHeight * 670 / 932,
+                child: GestureDetector(
+                  onTap: () async {
+                    final newPassword = _newPasswordController.text.trim();
+                    if (newPassword.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter a new password'),
+                        ),
+                      );
+                      return;
+                    }
+                    if (_userDocId == null) return;
+                    await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(_userDocId)
+                        .update({'password': newPassword});
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Password has been reset. Please return to login.',
+                        ),
+                      ),
+                    );
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
+                  child: Container(
+                    width: screenWidth * 337 / 430,
+                    height: screenHeight * 53 / 932,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 5,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Reset Password',
+                        style: TextStyle(
+                          fontFamily: 'InknutAntiqua',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            // Back to Login Button
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 670 / 932,
+              top: screenHeight * 730 / 932,
               child: SizedBox(
                 width: screenWidth * 337 / 430,
                 child: Center(
