@@ -117,7 +117,7 @@ class CheckoutPage extends StatelessWidget {
                           // Store order in Firestore
                           await DatabaseService().addOrder(order);
                           cartProvider.items.clear();
-                          // ignore: invalid_use_of_protected_member
+                          // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
                           cartProvider.notifyListeners();
                           showDialog(
                             // ignore: use_build_context_synchronously
