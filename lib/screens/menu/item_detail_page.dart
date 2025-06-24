@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../../../models/menu_item.dart';
 import '../../../services/favourite_service.dart';
 import '../../../widgets/title_appbar.dart';
+import 'package:provider/provider.dart';
+import '../../providers/cart_provider.dart';
 
 class ItemDetailPage extends StatefulWidget {
   final MenuItem menuItem;
@@ -15,6 +17,26 @@ class ItemDetailPage extends StatefulWidget {
 
 class _ItemDetailPageState extends State<ItemDetailPage> {
   final FavouriteService _favouriteService = FavouriteService();
+  int _quantity = 1;
+
+  void _addToCart(BuildContext context) {
+    Provider.of<CartProvider>(
+      context,
+      listen: false,
+    ).addItem(widget.menuItem, _quantity);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Added to cart!'),
+        duration: const Duration(seconds: 1),
+        action: SnackBarAction(
+          label: 'View Cart',
+          onPressed: () {
+            Navigator.pushNamed(context, '/bottomNav'); // Or your cart route
+          },
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +101,11 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                           children: [
                             ...List.generate(
                               5,
-                              (i) =>
-                                  const Icon(Icons.star, color: Colors.amber, size: 28),
+                              (i) => const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 28,
+                              ),
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -95,7 +120,10 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                         const SizedBox(height: 2),
                         Text(
                           '${widget.menuItem.reviews.length} Reviews',
-                          style: const TextStyle(color: Colors.grey, fontSize: 14),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
                         ),
                         const SizedBox(height: 12),
                         // Reviews (Horizontal Scrollable if # of reviews > 2)
@@ -104,7 +132,9 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                           child: Row(
                             children:
                                 widget.menuItem.reviews
-                                    .map((review) => _ReviewCard(review: review))
+                                    .map(
+                                      (review) => _ReviewCard(review: review),
+                                    )
                                     .toList(),
                           ),
                         ),
@@ -200,9 +230,16 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                                 ),
                                 padding: const EdgeInsets.all(4),
                                 constraints: const BoxConstraints(),
-                                onPressed: () {},
+                                onPressed: () {
+                                  setState(() {
+                                    if (_quantity > 1) _quantity--;
+                                  });
+                                },
                               ),
-                              const Text('1', style: TextStyle(fontSize: 16)),
+                              Text(
+                                '$_quantity',
+                                style: const TextStyle(fontSize: 16),
+                              ),
                               IconButton(
                                 icon: const Icon(
                                   Icons.add,
@@ -211,7 +248,11 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                                 ),
                                 padding: const EdgeInsets.all(4),
                                 constraints: const BoxConstraints(),
-                                onPressed: () {},
+                                onPressed: () {
+                                  setState(() {
+                                    _quantity++;
+                                  });
+                                },
                               ),
                             ],
                           ),
@@ -228,7 +269,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                               vertical: 8,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () => _addToCart(context),
                           child: const Text(
                             'ADD TO CART',
                             style: TextStyle(
