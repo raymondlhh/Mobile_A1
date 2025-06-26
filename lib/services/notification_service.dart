@@ -8,6 +8,7 @@ class NotificationItem {
   final String date;
   final String time;
   bool isRead;
+  final DateTime timestamp;
 
   NotificationItem({
     required this.name,
@@ -15,6 +16,7 @@ class NotificationItem {
     required this.date,
     required this.time,
     this.isRead = false,
+    required this.timestamp,
   });
 
   Map<String, dynamic> toJson() => {
@@ -23,6 +25,7 @@ class NotificationItem {
     'date': date,
     'time': time,
     'isRead': isRead,
+    'timestamp': timestamp.toIso8601String(),
   };
 
   static NotificationItem fromJson(Map<String, dynamic> json) => NotificationItem(
@@ -31,6 +34,7 @@ class NotificationItem {
     date: json['date'],
     time: json['time'],
     isRead: json['isRead'] ?? false,
+    timestamp: json['timestamp'] != null ? DateTime.parse(json['timestamp']) : DateTime.now(),
   );
 }
 
@@ -44,7 +48,7 @@ class NotificationService extends ChangeNotifier {
         .collection('users')
         .doc(userId)
         .collection('notifications')
-        .orderBy('date', descending: true)
+        .orderBy('timestamp', descending: true)
         .get();
     return snapshot.docs.map((doc) => NotificationItem.fromJson(doc.data())).toList();
   }

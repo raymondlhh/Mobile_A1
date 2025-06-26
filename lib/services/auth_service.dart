@@ -43,6 +43,8 @@ class AuthService {
         UserProfile.phone = userData['phone'] ?? '';
         UserProfile.address = userData['address'] ?? '';
         UserProfile.rewardsPoints = userData['rewardsPoints'] ?? 0;
+        // Load profile picture - check for photoAsset first, then photoUrl
+        UserProfile.photoUrl = userData['photoAsset'] ?? userData['photoUrl'] ?? '';
         return true;
       }
       return false;

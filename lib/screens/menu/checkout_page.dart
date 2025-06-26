@@ -249,6 +249,7 @@ class CheckoutPage extends StatelessWidget {
                                               'RM ${total.toStringAsFixed(2)} has been successfully paid',
                                           date: _todayDateString(),
                                           time: _currentTimeString(),
+                                          timestamp: DateTime.now(),
                                         ),
                                       );
 
@@ -260,6 +261,7 @@ class CheckoutPage extends StatelessWidget {
                                               'You earned $points points for this order',
                                           date: _todayDateString(),
                                           time: _currentTimeString(),
+                                          timestamp: DateTime.now(),
                                         ),
                                       );
 

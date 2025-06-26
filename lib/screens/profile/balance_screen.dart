@@ -70,6 +70,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
           description: 'RM ${topUpAmount.toStringAsFixed(2)} has been successfully topped-up',
           date: _todayDateString(),
           time: _currentTimeString(),
+          timestamp: DateTime.now(),
         ),
       );
       if (mounted) {

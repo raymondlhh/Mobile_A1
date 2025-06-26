@@ -1,8 +1,10 @@
 // lib/screens/home/profile_screen.dart
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widgets/title_appbar.dart';
 import '../../widgets/profile_description.dart';
+import '../../models/user_profile.dart';
 
 import '../profile/favourite_screen.dart';
 import '../profile/balance_screen.dart';
@@ -10,6 +12,28 @@ import '../profile/setting_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});  // FIX key constructor
+
+  Future<void> _logout(BuildContext context) async {
+    // Clear UserProfile data
+    UserProfile.userId = '';
+    UserProfile.name = '';
+    UserProfile.email = '';
+    UserProfile.password = '';
+    UserProfile.phone = '';
+    UserProfile.address = '';
+    UserProfile.rewardsPoints = 0;
+    UserProfile.photoUrl = '';
+
+    // Clear SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false);
+    await prefs.setString('userId', '');
+
+    // Navigate to welcome screen
+    if (context.mounted) {
+      Navigator.pushReplacementNamed(context, '/welcome');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +113,7 @@ Widget _buildActionButtons(BuildContext context) {
 
 Widget _buildLogoutButton(BuildContext context) {
   return GestureDetector(
-    onTap: () {
-      Navigator.pushReplacementNamed(context, '/welcome');
-    },
+    onTap: () => ProfileScreen()._logout(context),
     child: Image.asset(
       'assets/images/buttons/LogOutButton.png',
       width: 160, // adjust size as needed

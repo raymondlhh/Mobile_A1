@@ -12,6 +12,34 @@ class ProfileHeader extends StatefulWidget {
 }
 
 class _ProfileHeaderState extends State<ProfileHeader> {
+  String _currentPhotoUrl = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfilePicture();
+  }
+
+  Future<void> _loadProfilePicture() async {
+    final userId = UserProfile.userId;
+    if (userId.isEmpty) return;
+    
+    try {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+      if (doc.exists && doc.data() != null) {
+        final userData = doc.data()!;
+        final photoAsset = userData['photoAsset'];
+        final photoUrl = userData['photoUrl'];
+        
+        setState(() {
+          _currentPhotoUrl = photoAsset ?? photoUrl ?? 'assets/images/others/Profile.png';
+        });
+      }
+    } catch (e) {
+      print('Error loading profile picture: $e');
+    }
+  }
+
   Future<void> _pickProfileAsset(BuildContext context) async {
     final List<String> assetNames = [
       'assets/images/others/Profile.png',
@@ -45,7 +73,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         SetOptions(merge: true),
       );
       UserProfile.photoUrl = selected;
-      setState(() {});
+      setState(() {
+        _currentPhotoUrl = selected;
+      });
     }
   }
 
@@ -67,8 +97,8 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         ),
         ClipOval(
           child: Image.asset(
-            UserProfile.photoUrl.isNotEmpty
-                ? UserProfile.photoUrl
+            _currentPhotoUrl.isNotEmpty
+                ? _currentPhotoUrl
                 : 'assets/images/others/Profile.png',
             width: 100,
             height: 100,
@@ -127,7 +157,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             await Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => const EditScreen()),
                             );
-                            setState(() {}); // ⬅ Rebuilds with updated name/email
+                            setState(() {
+                              _loadProfilePicture(); // Reload profile picture after edit
+                            }); // ⬅ Rebuilds with updated name/email
                           },
                           child: Image.asset(
                             'assets/images/buttons/EditButton.png',
