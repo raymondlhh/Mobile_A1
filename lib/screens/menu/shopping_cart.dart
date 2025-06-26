@@ -4,13 +4,10 @@ import '../../providers/cart_provider.dart';
 import '../../models/cart_item.dart';
 import '../../../widgets/title_appbar.dart';
 import 'checkout_page.dart';
-<<<<<<< Updated upstream
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-=======
 import '../../services/balance_service.dart';
 import '../../services/notification_service.dart';
->>>>>>> Stashed changes
 
 class ShoppingCart extends StatelessWidget {
   const ShoppingCart({super.key});
@@ -19,14 +16,27 @@ class ShoppingCart extends StatelessWidget {
     final now = DateTime.now();
     return '${now.day} ${_monthName(now.month)} ${now.year}';
   }
+
   String _currentTimeString() {
     final now = DateTime.now();
     return '${now.hour}:${now.minute.toString().padLeft(2, '0')}';
   }
+
   String _monthName(int month) {
     const months = [
-      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      '',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return months[month];
   }
@@ -165,51 +175,13 @@ class ShoppingCart extends StatelessWidget {
                     onPressed:
                         cartItems.isEmpty
                             ? null
-                            : () async {
-                              final balanceService = BalanceService();
-                              final balance = await balanceService.getBalance();
-                              final total = cartProvider.totalAmount;
-
-                              if (balance >= total) {
-                                // Deduct and save new balance
-                                await balanceService.setBalance(balance - total);
-
-                                // Add Payment Successful notification
-                                await NotificationService().addNotification(
-                                  NotificationItem(
-                                    name: 'Payment Successful',
-                                    description: 'RM ${total.toStringAsFixed(2)} has been successfully paid',
-                                    date: _todayDateString(),
-                                    time: _currentTimeString(),
-                                  ),
-                                );
-
-                                // Add Points Earned notification
-                                int pointsEarned = total.floor(); // 1 point per RM 1 (floor to ignore cents)
-                                if (pointsEarned > 0) {
-                                  await NotificationService().addNotification(
-                                    NotificationItem(
-                                      name: 'Points Earned',
-                                      description: '$pointsEarned points has been successfully earned',
-                                      date: _todayDateString(),
-                                      time: _currentTimeString(),
-                                    ),
-                                  );
-                                }
-
-                                // Proceed to checkout page
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const CheckoutPage(),
-                                  ),
-                                );
-                              } else {
-                                // Handle insufficient balance
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Insufficient balance')),
-                                );
-                              }
+                            : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const CheckoutPage(),
+                                ),
+                              );
                             },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFCA3202),
