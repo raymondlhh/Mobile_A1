@@ -252,6 +252,17 @@ class CheckoutPage extends StatelessWidget {
                                         ),
                                       );
 
+                                      // Add Points Earned notification
+                                      await NotificationService().addNotification(
+                                        NotificationItem(
+                                          name: 'Points Earned',
+                                          description:
+                                              'You earned $points points for this order',
+                                          date: _todayDateString(),
+                                          time: _currentTimeString(),
+                                        ),
+                                      );
+
                                       // Prepare order details
                                       final details =
                                           cartItems

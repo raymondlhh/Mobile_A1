@@ -45,4 +45,21 @@ class MenuItem {
     'description': description,
     'imagePath': imagePath,
   };
+
+  factory MenuItem.fromJson(Map<String, dynamic> json) => MenuItem(
+    name: json['name'] ?? '',
+    price: json['price'] ?? '',
+    ratings: (json['ratings'] is int)
+        ? (json['ratings'] as int).toDouble()
+        : (json['ratings'] ?? 0.0).toDouble(),
+    reviews: (json['reviews'] as List<dynamic>? ?? [])
+        .map((r) => Review(
+              reviewerName: r['reviewerName'] ?? '',
+              reviewerAvatar: r['reviewerAvatar'] ?? '',
+              comment: r['comment'] ?? '',
+            ))
+        .toList(),
+    description: json['description'] ?? '',
+    imagePath: json['imagePath'] ?? '',
+  );
 }

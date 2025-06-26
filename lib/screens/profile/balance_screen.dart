@@ -66,6 +66,21 @@ class _BalanceScreenState extends State<BalanceScreen> {
           time: _currentTimeString(),
         ),
       );
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Top-Up Successful!'),
+            content: const Text('Thank you for your top-up.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
