@@ -5,9 +5,26 @@ import '../../models/cart_item.dart';
 import '../../../widgets/title_appbar.dart';
 import 'checkout_page.dart';
 import '../../services/balance_service.dart';
+import '../../services/notification_service.dart';
 
 class ShoppingCart extends StatelessWidget {
   const ShoppingCart({super.key});
+
+  String _todayDateString() {
+    final now = DateTime.now();
+    return '${now.day} ${_monthName(now.month)} ${now.year}';
+  }
+  String _currentTimeString() {
+    final now = DateTime.now();
+    return '${now.hour}:${now.minute.toString().padLeft(2, '0')}';
+  }
+  String _monthName(int month) {
+    const months = [
+      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return months[month];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +95,16 @@ class ShoppingCart extends StatelessWidget {
                                 if (balance >= total) {
                                   // Deduct and save new balance
                                   await balanceService.setBalance(balance - total);
+
+                                  // Add Payment Successful notification
+                                  await NotificationService().addNotification(
+                                    NotificationItem(
+                                      name: 'Payment Successful',
+                                      description: 'RM ${total.toStringAsFixed(2)} has been successfully paid',
+                                      date: _todayDateString(),
+                                      time: _currentTimeString(),
+                                    ),
+                                  );
 
                                   // Optionally, clear the cart here if you want
                                   // cartProvider.clearCart();

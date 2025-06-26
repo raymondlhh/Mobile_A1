@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
 import '../../services/balance_service.dart';
+import '../../services/notification_service.dart';
 
 class BalanceScreen extends StatefulWidget {
   const BalanceScreen({super.key});
@@ -33,12 +34,39 @@ class _BalanceScreenState extends State<BalanceScreen> {
     });
   }
 
+  String _todayDateString() {
+    final now = DateTime.now();
+    return '${now.day} ${_monthName(now.month)} ${now.year}';
+  }
+  String _currentTimeString() {
+    final now = DateTime.now();
+    return '${now.hour}:${now.minute.toString().padLeft(2, '0')}';
+  }
+  String _monthName(int month) {
+    const months = [
+      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return months[month];
+  }
+
   void topUp() async {
+    double topUpAmount = double.tryParse(_controller.text) ?? 0;
     setState(() {
-      balance += double.tryParse(_controller.text) ?? 0;
+      balance += topUpAmount;
       _controller.text = '0.00';
     });
     await _balanceService.setBalance(balance);
+    if (topUpAmount > 0) {
+      await NotificationService().addNotification(
+        NotificationItem(
+          name: 'Top-Up Successful',
+          description: 'RM ${topUpAmount.toStringAsFixed(2)} has been successfully topped-up',
+          date: _todayDateString(),
+          time: _currentTimeString(),
+        ),
+      );
+    }
   }
 
   @override
