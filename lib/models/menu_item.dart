@@ -11,6 +11,12 @@ class Review {
     required this.reviewerAvatar,
     required this.comment,
   });
+
+  Map<String, dynamic> toJson() => {
+    'reviewerName': reviewerName,
+    'reviewerAvatar': reviewerAvatar,
+    'comment': comment,
+  };
 }
 
 @immutable
@@ -30,4 +36,13 @@ class MenuItem {
     required this.description,
     required this.imagePath,
   });
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'price': price,
+    'ratings': ratings,
+    'reviews': reviews.map((r) => r.toJson()).toList(),
+    'description': description,
+    'imagePath': imagePath,
+  };
 }
