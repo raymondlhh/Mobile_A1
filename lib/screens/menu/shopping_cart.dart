@@ -14,7 +14,7 @@ class ShoppingCart extends StatelessWidget {
     final cartItems = cartProvider.items;
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8E5),
-      appBar: buildAppBar(context, 'Shopping Cart'),
+      appBar: buildAppBar(context, 'Order Confirmation'),
       body: Column(
         children: [
           // Cart Items List
@@ -32,14 +32,14 @@ class ShoppingCart extends StatelessWidget {
           ),
           // Bottom Summary
           Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.all(24),
+            decoration: const BoxDecoration(
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black12,
                   blurRadius: 10,
-                  offset: const Offset(0, -5),
+                  offset: Offset(0, -5),
                 ),
               ],
             ),
@@ -49,13 +49,17 @@ class ShoppingCart extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Subtotal',
-                      style: TextStyle(fontSize: 16, fontFamily: 'Inter'),
+                      'Grand Total',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     Text(
                       'RM ${cartProvider.totalAmount.toStringAsFixed(2)}',
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 20,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.bold,
                       ),
@@ -88,7 +92,7 @@ class ShoppingCart extends StatelessWidget {
                       'Proceed to Checkout',
                       style: TextStyle(
                         color: Color(0xFFFFFFFF),
-                        fontSize: 16,
+                        fontSize: 20,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.bold,
                       ),
@@ -116,37 +120,27 @@ class _CartItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: Row(
         children: [
           // Item Image
           Container(
-            width: 100,
-            height: 100,
-            decoration: const BoxDecoration(
-              color: Color(0xFFCA3202),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(12),
-                bottomLeft: Radius.circular(12),
-              ),
+            width: 124,
+            height: 124,
+            decoration: BoxDecoration(
+              color: const Color(0xFFCA3202),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                bottomLeft: Radius.circular(12),
-              ),
+              borderRadius: BorderRadius.circular(12),
               child: Image.asset(
                 cartItem.menuItem.imagePath,
                 fit: BoxFit.cover,
-                width: 100,
-                height: 100,
+                width: 124,
+                height: 124,
               ),
             ),
           ),
