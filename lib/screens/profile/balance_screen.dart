@@ -27,9 +27,9 @@ class _BalanceScreenState extends State<BalanceScreen> {
     });
   }
 
-  void addAmount(double amount) {
+  void setAmount(double amount) {
     setState(() {
-      _controller.text = (double.tryParse(_controller.text) ?? 0 + amount).toStringAsFixed(2);
+      _controller.text = amount.toStringAsFixed(2);
     });
   }
 
@@ -146,7 +146,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     children: [
                       for (var amount in [10, 50, 100, 200, 350, 500])
                         GestureDetector(
-                          onTap: () => addAmount(amount.toDouble()),
+                          onTap: () => setAmount(amount.toDouble()),
                           child: Image.asset(
                             'assets/images/buttons/${amount}rmButton.png',
                             width: 100,
