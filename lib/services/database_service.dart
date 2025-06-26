@@ -401,7 +401,7 @@ class DatabaseService {
       // Add points to user for completing an order
       // You can customize the points calculation based on order value
       final orderValue = order.total;
-      int pointsToAdd = (orderValue * 10).round();
+      int pointsToAdd = (orderValue * 10).round(); // 1 point per $10 spent
       if (pointsToAdd < 1) pointsToAdd = 1; // Minimum 1 point per order
 
       // Try to add points using user ID first, then fall back to email
