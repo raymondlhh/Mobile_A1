@@ -23,6 +23,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void markAllAsRead() async {
     await _notificationService.markAllAsRead();
     await loadNotifications();
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   @override
