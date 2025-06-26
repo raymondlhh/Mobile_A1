@@ -13,6 +13,7 @@ class RedeemPage extends StatelessWidget {
   final int userPoints;
   final int maxRedemptions;
   final int userRedemptionCount;
+  final VoidCallback? onRedeemSuccess;
 
   const RedeemPage({
     super.key,
@@ -25,6 +26,7 @@ class RedeemPage extends StatelessWidget {
     required this.userPoints,
     required this.maxRedemptions,
     required this.userRedemptionCount,
+    this.onRedeemSuccess,
   });
 
   bool get canAfford => userPoints >= points;
@@ -78,6 +80,9 @@ class RedeemPage extends StatelessWidget {
         );
         Navigator.pop(context);
       }
+
+      // Call the callback to refresh the parent screen
+      onRedeemSuccess?.call();
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

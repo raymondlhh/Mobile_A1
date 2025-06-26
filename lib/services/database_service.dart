@@ -130,15 +130,10 @@ class DatabaseService {
           await _userRewardRedemptionsCollection
               .where('userId', isEqualTo: userId)
               .where('rewardId', isEqualTo: rewardId)
-              .orderBy('redemptionCount', descending: true)
-              .limit(1)
               .get();
 
-      if (snapshot.docs.isNotEmpty) {
-        final data = snapshot.docs.first.data() as Map<String, dynamic>;
-        return data['redemptionCount'] ?? 0;
-      }
-      return 0;
+      // Simply count the number of documents (each document represents one redemption)
+      return snapshot.docs.length;
     } catch (e) {
       print('Error getting user reward redemption count: $e');
       return 0;
@@ -185,14 +180,12 @@ class DatabaseService {
       await _rewardsService.deductRewardsPointsById(userId, rewardPoints);
 
       // Record user reward redemption
-      final newRedemptionCount = userRedemptionCount + 1;
       await _userRewardRedemptionsCollection.add({
         'userId': userId,
         'rewardId': rewardId,
         'rewardName': rewardName,
         'pointsSpent': rewardPoints,
         'redeemedAt': DateTime.now().toIso8601String(),
-        'redemptionCount': newRedemptionCount,
       });
 
       return true;
@@ -239,14 +232,12 @@ class DatabaseService {
       await _rewardsService.deductRewardsPoints(userEmail, rewardPoints);
 
       // Record user reward redemption
-      final newRedemptionCount = userRedemptionCount + 1;
       await _userRewardRedemptionsCollection.add({
         'userId': userEmail,
         'rewardId': rewardId,
         'rewardName': rewardName,
         'pointsSpent': rewardPoints,
         'redeemedAt': DateTime.now().toIso8601String(),
-        'redemptionCount': newRedemptionCount,
       });
 
       return true;
@@ -311,9 +302,13 @@ class DatabaseService {
   Future<List<Reward>> getAvailableRewards() async {
     try {
       QuerySnapshot snapshot = await _rewardsCollection.get();
-      return snapshot.docs.map((doc) {
-        return Reward.fromMap(doc.id, doc.data() as Map<String, dynamic>);
-      }).toList();
+      final rewards =
+          snapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            return Reward.fromMap(doc.id, data);
+          }).toList();
+
+      return rewards;
     } catch (e) {
       print('Error getting available rewards: $e');
       rethrow;
@@ -436,5 +431,88 @@ class DatabaseService {
   // Add points to user (for admin/testing purposes)
   Future<bool> addPointsToUser(String userEmail, int points) async {
     return await _rewardsService.addRewardsPoints(userEmail, points);
+  }
+
+  // Force re-initialize rewards (for development/testing)
+  Future<void> forceReinitializeRewards() async {
+    try {
+      // Delete all existing rewards
+      QuerySnapshot existingRewards = await _rewardsCollection.get();
+      for (var doc in existingRewards.docs) {
+        await _rewardsCollection.doc(doc.id).delete();
+      }
+      print('Deleted existing rewards');
+
+      // Re-initialize with new data
+      await initializeCurrentRewards();
+      print('Re-initialized rewards successfully');
+    } catch (e) {
+      print('Error re-initializing rewards: $e');
+      rethrow;
+    }
+  }
+
+  // Check current rewards in database (for debugging)
+  Future<void> checkCurrentRewards() async {
+    try {
+      QuerySnapshot snapshot = await _rewardsCollection.get();
+      print('=== Current Rewards in Database ===');
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        print('Reward ID: ${doc.id}');
+        print('  Name: ${data['name']}');
+        print('  Points: ${data['points']}');
+        print('  maxRedemptions: ${data['maxRedemptions']}');
+        print('  All fields: $data');
+        print('---');
+      }
+    } catch (e) {
+      print('Error checking current rewards: $e');
+    }
+  }
+
+  // Update existing rewards to include maxRedemptions field
+  Future<void> updateExistingRewardsWithMaxRedemptions() async {
+    try {
+      QuerySnapshot snapshot = await _rewardsCollection.get();
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        if (!data.containsKey('maxRedemptions')) {
+          // Set default maxRedemptions based on reward name
+          int maxRedemptions = 1; // default
+          String name = data['name'] ?? '';
+          if (name.contains('Chuka Wakame')) {
+            maxRedemptions = 3;
+          } else if (name.contains('Ebi Curry Udon')) {
+            maxRedemptions = 2;
+          } else if (name.contains('Chicken Teriyaki Ramen')) {
+            maxRedemptions = 4;
+          } else if (name.contains('Ebi Tempura')) {
+            maxRedemptions = 2;
+          }
+
+          await _rewardsCollection.doc(doc.id).update({
+            'maxRedemptions': maxRedemptions,
+          });
+          print('Updated ${name} with maxRedemptions: $maxRedemptions');
+        }
+      }
+    } catch (e) {
+      print('Error updating existing rewards: $e');
+    }
+  }
+
+  // Clear existing redemption data (for testing/fixing data structure)
+  Future<void> clearExistingRedemptions() async {
+    try {
+      QuerySnapshot existingRedemptions =
+          await _userRewardRedemptionsCollection.get();
+      for (var doc in existingRedemptions.docs) {
+        await _userRewardRedemptionsCollection.doc(doc.id).delete();
+      }
+      print('Cleared existing redemption data');
+    } catch (e) {
+      print('Error clearing redemption data: $e');
+    }
   }
 }

@@ -49,6 +49,21 @@ class _RewardsScreenState extends State<RewardsScreen> {
     }
   }
 
+  // Method to refresh the entire screen after redemption
+  Future<void> _refreshAfterRedemption() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Refresh user points from the database
+    await _rewardsService.refreshCurrentUserPoints();
+    _userPoints = _rewardsService.getCurrentUserPoints();
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +127,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                                 validity: reward.validity,
                                 userPoints: _userPoints,
                                 maxRedemptions: reward.maxRedemptions,
+                                onRedeemSuccess: _refreshAfterRedemption,
                               );
                             },
                           );
