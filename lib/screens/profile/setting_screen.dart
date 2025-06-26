@@ -10,8 +10,6 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  bool _isNotificationOn = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,42 +20,6 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Privacy',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                fontFamily: 'Inter',
-              ),
-            ),
-            const SizedBox(height: 0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Push Notification',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isNotificationOn = !_isNotificationOn;
-                    });
-                  },
-                  child: Image.asset(
-                    _isNotificationOn
-                        ? 'assets/images/buttons/OnSwitch.png'
-                        : 'assets/images/buttons/OffSwitch.png',
-                    width: 40,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
             GestureDetector(
               onTap: () {
                 Navigator.of(context).push(
