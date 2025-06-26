@@ -1,21 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
-
-class NotificationItem {
-  final String name;
-  final String description;
-  final String date;
-  final String time;
-  bool isRead;
-
-  NotificationItem({
-    required this.name,
-    required this.description,
-    required this.date,
-    required this.time,
-    this.isRead = false,
-  });
-}
+import '../../services/notification_service.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -25,52 +10,26 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  List<NotificationItem> notifications = [
-    NotificationItem(
-      name: 'Points Earned',
-      description: '15 points has been successfully earned',
-      date: '6 May 2025',
-      time: '9:30 AM',
-    ),
-    NotificationItem(
-      name: 'Payment Successful',
-      description: 'RM 15.00 has been successfully paid',
-      date: '6 May 2025',
-      time: '9:26 AM',
-      isRead: true,
-    ),
-    NotificationItem(
-      name: 'Payment Failed',
-      description: 'RM 15.00 payment has failed',
-      date: '6 May 2025',
-      time: '9:20 AM',
-    ),
-    NotificationItem(
-      name: 'Top-Up Failed',
-      description: 'RM 100.00 top-up has failed',
-      date: '6 May 2025',
-      time: '9:20 AM',
-    ),
-    NotificationItem(
-      name: 'Top-Up Successful',
-      description: 'RM 100.00 has been successfully topped-up',
-      date: '6 May 2025',
-      time: '9:20 AM',
-    ),
-  ];
+  List<NotificationItem> notifications = [];
+  final NotificationService _notificationService = NotificationService();
 
-  void markAllAsRead() {
+  Future<void> loadNotifications() async {
+    final loaded = await _notificationService.getNotifications();
     setState(() {
-      for (var item in notifications) {
-        item.isRead = true;
-      }
+      notifications = loaded;
     });
+  }
+
+  void markAllAsRead() async {
+    await _notificationService.markAllAsRead();
+    await loadNotifications();
   }
 
   @override
   void initState() {
     super.initState();
     onTickPressed = markAllAsRead;
+    loadNotifications();
   }
 
   @override
@@ -89,7 +48,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
           final isUnread = !item.isRead;
 
           return GestureDetector(
-            onTap: () => setState(() => item.isRead = true),
+            onTap: () async {
+              item.isRead = true;
+              await _notificationService.saveNotifications(notifications);
+              setState(() {});
+            },
             child: Container(
               color: isUnread ? const Color(0xFF8AB98F) : Colors.transparent,
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -107,9 +70,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             fontWeight: FontWeight.w900,
                             fontSize: 16,
                             color: Colors.black,
-                            // color: item.name == 'Points Earned'
-                            //     ? const Color(0xFFD03E27)
-                            //     : Colors.black,
                           ),
                         ),
                         const SizedBox(height: 6),

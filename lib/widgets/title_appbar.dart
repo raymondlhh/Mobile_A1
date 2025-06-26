@@ -104,13 +104,13 @@ List<Widget>? _buildAppBarActions(
             builder: (context, child) {
               return IconButton(
                 icon: Image.asset(
-                  favouriteService!.isFavourite(menuItem!)
+                  favouriteService.isFavourite(menuItem!)
                       ? 'assets/images/others/bookmarkOn.png'
                       : 'assets/images/others/bookmarkOff.png',
                   width: 24,
                 ),
                 onPressed: () {
-                  favouriteService!.toggleFavourite(menuItem!);
+                  favouriteService.toggleFavourite(menuItem);
                 },
               );
             },

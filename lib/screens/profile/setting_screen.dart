@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
+import 'help_centre_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -55,6 +56,28 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 30),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const HelpCentreScreen()),
+                );
+              },
+              child: Row(
+                children: const [
+                  Icon(Icons.help_outline, color: Colors.black),
+                  SizedBox(width: 10),
+                  Text(
+                    'Help Centre',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
