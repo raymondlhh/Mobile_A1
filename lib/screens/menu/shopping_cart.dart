@@ -4,6 +4,8 @@ import '../../providers/cart_provider.dart';
 import '../../models/cart_item.dart';
 import '../../../widgets/title_appbar.dart';
 import 'checkout_page.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class ShoppingCart extends StatelessWidget {
   const ShoppingCart({super.key});
@@ -249,12 +251,32 @@ class _BranchDetailsSection extends StatelessWidget {
 class FullScreenMapPage extends StatelessWidget {
   const FullScreenMapPage({super.key});
 
+  static const LatLng branchLocation = LatLng(2.817180, 101.789831);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Branch Location')),
-      body: const Center(
-        child: Icon(Icons.location_on, size: 120, color: Colors.red),
+      body: FlutterMap(
+        // ignore: deprecated_member_use
+        options: const MapOptions(center: branchLocation, zoom: 16.0),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            subdomains: const ['a', 'b', 'c'],
+            userAgentPackageName: 'com.example.app',
+          ),
+          const MarkerLayer(
+            markers: [
+              Marker(
+                width: 60.0,
+                height: 60.0,
+                point: branchLocation,
+                child: Icon(Icons.location_on, color: Colors.red, size: 40),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
