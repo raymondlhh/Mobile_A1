@@ -39,6 +39,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             itemBuilder: (context, index) {
               final item = favouriteItems[index];
               return Card(
+                color: const Color(0xFF8AB98F),
                 margin: const EdgeInsets.only(bottom: 16),
                 child: ListTile(
                   leading: Image.asset(item.imagePath,
