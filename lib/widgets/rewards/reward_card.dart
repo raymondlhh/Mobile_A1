@@ -8,6 +8,7 @@ class RewardCard extends StatelessWidget {
   final String description;
   final int points;
   final int validity;
+  final int userPoints;
 
   const RewardCard({
     super.key,
@@ -17,7 +18,10 @@ class RewardCard extends StatelessWidget {
     required this.description,
     required this.points,
     required this.validity,
+    required this.userPoints,
   });
+
+  bool get canAfford => userPoints >= points;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +38,7 @@ class RewardCard extends StatelessWidget {
                   description: description,
                   points: points,
                   validity: validity,
+                  userPoints: userPoints,
                 ),
           ),
         );
@@ -44,7 +49,7 @@ class RewardCard extends StatelessWidget {
         child: Container(
           width: 100,
           decoration: BoxDecoration(
-            color: const Color(0xFF8AB98F),
+            color: canAfford ? const Color(0xFF8AB98F) : Colors.grey.shade400,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -57,9 +62,20 @@ class RewardCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFCA3202), width: 10),
+                  border: Border.all(
+                    color:
+                        canAfford
+                            ? const Color(0xFFCA3202)
+                            : Colors.grey.shade600,
+                    width: 10,
+                  ),
                 ),
-                child: Image.asset(imagePath, fit: BoxFit.cover),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  color: canAfford ? null : Colors.grey.shade400,
+                  colorBlendMode: canAfford ? null : BlendMode.saturation,
+                ),
               ),
               const SizedBox(height: 6),
               Container(
@@ -68,14 +84,20 @@ class RewardCard extends StatelessWidget {
                   vertical: 3,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: canAfford ? Colors.white : Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFF7F7F7F), width: 1),
+                  border: Border.all(
+                    color:
+                        canAfford
+                            ? const Color(0xFF7F7F7F)
+                            : Colors.grey.shade400,
+                    width: 1,
+                  ),
                 ),
                 child: Text(
                   '$points pts',
-                  style: const TextStyle(
-                    color: Colors.black,
+                  style: TextStyle(
+                    color: canAfford ? Colors.black : Colors.grey.shade600,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -84,15 +106,36 @@ class RewardCard extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 itemName,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: canAfford ? Colors.black : Colors.grey.shade600,
                   fontSize: 13,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
+              if (!canAfford) ...[
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade100,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    'Need ${points - userPoints} more pts',
+                    style: TextStyle(
+                      color: Colors.red.shade800,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

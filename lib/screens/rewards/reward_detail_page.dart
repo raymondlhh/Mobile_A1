@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
 import '../../services/database_service.dart';
+import '../../models/user_profile.dart';
 
 class RedeemPage extends StatelessWidget {
   final String id;
@@ -9,6 +10,7 @@ class RedeemPage extends StatelessWidget {
   final String description;
   final int points;
   final int validity;
+  final int userPoints;
 
   const RedeemPage({
     super.key,
@@ -18,12 +20,36 @@ class RedeemPage extends StatelessWidget {
     required this.description,
     required this.points,
     required this.validity,
+    required this.userPoints,
   });
 
+  bool get canAfford => userPoints >= points;
+
   Future<void> _handleRedeem(BuildContext context) async {
+    if (!canAfford) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Insufficient points. You need ${points - userPoints} more points.',
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     try {
       final databaseService = DatabaseService();
-      await databaseService.redeemReward(id);
+
+      // Use user ID if available, otherwise fall back to email
+      if (UserProfile.userId.isNotEmpty) {
+        await databaseService.redeemRewardWithPointsById(
+          id,
+          UserProfile.userId,
+        );
+      } else {
+        await databaseService.redeemRewardWithPoints(id, UserProfile.email);
+      }
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -98,10 +124,29 @@ class RedeemPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Points',
+                    'Points Required',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text('${points}Pts'),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Your Current Points',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '${userPoints}Pts',
+                    style: TextStyle(
+                      color: canAfford ? Colors.green : Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (!canAfford) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      'You need ${points - userPoints} more points to redeem this reward',
+                      style: const TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ],
                   const SizedBox(height: 8),
                   const Text(
                     'Validity (per month)',
@@ -136,16 +181,17 @@ class RedeemPage extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD24545),
+                  backgroundColor:
+                      canAfford ? const Color(0xFFD24545) : Colors.grey,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                   minimumSize: const Size.fromHeight(48),
                 ),
-                onPressed: () => _handleRedeem(context),
-                child: const Text(
-                  'Redeem',
-                  style: TextStyle(
+                onPressed: canAfford ? () => _handleRedeem(context) : null,
+                child: Text(
+                  canAfford ? 'Redeem' : 'Insufficient Points',
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,

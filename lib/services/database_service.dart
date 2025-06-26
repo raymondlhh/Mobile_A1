@@ -5,9 +5,11 @@ import '../models/reward.dart';
 import '../models/order.dart' as app_models;
 import '../models/cart_item.dart';
 import '../models/user_profile.dart';
+import 'rewards_service.dart';
 
 class DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final RewardsService _rewardsService = RewardsService();
 
   // Collection reference
   final CollectionReference _rewardsCollection = FirebaseFirestore.instance
@@ -16,6 +18,10 @@ class DatabaseService {
   // Orders collection reference
   final CollectionReference _ordersCollection = FirebaseFirestore.instance
       .collection('orders');
+
+  // User rewards collection reference
+  final CollectionReference _userRewardsCollection = FirebaseFirestore.instance
+      .collection('userRewards');
 
   // Initialize current rewards
   Future<void> initializeCurrentRewards() async {
@@ -108,6 +114,155 @@ class DatabaseService {
     }
   }
 
+  // Redeem reward with points deduction by user ID
+  Future<bool> redeemRewardWithPointsById(
+    String rewardId,
+    String userId,
+  ) async {
+    try {
+      // Get reward details
+      final rewardDoc = await _rewardsCollection.doc(rewardId).get();
+      if (!rewardDoc.exists) {
+        throw Exception('Reward not found');
+      }
+
+      final rewardData = rewardDoc.data() as Map<String, dynamic>;
+      final rewardPoints = rewardData['points'] ?? 0;
+      final rewardName = rewardData['name'] ?? '';
+
+      // Check if user has enough points
+      final currentPoints = await _rewardsService.getUserRewardsPointsById(
+        userId,
+      );
+      if (currentPoints < rewardPoints) {
+        throw Exception('Insufficient rewards points');
+      }
+
+      // Deduct points from user account
+      await _rewardsService.deductRewardsPointsById(userId, rewardPoints);
+
+      // Mark reward as redeemed
+      await _rewardsCollection.doc(rewardId).update({
+        'isRedeemed': true,
+        'redeemedAt': DateTime.now().toIso8601String(),
+        'redeemedBy': userId,
+      });
+
+      // Record user reward redemption
+      await _userRewardsCollection.add({
+        'userId': userId,
+        'rewardId': rewardId,
+        'rewardName': rewardName,
+        'pointsSpent': rewardPoints,
+        'redeemedAt': DateTime.now().toIso8601String(),
+      });
+
+      return true;
+    } catch (e) {
+      print('Error redeeming reward with points: $e');
+      rethrow;
+    }
+  }
+
+  // Redeem reward with points deduction by email (for backward compatibility)
+  Future<bool> redeemRewardWithPoints(String rewardId, String userEmail) async {
+    try {
+      // Get reward details
+      final rewardDoc = await _rewardsCollection.doc(rewardId).get();
+      if (!rewardDoc.exists) {
+        throw Exception('Reward not found');
+      }
+
+      final rewardData = rewardDoc.data() as Map<String, dynamic>;
+      final rewardPoints = rewardData['points'] ?? 0;
+      final rewardName = rewardData['name'] ?? '';
+
+      // Check if user has enough points
+      final currentPoints = await _rewardsService.getUserRewardsPoints(
+        userEmail,
+      );
+      if (currentPoints < rewardPoints) {
+        throw Exception('Insufficient rewards points');
+      }
+
+      // Deduct points from user account
+      await _rewardsService.deductRewardsPoints(userEmail, rewardPoints);
+
+      // Mark reward as redeemed
+      await _rewardsCollection.doc(rewardId).update({
+        'isRedeemed': true,
+        'redeemedAt': DateTime.now().toIso8601String(),
+        'redeemedBy': userEmail,
+      });
+
+      // Record user reward redemption
+      await _userRewardsCollection.add({
+        'userId': userEmail,
+        'rewardId': rewardId,
+        'rewardName': rewardName,
+        'pointsSpent': rewardPoints,
+        'redeemedAt': DateTime.now().toIso8601String(),
+      });
+
+      return true;
+    } catch (e) {
+      print('Error redeeming reward with points: $e');
+      rethrow;
+    }
+  }
+
+  // Get user's reward redemption history by user ID
+  Future<List<Map<String, dynamic>>> getUserRewardHistoryById(
+    String userId,
+  ) async {
+    try {
+      final QuerySnapshot snapshot =
+          await _userRewardsCollection
+              .where('userId', isEqualTo: userId)
+              .orderBy('redeemedAt', descending: true)
+              .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return {
+          'id': doc.id,
+          'rewardName': data['rewardName'] ?? '',
+          'pointsSpent': data['pointsSpent'] ?? 0,
+          'redeemedAt': data['redeemedAt'] ?? '',
+        };
+      }).toList();
+    } catch (e) {
+      print('Error getting user reward history: $e');
+      return [];
+    }
+  }
+
+  // Get user's reward redemption history by email (for backward compatibility)
+  Future<List<Map<String, dynamic>>> getUserRewardHistory(
+    String userEmail,
+  ) async {
+    try {
+      final QuerySnapshot snapshot =
+          await _userRewardsCollection
+              .where('userId', isEqualTo: userEmail)
+              .orderBy('redeemedAt', descending: true)
+              .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return {
+          'id': doc.id,
+          'rewardName': data['rewardName'] ?? '',
+          'pointsSpent': data['pointsSpent'] ?? 0,
+          'redeemedAt': data['redeemedAt'] ?? '',
+        };
+      }).toList();
+    } catch (e) {
+      print('Error getting user reward history: $e');
+      return [];
+    }
+  }
+
   Future<List<Reward>> getAvailableRewards() async {
     try {
       QuerySnapshot snapshot =
@@ -155,9 +310,39 @@ class DatabaseService {
   Future<void> addOrder(app_models.Order order) async {
     try {
       await _ordersCollection.add(order.toMap());
+
+      // Add points to user for completing an order
+      // You can customize the points calculation based on order value
+      final orderValue = order.total;
+      int pointsToAdd = (orderValue / 10).round(); // 1 point per $10 spent
+      if (pointsToAdd < 1) pointsToAdd = 1; // Minimum 1 point per order
+
+      // Try to add points using user ID first, then fall back to email
+      bool pointsAdded = false;
+      if (UserProfile.userId.isNotEmpty &&
+          UserProfile.email == order.userEmail) {
+        pointsAdded = await _rewardsService.addRewardsPointsById(
+          UserProfile.userId,
+          pointsToAdd,
+        );
+      }
+
+      if (!pointsAdded) {
+        await _rewardsService.addRewardsPoints(order.userEmail, pointsToAdd);
+      }
     } catch (e) {
       print('Error adding order: $e');
       rethrow;
     }
+  }
+
+  // Get user's current rewards points
+  Future<int> getUserRewardsPoints(String userEmail) async {
+    return await _rewardsService.getUserRewardsPoints(userEmail);
+  }
+
+  // Add points to user (for admin/testing purposes)
+  Future<bool> addPointsToUser(String userEmail, int points) async {
+    return await _rewardsService.addRewardsPoints(userEmail, points);
   }
 }
