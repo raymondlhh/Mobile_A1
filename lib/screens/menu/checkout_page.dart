@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart_provider.dart';
-import '../../models/cart_item.dart';
 import '../../services/database_service.dart';
 import '../../models/order.dart' as app_models;
 import '../../models/user_profile.dart';
@@ -10,7 +9,7 @@ import '../../services/balance_service.dart';
 import '../../services/notification_service.dart';
 
 class CheckoutPage extends StatelessWidget {
-  const CheckoutPage({Key? key}) : super(key: key);
+  const CheckoutPage({super.key});
 
   String _todayDateString() {
     final now = DateTime.now();

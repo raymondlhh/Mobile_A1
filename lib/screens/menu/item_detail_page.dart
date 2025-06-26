@@ -6,6 +6,7 @@ import '../../services/favourite_service.dart';
 import '../../widgets/title_appbar.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart_provider.dart';
+import 'shopping_cart.dart';
 
 class ItemDetailPage extends StatefulWidget {
   final MenuItem menuItem;
@@ -31,7 +32,10 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
         action: SnackBarAction(
           label: 'View Cart',
           onPressed: () {
-            Navigator.pushNamed(context, '/bottomNav'); // Or your cart route
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ShoppingCart()),
+            );
           },
         ),
       ),
