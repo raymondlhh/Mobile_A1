@@ -6,6 +6,7 @@ import 'providers/cart_provider.dart';
 import 'services/rewards_service.dart';
 import 'models/user_profile.dart';
 import 'services/notification_service.dart';
+import 'services/favourite_service.dart';
 
 import 'widgets/bottom_nav.dart';
 //import 'screens/home/home_screen.dart';
@@ -24,10 +25,12 @@ import 'screens/home/forgot_password_screen.dart';
 import 'screens/home/restaurant_menu_screen.dart';
 import 'screens/home/video_splash_screen.dart';
 import 'screens/menu/checkout_page.dart';
+import 'screens/home/splash_screen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 // ignore: unused_import
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(
@@ -51,26 +54,39 @@ void main() async {
   final rewardsService = RewardsService();
   await rewardsService.addRewardsPoints(UserProfile.email, 5000);
 
+  // Auto-login logic
+  final prefs = await SharedPreferences.getInstance();
+  final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  final userId = prefs.getString('userId') ?? '';
+  if (isLoggedIn && userId.isNotEmpty) {
+    UserProfile.userId = userId;
+    await FavouriteService().loadFavourites();
+  }
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => NotificationService()),
+        ChangeNotifierProvider.value(value: FavouriteService()),
       ],
-      child: const MyApp(),
+      child: MyApp(
+        initialRoute: (isLoggedIn && userId.isNotEmpty) ? '/splash' : '/welcome',
+      ),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String initialRoute;
+  const MyApp({super.key, this.initialRoute = '/welcome'});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFFFF8E5)),
-      initialRoute: '/welcome',
+      initialRoute: initialRoute,
       routes: {
         '/': (context) => const BottomNav(),
         '/welcome': (context) => const WelcomeScreen(),
@@ -87,6 +103,7 @@ class MyApp extends StatelessWidget {
         '/restaurant_menu': (context) => const RestaurantMenuScreen(),
         '/videoSplash': (context) => const VideoSplashScreen(),
         '/checkout': (context) => const CheckoutPage(),
+        '/splash': (context) => const SplashScreen(),
       },
     );
   }

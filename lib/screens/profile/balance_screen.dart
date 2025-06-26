@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
 import '../../services/balance_service.dart';
 import '../../services/notification_service.dart';
+import '../../models/user_profile.dart';
 
 class BalanceScreen extends StatefulWidget {
   const BalanceScreen({super.key});
@@ -22,7 +23,9 @@ class _BalanceScreenState extends State<BalanceScreen> {
   }
 
   void _loadBalance() async {
+    print('Current userId: ${_balanceService == null ? 'null' : UserProfile.userId}');
     double savedBalance = await _balanceService.getBalance();
+    print('Loaded balance from Firestore: $savedBalance');
     setState(() {
       balance = savedBalance;
     });
@@ -56,7 +59,10 @@ class _BalanceScreenState extends State<BalanceScreen> {
       balance += topUpAmount;
       _controller.text = '0.00';
     });
+    print('Top up: new balance to save = $balance');
+    print('Current userId: ${UserProfile.userId}');
     await _balanceService.setBalance(balance);
+    _loadBalance();
     if (topUpAmount > 0) {
       await NotificationService().addNotification(
         NotificationItem(
@@ -225,7 +231,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                         Image.asset('assets/images/icons/TNG.png', width: 28),
                         const SizedBox(width: 10),
                         const Text(
-                          'Touch ‘n Go eWallet',
+                          'Touch \'n Go eWallet',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600, 
@@ -240,7 +246,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '*We accept Touch ‘n Go eWallet only',
+                      '*We accept Touch \'n Go eWallet only',
                       style: TextStyle(fontSize: 12, color: Colors.black54, fontFamily: 'Inter'),
                     ),
                   ),

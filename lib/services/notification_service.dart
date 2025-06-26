@@ -1,6 +1,6 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/user_profile.dart';
 
 class NotificationItem {
   final String name;
@@ -35,34 +35,57 @@ class NotificationItem {
 }
 
 class NotificationService extends ChangeNotifier {
-  static const String _key = 'notifications';
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<List<NotificationItem>> getNotifications() async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getStringList(_key) ?? [];
-    return data.map((e) => NotificationItem.fromJson(json.decode(e))).toList();
+    final userId = UserProfile.userId;
+    if (userId.isEmpty) return [];
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .orderBy('date', descending: true)
+        .get();
+    return snapshot.docs.map((doc) => NotificationItem.fromJson(doc.data())).toList();
   }
 
   Future<void> saveNotifications(List<NotificationItem> notifications) async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = notifications.map((e) => json.encode(e.toJson())).toList();
-    await prefs.setStringList(_key, data);
+    final userId = UserProfile.userId;
+    if (userId.isEmpty) return;
+    final batch = _firestore.batch();
+    final collection = _firestore.collection('users').doc(userId).collection('notifications');
+    // Clear existing notifications
+    final existing = await collection.get();
+    for (var doc in existing.docs) {
+      batch.delete(doc.reference);
+    }
+    // Add new notifications
+    for (var n in notifications) {
+      final docRef = collection.doc();
+      batch.set(docRef, n.toJson());
+    }
+    await batch.commit();
     notifyListeners();
   }
 
   Future<void> addNotification(NotificationItem notification) async {
-    final notifications = await getNotifications();
-    notifications.insert(0, notification); // newest first
-    await saveNotifications(notifications);
+    final userId = UserProfile.userId;
+    if (userId.isEmpty) return;
+    final collection = _firestore.collection('users').doc(userId).collection('notifications');
+    await collection.add(notification.toJson());
     notifyListeners();
   }
 
   Future<void> markAllAsRead() async {
-    final notifications = await getNotifications();
-    for (var n in notifications) {
-      n.isRead = true;
+    final userId = UserProfile.userId;
+    if (userId.isEmpty) return;
+    final collection = _firestore.collection('users').doc(userId).collection('notifications');
+    final snapshot = await collection.get();
+    final batch = _firestore.batch();
+    for (var doc in snapshot.docs) {
+      batch.update(doc.reference, {'isRead': true});
     }
-    await saveNotifications(notifications);
+    await batch.commit();
     notifyListeners();
   }
 } 

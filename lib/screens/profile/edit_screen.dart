@@ -1,4 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../widgets/title_appbar.dart';
 import '../../widgets/profile_description.dart';
@@ -22,6 +26,8 @@ class _EditScreenState extends State<EditScreen> {
   final AuthService _authService = AuthService();
 
   bool _obscurePassword = true;
+  File? _profileImage;
+  bool _isUploadingPhoto = false;
 
   @override
   void initState() {
@@ -36,6 +42,32 @@ class _EditScreenState extends State<EditScreen> {
     _obscurePassword = true;
 
     onTickPressed = saveProfileData;
+  }
+
+  Future<void> _pickAndUploadPhoto() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
+
+    setState(() { _isUploadingPhoto = true; });
+
+    final userId = UserProfile.userId;
+    final storageRef = FirebaseStorage.instance.ref().child('profile_photos/$userId.jpg');
+    await storageRef.putFile(File(pickedFile.path));
+    final photoUrl = await storageRef.getDownloadURL();
+
+    // Save URL to Firestore
+    await FirebaseFirestore.instance.collection('users').doc(userId).set(
+      {'photoUrl': photoUrl},
+      SetOptions(merge: true),
+    );
+
+    // Update in-memory profile
+    UserProfile.photoUrl = photoUrl;
+    setState(() {
+      _profileImage = File(pickedFile.path);
+      _isUploadingPhoto = false;
+    });
   }
 
   void saveProfileData() async {
@@ -75,7 +107,6 @@ class _EditScreenState extends State<EditScreen> {
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

@@ -7,4 +7,5 @@ class UserProfile {
   static String address =
       'LY6-A606, Xiamen University Malaysia, Jalan Sunsuria, Bandar Sunsuria';
   static int rewardsPoints = 0;
+  static String photoUrl = '';
 }

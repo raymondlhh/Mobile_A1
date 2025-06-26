@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../screens/profile/edit_screen.dart';
 import '../models/user_profile.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class ProfileHeader extends StatefulWidget {
   final bool showDetails;
@@ -16,41 +17,47 @@ class ProfileHeader extends StatefulWidget {
 
 class _ProfileHeaderState extends State<ProfileHeader> {
   File? _selectedImage;
+  bool _isUploadingPhoto = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadSavedImage();
+  Future<File> _compressImage(File file) async {
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      file.absolute.path + '_compressed.jpg',
+      quality: 70,
+    );
+    if (result != null) {
+      return File(result.path);
+    } else {
+      return file;
+    }
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _pickAndUploadPhoto() async {
     final picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() {
-        _selectedImage = File(picked.path);
-      });
-      await _saveProfileImagePath(picked.path);
-    }
-  }
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
 
-  Future<void> _saveProfileImagePath(String path) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('profile_image_path', path);
-  }
+    setState(() { _isUploadingPhoto = true; });
 
-  Future<String?> _loadProfileImagePath() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('profile_image_path');
-  }
+    final userId = UserProfile.userId;
+    File imageFile = File(pickedFile.path);
+    File compressed = await _compressImage(imageFile);
+    final storageRef = FirebaseStorage.instance.ref().child('profile_photos/$userId.jpg');
+    await storageRef.putFile(compressed);
+    final photoUrl = await storageRef.getDownloadURL();
 
-  void _loadSavedImage() async {
-    final path = await _loadProfileImagePath();
-    if (path != null) {
-      setState(() {
-        _selectedImage = File(path);
-      });
-    }
+    // Save URL to Firestore
+    await FirebaseFirestore.instance.collection('users').doc(userId).set(
+      {'photoUrl': photoUrl},
+      SetOptions(merge: true),
+    );
+
+    // Update in-memory profile
+    UserProfile.photoUrl = photoUrl;
+    setState(() {
+      _selectedImage = compressed;
+      _isUploadingPhoto = false;
+    });
   }
 
   @override
@@ -72,14 +79,16 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         ClipOval(
           child: _selectedImage != null
               ? Image.file(_selectedImage!, width: 100, height: 100, fit: BoxFit.cover)
-              : Image.asset('assets/images/others/Profile.png', width: 100, height: 100, fit: BoxFit.cover),
+              : (UserProfile.photoUrl.isNotEmpty
+                  ? Image.network(UserProfile.photoUrl, width: 100, height: 100, fit: BoxFit.cover)
+                  : Image.asset('assets/images/others/Profile.png', width: 100, height: 100, fit: BoxFit.cover)),
         ),
         // Edit profile button overlaid
         Positioned(
           bottom: -30,
           right: -30,
           child: GestureDetector(
-            onTap: _pickImage,
+            onTap: _isUploadingPhoto ? null : _pickAndUploadPhoto,
             child: Image.asset(
               'assets/images/buttons/EditProfileButton.png',
               width: 100,
@@ -87,6 +96,10 @@ class _ProfileHeaderState extends State<ProfileHeader> {
             ),
           ),
         ),
+        if (_isUploadingPhoto)
+          Positioned.fill(
+            child: Center(child: CircularProgressIndicator()),
+          ),
       ],
     );
 

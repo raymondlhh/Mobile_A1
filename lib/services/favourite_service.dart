@@ -64,31 +64,4 @@ class FavouriteService extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-  /// One-time migration: Move all docs from global 'favouriteItems' to per-user subcollections
-  static Future<void> migrateFavouriteItemsToUserSubcollections() async {
-    final firestore = FirebaseFirestore.instance;
-    final favouriteItemsCollection = firestore.collection('favouriteItems');
-    final usersCollection = firestore.collection('users');
-
-    final snapshot = await favouriteItemsCollection.get();
-
-    for (var doc in snapshot.docs) {
-      final data = doc.data();
-      final userId = data['userId'];
-      final menuItem = data['menuItem']; // or adjust if your field is different
-
-      if (userId != null && menuItem != null) {
-        final menuItemId = menuItem['name'] ?? doc.id;
-        await usersCollection
-            .doc(userId)
-            .collection('favourites')
-            .doc(menuItemId)
-            .set(menuItem);
-        // Optionally, delete the old document
-        await doc.reference.delete();
-      }
-    }
-    print('Favourite items migration complete!');
-  }
 }
