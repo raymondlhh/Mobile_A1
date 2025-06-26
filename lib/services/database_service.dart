@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/reward.dart';
+import '../models/user_reward_redemption.dart';
 import '../models/order.dart' as app_models;
 import '../models/cart_item.dart';
 import '../models/user_profile.dart';
@@ -23,6 +24,11 @@ class DatabaseService {
   final CollectionReference _userRewardsCollection = FirebaseFirestore.instance
       .collection('userRewards');
 
+  // User reward redemptions collection reference
+  final CollectionReference _userRewardRedemptionsCollection = FirebaseFirestore
+      .instance
+      .collection('userRewardRedemptions');
+
   // Initialize current rewards
   Future<void> initializeCurrentRewards() async {
     try {
@@ -40,32 +46,32 @@ class DatabaseService {
           'description': 'Seaweed salad with a subtly sweet and savory flavor.',
           'points': 1500,
           'imagePath': 'assets/images/foods/appetizers/chuka_wakame.png',
-          'isRedeemed': false,
           'validity': 8,
+          'maxRedemptions': 3, // User can redeem this 3 times
         },
         {
           'name': 'Ebi Curry Udon',
           'description': 'Curry udon with ebi tempura.',
           'points': 2000,
           'imagePath': 'assets/images/foods/curry_sets/ebi_curry_udon.png',
-          'isRedeemed': false,
           'validity': 6,
+          'maxRedemptions': 2, // User can redeem this 2 times
         },
         {
           'name': 'Chicken Teriyaki Ramen',
           'description': 'Ramen with chicken teriyaki and vegetables.',
           'points': 1800,
           'imagePath': 'assets/images/foods/ramen/chicken_teriyaki_ramen.png',
-          'isRedeemed': false,
           'validity': 7,
+          'maxRedemptions': 4, // User can redeem this 4 times
         },
         {
           'name': 'Ebi Tempura',
           'description': 'Crispy battered shrimp tempura.',
           'points': 1700,
           'imagePath': 'assets/images/foods/tempura/ebi_tempura.png',
-          'isRedeemed': false,
           'validity': 5,
+          'maxRedemptions': 2, // User can redeem this 2 times
         },
       ];
 
@@ -114,6 +120,31 @@ class DatabaseService {
     }
   }
 
+  // Get user's redemption count for a specific reward
+  Future<int> getUserRewardRedemptionCount(
+    String userId,
+    String rewardId,
+  ) async {
+    try {
+      final QuerySnapshot snapshot =
+          await _userRewardRedemptionsCollection
+              .where('userId', isEqualTo: userId)
+              .where('rewardId', isEqualTo: rewardId)
+              .orderBy('redemptionCount', descending: true)
+              .limit(1)
+              .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final data = snapshot.docs.first.data() as Map<String, dynamic>;
+        return data['redemptionCount'] ?? 0;
+      }
+      return 0;
+    } catch (e) {
+      print('Error getting user reward redemption count: $e');
+      return 0;
+    }
+  }
+
   // Redeem reward with points deduction by user ID
   Future<bool> redeemRewardWithPointsById(
     String rewardId,
@@ -129,6 +160,7 @@ class DatabaseService {
       final rewardData = rewardDoc.data() as Map<String, dynamic>;
       final rewardPoints = rewardData['points'] ?? 0;
       final rewardName = rewardData['name'] ?? '';
+      final maxRedemptions = rewardData['maxRedemptions'] ?? 1;
 
       // Check if user has enough points
       final currentPoints = await _rewardsService.getUserRewardsPointsById(
@@ -138,23 +170,29 @@ class DatabaseService {
         throw Exception('Insufficient rewards points');
       }
 
+      // Check if user has reached their redemption limit for this reward
+      final userRedemptionCount = await getUserRewardRedemptionCount(
+        userId,
+        rewardId,
+      );
+      if (userRedemptionCount >= maxRedemptions) {
+        throw Exception(
+          'You have reached the maximum redemption limit for this reward',
+        );
+      }
+
       // Deduct points from user account
       await _rewardsService.deductRewardsPointsById(userId, rewardPoints);
 
-      // Mark reward as redeemed
-      await _rewardsCollection.doc(rewardId).update({
-        'isRedeemed': true,
-        'redeemedAt': DateTime.now().toIso8601String(),
-        'redeemedBy': userId,
-      });
-
       // Record user reward redemption
-      await _userRewardsCollection.add({
+      final newRedemptionCount = userRedemptionCount + 1;
+      await _userRewardRedemptionsCollection.add({
         'userId': userId,
         'rewardId': rewardId,
         'rewardName': rewardName,
         'pointsSpent': rewardPoints,
         'redeemedAt': DateTime.now().toIso8601String(),
+        'redemptionCount': newRedemptionCount,
       });
 
       return true;
@@ -176,6 +214,7 @@ class DatabaseService {
       final rewardData = rewardDoc.data() as Map<String, dynamic>;
       final rewardPoints = rewardData['points'] ?? 0;
       final rewardName = rewardData['name'] ?? '';
+      final maxRedemptions = rewardData['maxRedemptions'] ?? 1;
 
       // Check if user has enough points
       final currentPoints = await _rewardsService.getUserRewardsPoints(
@@ -185,23 +224,29 @@ class DatabaseService {
         throw Exception('Insufficient rewards points');
       }
 
+      // Check if user has reached their redemption limit for this reward
+      final userRedemptionCount = await getUserRewardRedemptionCount(
+        userEmail,
+        rewardId,
+      );
+      if (userRedemptionCount >= maxRedemptions) {
+        throw Exception(
+          'You have reached the maximum redemption limit for this reward',
+        );
+      }
+
       // Deduct points from user account
       await _rewardsService.deductRewardsPoints(userEmail, rewardPoints);
 
-      // Mark reward as redeemed
-      await _rewardsCollection.doc(rewardId).update({
-        'isRedeemed': true,
-        'redeemedAt': DateTime.now().toIso8601String(),
-        'redeemedBy': userEmail,
-      });
-
       // Record user reward redemption
-      await _userRewardsCollection.add({
+      final newRedemptionCount = userRedemptionCount + 1;
+      await _userRewardRedemptionsCollection.add({
         'userId': userEmail,
         'rewardId': rewardId,
         'rewardName': rewardName,
         'pointsSpent': rewardPoints,
         'redeemedAt': DateTime.now().toIso8601String(),
+        'redemptionCount': newRedemptionCount,
       });
 
       return true;
@@ -265,8 +310,7 @@ class DatabaseService {
 
   Future<List<Reward>> getAvailableRewards() async {
     try {
-      QuerySnapshot snapshot =
-          await _rewardsCollection.where('isRedeemed', isEqualTo: false).get();
+      QuerySnapshot snapshot = await _rewardsCollection.get();
       return snapshot.docs.map((doc) {
         return Reward.fromMap(doc.id, doc.data() as Map<String, dynamic>);
       }).toList();
@@ -276,16 +320,64 @@ class DatabaseService {
     }
   }
 
+  // Get available rewards for a specific user (considering user's redemption limits)
+  Future<List<Reward>> getAvailableRewardsForUser(String userId) async {
+    try {
+      QuerySnapshot snapshot = await _rewardsCollection.get();
+      final List<Reward> availableRewards = [];
+
+      for (var doc in snapshot.docs) {
+        final rewardData = doc.data() as Map<String, dynamic>;
+        final maxRedemptions = rewardData['maxRedemptions'] ?? 1;
+
+        // Check if user hasn't reached their personal limit
+        final userRedemptionCount = await getUserRewardRedemptionCount(
+          userId,
+          doc.id,
+        );
+        if (userRedemptionCount < maxRedemptions) {
+          availableRewards.add(Reward.fromMap(doc.id, rewardData));
+        }
+      }
+
+      return availableRewards;
+    } catch (e) {
+      print('Error getting available rewards for user: $e');
+      rethrow;
+    }
+  }
+
   Future<List<Reward>> getRedeemedRewards() async {
     try {
-      QuerySnapshot snapshot =
-          await _rewardsCollection.where('isRedeemed', isEqualTo: true).get();
-      return snapshot.docs.map((doc) {
-        return Reward.fromMap(doc.id, doc.data() as Map<String, dynamic>);
-      }).toList();
+      // Since there's no total availability limit, this method now returns an empty list
+      // as all rewards are always available (only limited per user)
+      return [];
     } catch (e) {
       print('Error getting redeemed rewards: $e');
       rethrow;
+    }
+  }
+
+  // Get user's redeemed rewards
+  Future<List<UserRewardRedemption>> getUserRedeemedRewards(
+    String userId,
+  ) async {
+    try {
+      final QuerySnapshot snapshot =
+          await _userRewardRedemptionsCollection
+              .where('userId', isEqualTo: userId)
+              .orderBy('redeemedAt', descending: true)
+              .get();
+
+      return snapshot.docs.map((doc) {
+        return UserRewardRedemption.fromMap(
+          doc.id,
+          doc.data() as Map<String, dynamic>,
+        );
+      }).toList();
+    } catch (e) {
+      print('Error getting user redeemed rewards: $e');
+      return [];
     }
   }
 

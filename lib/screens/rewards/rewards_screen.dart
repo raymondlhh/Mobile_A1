@@ -111,6 +111,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                                 points: reward.points,
                                 validity: reward.validity,
                                 userPoints: _userPoints,
+                                maxRedemptions: reward.maxRedemptions,
                               );
                             },
                           );
