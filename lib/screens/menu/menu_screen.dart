@@ -3,6 +3,8 @@ import 'package:flutter_application_1/screens/menu/shopping_cart.dart';
 import '../../data/menu_data.dart';
 import 'item_detail_page.dart';
 import '../../models/menu_item.dart';
+import 'package:provider/provider.dart';
+import '../../providers/cart_provider.dart';
 
 class MenuScreen extends StatefulWidget {
   final String? initialSection;
@@ -174,18 +176,55 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.shopping_cart,
-                      color: Colors.black,
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ShoppingCart(),
-                        ),
+                  Consumer<CartProvider>(
+                    builder: (context, cartProvider, child) {
+                      int itemCount = cartProvider.items.fold(
+                        0,
+                        (sum, item) => sum + item.quantity,
+                      );
+                      return Stack(
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.shopping_cart,
+                              color: Colors.black,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ShoppingCart(),
+                                ),
+                              );
+                            },
+                          ),
+                          if (itemCount > 0)
+                            Positioned(
+                              right: 4,
+                              top: 4,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 20,
+                                  minHeight: 20,
+                                ),
+                                child: Text(
+                                  '$itemCount',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                        ],
                       );
                     },
                   ),
@@ -541,7 +580,7 @@ class _MenuItem extends StatelessWidget {
                   Text(
                     price,
                     style: const TextStyle(
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white,
                       fontSize: 12,
                       fontFamily: 'Inter',
