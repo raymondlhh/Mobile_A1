@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/profile/notification_screen.dart';
-import '../../screens/home/detail_home_screen.dart';
+import '../screens/home/detail_home_screen.dart';
 import '../models/menu_item.dart';
 import '../services/favourite_service.dart';
 
@@ -99,15 +99,20 @@ List<Widget>? _buildAppBarActions(
       return [
         Padding(
           padding: const EdgeInsets.only(right: 16),
-          child: IconButton(
-            icon: Image.asset(
-              favouriteService!.isFavourite(menuItem!)
-                  ? 'assets/images/others/bookmarkOn.png'
-                  : 'assets/images/others/bookmarkOff.png',
-              width: 24,
-            ),
-            onPressed: () {
-              favouriteService.toggleFavourite(menuItem);
+          child: ListenableBuilder(
+            listenable: favouriteService!,
+            builder: (context, child) {
+              return IconButton(
+                icon: Image.asset(
+                  favouriteService!.isFavourite(menuItem!)
+                      ? 'assets/images/others/bookmarkOn.png'
+                      : 'assets/images/others/bookmarkOff.png',
+                  width: 24,
+                ),
+                onPressed: () {
+                  favouriteService!.toggleFavourite(menuItem!);
+                },
+              );
             },
           ),
         ),
