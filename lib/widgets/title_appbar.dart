@@ -4,6 +4,7 @@ import '../screens/home/detail_home_screen.dart';
 import '../models/menu_item.dart';
 import '../services/favourite_service.dart';
 import '../services/notification_service.dart';
+import 'package:provider/provider.dart';
 
 VoidCallback? onTickPressed;
 
@@ -67,54 +68,58 @@ List<Widget>? _buildAppBarActions(
       return [
         Padding(
           padding: const EdgeInsets.only(right: 16),
-          child: FutureBuilder<int>(
-            future: NotificationService().getNotifications().then(
-              (list) => list.where((n) => !n.isRead).length,
-            ),
-            builder: (context, snapshot) {
-              int unreadCount = snapshot.data ?? 0;
-              return Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  IconButton(
-                    icon: Image.asset(
-                      'assets/images/icons/Notification.png',
-                      width: 24,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const NotificationScreen(),
+          child: Consumer<NotificationService>(
+            builder: (context, notificationService, _) {
+              return FutureBuilder<int>(
+                future: notificationService.getNotifications().then(
+                  (list) => list.where((n) => !n.isRead).length,
+                ),
+                builder: (context, snapshot) {
+                  int unreadCount = snapshot.data ?? 0;
+                  return Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      IconButton(
+                        icon: Image.asset(
+                          'assets/images/icons/Notification.png',
+                          width: 24,
                         ),
-                      );
-                    },
-                  ),
-                  if (unreadCount > 0)
-                    Positioned(
-                      right: 4,
-                      top: 4,
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 16,
-                          minHeight: 16,
-                        ),
-                        child: Text(
-                          '$unreadCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const NotificationScreen(),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                ],
+                      if (unreadCount > 0)
+                        Positioned(
+                          right: 4,
+                          top: 4,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            child: Text(
+                              '$unreadCount',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               );
             },
           ),
