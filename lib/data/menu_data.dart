@@ -1,4 +1,5 @@
 import '../models/menu_item.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 const menuItems = [
   MenuItem(
@@ -541,3 +542,11 @@ const menuItems = [
     imagePath: 'assets/images/foods/drinks/oyoshi_green_tea.png',
   ),
 ];
+
+Future<void> migrateMenuToFirestore() async {
+  final menuCollection = FirebaseFirestore.instance.collection('menuItems');
+  for (final item in menuItems) {
+    await menuCollection.add(item.toJson());
+  }
+  print('Migration complete!');
+}
