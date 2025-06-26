@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
+import '../../services/favourite_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -69,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final isValid = await _authService.validateUser(email, password);
       if (isValid) {
+        await FavouriteService().loadFavourites();
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/videoSplash');
         }

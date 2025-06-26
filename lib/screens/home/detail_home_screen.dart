@@ -4,6 +4,8 @@ import '../menu/menu_screen.dart';
 import '../menu/item_detail_page.dart';
 import '../../models/menu_item.dart';
 import '../../data/menu_data.dart';
+import '../../services/favourite_service.dart';
+import '../../models/user_profile.dart';
 
 class DetailHomeScreen extends StatefulWidget {
   const DetailHomeScreen({super.key});
@@ -20,6 +22,7 @@ class _DetailHomeScreenState extends State<DetailHomeScreen> {
   void initState() {
     super.initState();
     _updateDisplayedItems();
+    _loadUserFavourites();
   }
 
   void _updateDisplayedItems() {
@@ -35,6 +38,12 @@ class _DetailHomeScreenState extends State<DetailHomeScreen> {
     setState(() {
       displayedItems = items.take(2).toList();
     });
+  }
+
+  Future<void> _loadUserFavourites() async {
+    if (UserProfile.userId.isNotEmpty) {
+      await FavouriteService().loadFavourites();
+    }
   }
 
   @override
