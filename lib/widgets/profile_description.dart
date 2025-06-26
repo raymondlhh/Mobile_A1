@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import '../screens/profile/edit_screen.dart';
 import '../models/user_profile.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class ProfileHeader extends StatefulWidget {
   final bool showDetails;
@@ -16,48 +12,41 @@ class ProfileHeader extends StatefulWidget {
 }
 
 class _ProfileHeaderState extends State<ProfileHeader> {
-  File? _selectedImage;
-  bool _isUploadingPhoto = false;
+  Future<void> _pickProfileAsset(BuildContext context) async {
+    final List<String> assetNames = [
+      'assets/images/others/Profile.png',
+      'assets/images/others/Profile2.png',
+      'assets/images/others/Profile3.png',
+    ];
 
-  Future<File> _compressImage(File file) async {
-    final result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      file.absolute.path + '_compressed.jpg',
-      quality: 70,
+    final selected = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Choose Profile Picture'),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: assetNames.map((asset) {
+            return GestureDetector(
+              onTap: () => Navigator.of(context).pop(asset),
+              child: CircleAvatar(
+                backgroundImage: AssetImage(asset),
+                radius: 35,
+              ),
+            );
+          }).toList(),
+        ),
+      ),
     );
-    if (result != null) {
-      return File(result.path);
-    } else {
-      return file;
+
+    if (selected != null) {
+      final userId = UserProfile.userId;
+      await FirebaseFirestore.instance.collection('users').doc(userId).set(
+        {'photoAsset': selected},
+        SetOptions(merge: true),
+      );
+      UserProfile.photoUrl = selected;
+      setState(() {});
     }
-  }
-
-  Future<void> _pickAndUploadPhoto() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile == null) return;
-
-    setState(() { _isUploadingPhoto = true; });
-
-    final userId = UserProfile.userId;
-    File imageFile = File(pickedFile.path);
-    File compressed = await _compressImage(imageFile);
-    final storageRef = FirebaseStorage.instance.ref().child('profile_photos/$userId.jpg');
-    await storageRef.putFile(compressed);
-    final photoUrl = await storageRef.getDownloadURL();
-
-    // Save URL to Firestore
-    await FirebaseFirestore.instance.collection('users').doc(userId).set(
-      {'photoUrl': photoUrl},
-      SetOptions(merge: true),
-    );
-
-    // Update in-memory profile
-    UserProfile.photoUrl = photoUrl;
-    setState(() {
-      _selectedImage = compressed;
-      _isUploadingPhoto = false;
-    });
   }
 
   @override
@@ -77,18 +66,21 @@ class _ProfileHeaderState extends State<ProfileHeader> {
           ),
         ),
         ClipOval(
-          child: _selectedImage != null
-              ? Image.file(_selectedImage!, width: 100, height: 100, fit: BoxFit.cover)
-              : (UserProfile.photoUrl.isNotEmpty
-                  ? Image.network(UserProfile.photoUrl, width: 100, height: 100, fit: BoxFit.cover)
-                  : Image.asset('assets/images/others/Profile.png', width: 100, height: 100, fit: BoxFit.cover)),
+          child: Image.asset(
+            UserProfile.photoUrl.isNotEmpty
+                ? UserProfile.photoUrl
+                : 'assets/images/others/Profile.png',
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+          ),
         ),
         // Edit profile button overlaid
         Positioned(
           bottom: -30,
           right: -30,
           child: GestureDetector(
-            onTap: _isUploadingPhoto ? null : _pickAndUploadPhoto,
+            onTap: () => _pickProfileAsset(context),
             child: Image.asset(
               'assets/images/buttons/EditProfileButton.png',
               width: 100,
@@ -96,10 +88,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
             ),
           ),
         ),
-        if (_isUploadingPhoto)
-          Positioned.fill(
-            child: Center(child: CircularProgressIndicator()),
-          ),
       ],
     );
 

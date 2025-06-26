@@ -70,6 +70,43 @@ class _EditScreenState extends State<EditScreen> {
     });
   }
 
+  Future<void> _pickProfileAsset(BuildContext context) async {
+    final List<String> assetNames = [
+      'assets/images/others/Profile.png',
+      'assets/images/others/Profile2.png',
+      'assets/images/others/Profile3.png',
+    ];
+
+    final selected = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Choose Profile Picture'),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: assetNames.map((asset) {
+            return GestureDetector(
+              onTap: () => Navigator.of(context).pop(asset),
+              child: CircleAvatar(
+                backgroundImage: AssetImage(asset),
+                radius: 35,
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+
+    if (selected != null) {
+      final userId = UserProfile.userId;
+      await FirebaseFirestore.instance.collection('users').doc(userId).set(
+        {'photoAsset': selected},
+        SetOptions(merge: true),
+      );
+      UserProfile.photoUrl = selected;
+      setState(() {});
+    }
+  }
+
   void saveProfileData() async {
     final name = _nameController.text;
     final email = _emailController.text;
