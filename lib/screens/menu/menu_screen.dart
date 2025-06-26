@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/menu/shopping_cart.dart';
-import '../../data/menu_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'item_detail_page.dart';
 import '../../models/menu_item.dart';
 import 'package:provider/provider.dart';
@@ -36,9 +36,10 @@ class _MenuScreenState extends State<MenuScreen> {
     'DRINKS': GlobalKey(),
   };
 
-  // Add a map to store filtered items for each category
-  final Map<String, List<_MenuItem>> _filteredItems = {};
+  Map<String, List<MenuItem>> _categoryItems = {};
+  Map<String, List<MenuItem>> _filteredItems = {};
   bool _isSearching = false;
+  List<MenuItem> _allMenuItems = [];
 
   @override
   void initState() {
@@ -60,6 +61,31 @@ class _MenuScreenState extends State<MenuScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<List<MenuItem>> _fetchMenuItems() async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection('menuItems').get();
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      return MenuItem(
+        name: data['name'] ?? '',
+        price: data['price'] ?? '',
+        ratings: (data['ratings'] ?? 0).toDouble(),
+        reviews:
+            (data['reviews'] as List<dynamic>? ?? [])
+                .map(
+                  (r) => Review(
+                    reviewerName: r['reviewerName'] ?? '',
+                    reviewerAvatar: r['reviewerAvatar'] ?? '',
+                    comment: r['comment'] ?? '',
+                  ),
+                )
+                .toList(),
+        description: data['description'] ?? '',
+        imagePath: data['imagePath'] ?? '',
+      );
+    }).toList();
   }
 
   void _scrollToSection(String section) {
@@ -93,45 +119,26 @@ class _MenuScreenState extends State<MenuScreen> {
         _filteredItems.clear();
         return;
       }
-
-      // Filter items in each category
       for (final category in _sectionKeys.keys) {
         _filteredItems[category] =
-            menuItems
-                .where((item) {
-                  final isInCategory = item.imagePath.contains(
-                    category.toLowerCase().replaceAll(' ', '_'),
-                  );
-                  final matchesSearch = item.name.toLowerCase().contains(
-                    query.toLowerCase(),
-                  );
-                  return isInCategory && matchesSearch;
-                })
-                .map(
-                  (item) => _MenuItem(
-                    image: item.imagePath,
-                    name: item.name,
-                    price: item.price,
-                  ),
-                )
-                .toList();
+            _allMenuItems.where((item) {
+              final isInCategory = item.imagePath.contains(
+                category.toLowerCase().replaceAll(' ', '_'),
+              );
+              final matchesSearch = item.name.toLowerCase().contains(
+                query.toLowerCase(),
+              );
+              return isInCategory && matchesSearch;
+            }).toList();
       }
     });
   }
 
-  List<_MenuItem> _getCategoryItems(String category) {
-    // Get items from menu_data.dart based on image path
-    return menuItems
+  List<MenuItem> _getCategoryItems(String category) {
+    return _allMenuItems
         .where(
           (item) => item.imagePath.contains(
             category.toLowerCase().replaceAll(' ', '_'),
-          ),
-        )
-        .map(
-          (item) => _MenuItem(
-            image: item.imagePath,
-            name: item.name,
-            price: item.price,
           ),
         )
         .toList();
@@ -139,266 +146,314 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFFF8E5),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Top Row 1: Branch Selector
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-              child: Row(
-                children: [
-                  const Icon(Icons.location_on, color: Colors.black, size: 30),
-                  const SizedBox(),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 1,
+    return FutureBuilder<List<MenuItem>>(
+      future: _fetchMenuItems(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error loading menu: \\${snapshot.error}'));
+        }
+        _allMenuItems = snapshot.data ?? [];
+        return Scaffold(
+          backgroundColor: const Color(0xFFFFF8E5),
+          body: SafeArea(
+            child: Column(
+              children: [
+                // Top Row 1: Branch Selector
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on,
+                        color: Colors.black,
+                        size: 30,
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.black12),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
+                      const SizedBox(),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 1,
                           ),
-                        ],
-                      ),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 180),
-                        child: _BranchDropdown(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Consumer<CartProvider>(
-                    builder: (context, cartProvider, child) {
-                      int itemCount = cartProvider.items.fold(
-                        0,
-                        (sum, item) => sum + item.quantity,
-                      );
-                      return Stack(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.shopping_cart,
-                              color: Colors.black,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ShoppingCart(),
-                                ),
-                              );
-                            },
-                          ),
-                          if (itemCount > 0)
-                            Positioned(
-                              right: 4,
-                              top: 4,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 20,
-                                  minHeight: 20,
-                                ),
-                                child: Text(
-                                  '$itemCount',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.black12),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
                               ),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            // Top Row 2: Search Bar
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: SearchBar(
-                controller: _searchController,
-                leading: const Icon(Icons.search),
-                hintText: 'Find your favourite sushi!',
-                backgroundColor: WidgetStateProperty.all(Colors.grey[100]),
-                shadowColor: WidgetStateProperty.all(Colors.black),
-                elevation: WidgetStateProperty.all(2.0),
-                shape: WidgetStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                            ],
+                          ),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 180),
+                            child: _BranchDropdown(),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Consumer<CartProvider>(
+                        builder: (context, cartProvider, child) {
+                          int itemCount = cartProvider.items.fold(
+                            0,
+                            (sum, item) => sum + item.quantity,
+                          );
+                          return Stack(
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.shopping_cart,
+                                  color: Colors.black,
+                                  size: 30,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => const ShoppingCart(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              if (itemCount > 0)
+                                Positioned(
+                                  right: 4,
+                                  top: 4,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 20,
+                                      minHeight: 20,
+                                    ),
+                                    child: Text(
+                                      '$itemCount',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                onChanged: _filterMenuItems,
-                onSubmitted: _filterMenuItems,
-                onTapOutside: (_) => FocusScope.of(context).unfocus(),
-              ),
-            ),
-            // Horizontal Divider
-            const Padding(
-              padding: EdgeInsets.only(top: 12),
-              child: Divider(thickness: 1, height: 1, color: Colors.black26),
-            ),
-            // Main Content: Side Nav + Menu
-            Expanded(
-              child: Row(
-                children: [
-                  // Side Navigation (Scrollable)
-                  Container(
-                    width: 90,
-                    color: const Color(0xFFFFF8E5),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 16),
-                          _SideNavItem(
-                            icon:
-                                'assets/images/icons/menu_sidebar/party_set.png',
-                            label: 'PARTY SET',
-                            onTap: () => _scrollToSection('PARTY SET'),
-                          ),
-                          _SideNavItem(
-                            icon:
-                                'assets/images/icons/menu_sidebar/appetizers.png',
-                            label: 'APPETIZERS',
-                            onTap: () => _scrollToSection('APPETIZERS'),
-                          ),
-                          _SideNavItem(
-                            icon:
-                                'assets/images/icons/menu_sidebar/maki_roll.png',
-                            label: 'MAKI ROLL',
-                            onTap: () => _scrollToSection('MAKI ROLL'),
-                          ),
-                          _SideNavItem(
-                            icon: 'assets/images/icons/menu_sidebar/nigiri.png',
-                            label: 'NIGIRI',
-                            onTap: () => _scrollToSection('NIGIRI'),
-                          ),
-                          _SideNavItem(
-                            icon: 'assets/images/icons/menu_sidebar/gunkan.png',
-                            label: 'GUNKAN',
-                            onTap: () => _scrollToSection('GUNKAN'),
-                          ),
-                          _SideNavItem(
-                            icon:
-                                'assets/images/icons/menu_sidebar/curry_set.png',
-                            label: 'CURRY SET',
-                            onTap: () => _scrollToSection('CURRY SET'),
-                          ),
-                          _SideNavItem(
-                            icon:
-                                'assets/images/icons/menu_sidebar/condiments.png',
-                            label: 'CONDIMENTS',
-                            onTap: () => _scrollToSection('CONDIMENTS'),
-                          ),
-                          _SideNavItem(
-                            icon: 'assets/images/icons/menu_sidebar/drinks.png',
-                            label: 'DRINKS',
-                            onTap: () => _scrollToSection('DRINKS'),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
+                // Top Row 2: Search Bar
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  child: SearchBar(
+                    controller: _searchController,
+                    leading: const Icon(Icons.search),
+                    hintText: 'Find your favourite sushi!',
+                    backgroundColor: WidgetStateProperty.all(Colors.grey[100]),
+                    shadowColor: WidgetStateProperty.all(Colors.black),
+                    elevation: WidgetStateProperty.all(2.0),
+                    shape: WidgetStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
+                    onChanged: _filterMenuItems,
+                    onSubmitted: _filterMenuItems,
+                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   ),
-                  // Vertical Divider
-                  const VerticalDivider(
-                    width: 1,
+                ),
+                // Horizontal Divider
+                const Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: Divider(
                     thickness: 1,
-                    color: Color(0xFF7F7F7F),
+                    height: 1,
+                    color: Colors.black26,
                   ),
-                  // Menu Content
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _MenuCategory(
-                            key: _sectionKeys['PARTY SET'],
-                            title: "PARTY SET",
-                            items: _getCategoryItems('PARTY SET'),
-                            isSearching: _isSearching,
-                            filteredItems: _filteredItems['PARTY SET'],
+                ),
+                // Main Content: Side Nav + Menu
+                Expanded(
+                  child: Row(
+                    children: [
+                      // Side Navigation (Scrollable)
+                      Container(
+                        width: 90,
+                        color: const Color(0xFFFFF8E5),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 16),
+                              _SideNavItem(
+                                icon:
+                                    'assets/images/icons/menu_sidebar/party_set.png',
+                                label: 'PARTY SET',
+                                onTap: () => _scrollToSection('PARTY SET'),
+                              ),
+                              _SideNavItem(
+                                icon:
+                                    'assets/images/icons/menu_sidebar/appetizers.png',
+                                label: 'APPETIZERS',
+                                onTap: () => _scrollToSection('APPETIZERS'),
+                              ),
+                              _SideNavItem(
+                                icon:
+                                    'assets/images/icons/menu_sidebar/maki_roll.png',
+                                label: 'MAKI ROLL',
+                                onTap: () => _scrollToSection('MAKI ROLL'),
+                              ),
+                              _SideNavItem(
+                                icon:
+                                    'assets/images/icons/menu_sidebar/nigiri.png',
+                                label: 'NIGIRI',
+                                onTap: () => _scrollToSection('NIGIRI'),
+                              ),
+                              _SideNavItem(
+                                icon:
+                                    'assets/images/icons/menu_sidebar/gunkan.png',
+                                label: 'GUNKAN',
+                                onTap: () => _scrollToSection('GUNKAN'),
+                              ),
+                              _SideNavItem(
+                                icon:
+                                    'assets/images/icons/menu_sidebar/curry_set.png',
+                                label: 'CURRY SET',
+                                onTap: () => _scrollToSection('CURRY SET'),
+                              ),
+                              _SideNavItem(
+                                icon:
+                                    'assets/images/icons/menu_sidebar/condiments.png',
+                                label: 'CONDIMENTS',
+                                onTap: () => _scrollToSection('CONDIMENTS'),
+                              ),
+                              _SideNavItem(
+                                icon:
+                                    'assets/images/icons/menu_sidebar/drinks.png',
+                                label: 'DRINKS',
+                                onTap: () => _scrollToSection('DRINKS'),
+                              ),
+                              const SizedBox(height: 16),
+                            ],
                           ),
-                          _MenuCategory(
-                            key: _sectionKeys['APPETIZERS'],
-                            title: "APPETIZERS",
-                            items: _getCategoryItems('APPETIZERS'),
-                            isSearching: _isSearching,
-                            filteredItems: _filteredItems['APPETIZERS'],
-                          ),
-                          _MenuCategory(
-                            key: _sectionKeys['MAKI ROLL'],
-                            title: "MAKI ROLL",
-                            items: _getCategoryItems('MAKI ROLL'),
-                            isSearching: _isSearching,
-                            filteredItems: _filteredItems['MAKI ROLL'],
-                          ),
-                          _MenuCategory(
-                            key: _sectionKeys['NIGIRI'],
-                            title: "NIGIRI",
-                            items: _getCategoryItems('NIGIRI'),
-                            isSearching: _isSearching,
-                            filteredItems: _filteredItems['NIGIRI'],
-                          ),
-                          _MenuCategory(
-                            key: _sectionKeys['GUNKAN'],
-                            title: "GUNKAN",
-                            items: _getCategoryItems('GUNKAN'),
-                            isSearching: _isSearching,
-                            filteredItems: _filteredItems['GUNKAN'],
-                          ),
-                          _MenuCategory(
-                            key: _sectionKeys['CURRY SET'],
-                            title: "CURRY SET",
-                            items: _getCategoryItems('CURRY SET'),
-                            isSearching: _isSearching,
-                            filteredItems: _filteredItems['CURRY SET'],
-                          ),
-                          _MenuCategory(
-                            key: _sectionKeys['CONDIMENTS'],
-                            title: "CONDIMENTS",
-                            items: _getCategoryItems('CONDIMENTS'),
-                            isSearching: _isSearching,
-                            filteredItems: _filteredItems['CONDIMENTS'],
-                          ),
-                          _MenuCategory(
-                            key: _sectionKeys['DRINKS'],
-                            title: "DRINKS",
-                            items: _getCategoryItems('DRINKS'),
-                            isSearching: _isSearching,
-                            filteredItems: _filteredItems['DRINKS'],
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      // Vertical Divider
+                      const VerticalDivider(
+                        width: 1,
+                        thickness: 1,
+                        color: Color(0xFF7F7F7F),
+                      ),
+                      // Menu Content
+                      Expanded(
+                        child: SingleChildScrollView(
+                          controller: _scrollController,
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _MenuCategory(
+                                key: _sectionKeys['PARTY SET'],
+                                title: "PARTY SET",
+                                items:
+                                    _isSearching
+                                        ? (_filteredItems['PARTY SET'] ?? [])
+                                        : _getCategoryItems('PARTY SET'),
+                                isSearching: _isSearching,
+                                filteredItems: _filteredItems['PARTY SET'],
+                              ),
+                              _MenuCategory(
+                                key: _sectionKeys['APPETIZERS'],
+                                title: "APPETIZERS",
+                                items:
+                                    _isSearching
+                                        ? (_filteredItems['APPETIZERS'] ?? [])
+                                        : _getCategoryItems('APPETIZERS'),
+                                isSearching: _isSearching,
+                                filteredItems: _filteredItems['APPETIZERS'],
+                              ),
+                              _MenuCategory(
+                                key: _sectionKeys['MAKI ROLL'],
+                                title: "MAKI ROLL",
+                                items:
+                                    _isSearching
+                                        ? (_filteredItems['MAKI ROLL'] ?? [])
+                                        : _getCategoryItems('MAKI ROLL'),
+                                isSearching: _isSearching,
+                                filteredItems: _filteredItems['MAKI ROLL'],
+                              ),
+                              _MenuCategory(
+                                key: _sectionKeys['NIGIRI'],
+                                title: "NIGIRI",
+                                items:
+                                    _isSearching
+                                        ? (_filteredItems['NIGIRI'] ?? [])
+                                        : _getCategoryItems('NIGIRI'),
+                                isSearching: _isSearching,
+                                filteredItems: _filteredItems['NIGIRI'],
+                              ),
+                              _MenuCategory(
+                                key: _sectionKeys['GUNKAN'],
+                                title: "GUNKAN",
+                                items:
+                                    _isSearching
+                                        ? (_filteredItems['GUNKAN'] ?? [])
+                                        : _getCategoryItems('GUNKAN'),
+                                isSearching: _isSearching,
+                                filteredItems: _filteredItems['GUNKAN'],
+                              ),
+                              _MenuCategory(
+                                key: _sectionKeys['CURRY SET'],
+                                title: "CURRY SET",
+                                items:
+                                    _isSearching
+                                        ? (_filteredItems['CURRY SET'] ?? [])
+                                        : _getCategoryItems('CURRY SET'),
+                                isSearching: _isSearching,
+                                filteredItems: _filteredItems['CURRY SET'],
+                              ),
+                              _MenuCategory(
+                                key: _sectionKeys['CONDIMENTS'],
+                                title: "CONDIMENTS",
+                                items:
+                                    _isSearching
+                                        ? (_filteredItems['CONDIMENTS'] ?? [])
+                                        : _getCategoryItems('CONDIMENTS'),
+                                isSearching: _isSearching,
+                                filteredItems: _filteredItems['CONDIMENTS'],
+                              ),
+                              _MenuCategory(
+                                key: _sectionKeys['DRINKS'],
+                                title: "DRINKS",
+                                items:
+                                    _isSearching
+                                        ? (_filteredItems['DRINKS'] ?? [])
+                                        : _getCategoryItems('DRINKS'),
+                                isSearching: _isSearching,
+                                filteredItems: _filteredItems['DRINKS'],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -453,9 +508,9 @@ class _SideNavItem extends StatelessWidget {
 // Menu Category Widget
 class _MenuCategory extends StatelessWidget {
   final String title;
-  final List<_MenuItem> items;
+  final List<MenuItem> items;
   final bool isSearching;
-  final List<_MenuItem>? filteredItems;
+  final List<MenuItem>? filteredItems;
 
   const _MenuCategory({
     super.key,
@@ -487,7 +542,21 @@ class _MenuCategory extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Wrap(spacing: 16, runSpacing: 16, children: displayItems),
+        Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          children:
+              displayItems
+                  .map(
+                    (item) => _MenuItem(
+                      image: item.imagePath,
+                      name: item.name,
+                      price: item.price,
+                      menuItem: item,
+                    ),
+                  )
+                  .toList(),
+        ),
       ],
     );
   }
@@ -498,27 +567,16 @@ class _MenuItem extends StatelessWidget {
   final String image;
   final String name;
   final String price;
+  final MenuItem menuItem;
   const _MenuItem({
     required this.image,
     required this.name,
     required this.price,
+    required this.menuItem,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Find the MenuItem instance from dummy data by name (or another unique field)
-    final menuItem = menuItems.firstWhere(
-      (item) => item.name == name,
-      orElse:
-          () => MenuItem(
-            name: name,
-            price: price,
-            imagePath: image,
-            ratings: 5.0,
-            reviews: const [],
-            description: '',
-          ),
-    );
     return GestureDetector(
       onTap: () {
         Navigator.push(
