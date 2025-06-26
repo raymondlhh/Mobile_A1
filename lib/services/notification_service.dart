@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
-import 'local_notification_helper.dart';
 
 class NotificationItem {
   final String name;
@@ -56,10 +55,6 @@ class NotificationService extends ChangeNotifier {
     notifications.insert(0, notification); // newest first
     await saveNotifications(notifications);
     notifyListeners();
-    await LocalNotificationHelper.showNotification(
-      title: notification.name,
-      body: notification.description,
-    );
   }
 
   Future<void> markAllAsRead() async {
