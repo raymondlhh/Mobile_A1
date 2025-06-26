@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
+import '../../services/balance_service.dart';
 
 class BalanceScreen extends StatefulWidget {
   const BalanceScreen({super.key});
@@ -11,6 +12,20 @@ class BalanceScreen extends StatefulWidget {
 class _BalanceScreenState extends State<BalanceScreen> {
   double balance = 0.0;
   final TextEditingController _controller = TextEditingController(text: '0.00');
+  final BalanceService _balanceService = BalanceService();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBalance();
+  }
+
+  void _loadBalance() async {
+    double savedBalance = await _balanceService.getBalance();
+    setState(() {
+      balance = savedBalance;
+    });
+  }
 
   void addAmount(double amount) {
     setState(() {
@@ -18,11 +33,12 @@ class _BalanceScreenState extends State<BalanceScreen> {
     });
   }
 
-  void topUp() {
+  void topUp() async {
     setState(() {
       balance += double.tryParse(_controller.text) ?? 0;
       _controller.text = '0.00';
     });
+    await _balanceService.setBalance(balance);
   }
 
   @override
