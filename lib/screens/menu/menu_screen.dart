@@ -144,11 +144,11 @@ class _MenuScreenState extends State<MenuScreen> {
           children: [
             // Top Row 1: Branch Selector
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
               child: Row(
                 children: [
                   const Icon(Icons.location_on, color: Colors.black, size: 30),
-                  const SizedBox(width: 8),
+                  const SizedBox(),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.symmetric(
