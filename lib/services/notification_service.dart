@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 class NotificationItem {
   final String name;
@@ -33,7 +34,7 @@ class NotificationItem {
   );
 }
 
-class NotificationService {
+class NotificationService extends ChangeNotifier {
   static const String _key = 'notifications';
 
   Future<List<NotificationItem>> getNotifications() async {
@@ -46,12 +47,14 @@ class NotificationService {
     final prefs = await SharedPreferences.getInstance();
     final data = notifications.map((e) => json.encode(e.toJson())).toList();
     await prefs.setStringList(_key, data);
+    notifyListeners();
   }
 
   Future<void> addNotification(NotificationItem notification) async {
     final notifications = await getNotifications();
     notifications.insert(0, notification); // newest first
     await saveNotifications(notifications);
+    notifyListeners();
   }
 
   Future<void> markAllAsRead() async {
@@ -60,5 +63,6 @@ class NotificationService {
       n.isRead = true;
     }
     await saveNotifications(notifications);
+    notifyListeners();
   }
 } 

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'providers/cart_provider.dart';
 import 'services/rewards_service.dart';
 import 'models/user_profile.dart';
+import 'services/notification_service.dart';
 
 import 'widgets/bottom_nav.dart';
 //import 'screens/home/home_screen.dart';
@@ -52,7 +53,10 @@ void main() async {
 
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => CartProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationService()),
+      ],
       child: const MyApp(),
     ),
   );
