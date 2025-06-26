@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 
 class AuthService {
   // Singleton pattern
@@ -15,6 +16,12 @@ class AuthService {
   final CollectionReference _usersCollection = FirebaseFirestore.instance
       .collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Uuid _uuid = const Uuid();
+
+  // Generate unique user ID
+  String _generateUserId() {
+    return _uuid.v4();
+  }
 
   // Validate user credentials
   Future<bool> validateUser(String email, String password) async {
@@ -29,11 +36,13 @@ class AuthService {
       if (result.docs.isNotEmpty) {
         // Update UserProfile with the found user's data
         final userData = result.docs.first.data() as Map<String, dynamic>;
+        UserProfile.userId = userData['userId'] ?? '';
         UserProfile.name = userData['name'] ?? '';
         UserProfile.email = userData['email'] ?? '';
         UserProfile.password = userData['password'] ?? '';
         UserProfile.phone = userData['phone'] ?? '';
         UserProfile.address = userData['address'] ?? '';
+        UserProfile.rewardsPoints = userData['rewardsPoints'] ?? 0;
         return true;
       }
       return false;
@@ -73,13 +82,18 @@ class AuthService {
         throw Exception('Password is not strong enough');
       }
 
+      // Generate unique user ID
+      final userId = _generateUserId();
+
       // Create new user document
       await _usersCollection.add({
+        'userId': userId,
         'name': name,
         'email': email,
         'password': password,
         'phone': phone,
         'address': address,
+        'rewardsPoints': 0, // Initialize with 0 points
         'createdAt': FieldValue.serverTimestamp(),
       });
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
 import '../../services/database_service.dart';
+import '../../models/user_profile.dart';
 
 class RedeemPage extends StatelessWidget {
   final String id;
@@ -9,6 +10,10 @@ class RedeemPage extends StatelessWidget {
   final String description;
   final int points;
   final int validity;
+  final int userPoints;
+  final int maxRedemptions;
+  final int userRedemptionCount;
+  final VoidCallback? onRedeemSuccess;
 
   const RedeemPage({
     super.key,
@@ -18,12 +23,53 @@ class RedeemPage extends StatelessWidget {
     required this.description,
     required this.points,
     required this.validity,
+    required this.userPoints,
+    required this.maxRedemptions,
+    required this.userRedemptionCount,
+    this.onRedeemSuccess,
   });
 
+  bool get canAfford => userPoints >= points;
+  bool get canRedeem => userRedemptionCount < maxRedemptions;
+  bool get canProceed => canAfford && canRedeem;
+
   Future<void> _handleRedeem(BuildContext context) async {
+    if (!canAfford) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Insufficient points. You need ${points - userPoints} more points.',
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (!canRedeem) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'You have reached the maximum redemption limit (${maxRedemptions}) for this reward.',
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     try {
       final databaseService = DatabaseService();
-      await databaseService.redeemReward(id);
+
+      // Use user ID if available, otherwise fall back to email
+      if (UserProfile.userId.isNotEmpty) {
+        await databaseService.redeemRewardWithPointsById(
+          id,
+          UserProfile.userId,
+        );
+      } else {
+        await databaseService.redeemRewardWithPoints(id, UserProfile.email);
+      }
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -34,6 +80,9 @@ class RedeemPage extends StatelessWidget {
         );
         Navigator.pop(context);
       }
+
+      // Call the callback to refresh the parent screen
+      onRedeemSuccess?.call();
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -43,6 +92,16 @@ class RedeemPage extends StatelessWidget {
           ),
         );
       }
+    }
+  }
+
+  String _getButtonText() {
+    if (!canAfford) {
+      return 'Insufficient Points';
+    } else if (!canRedeem) {
+      return 'Redemption Limit Reached';
+    } else {
+      return 'Redeem';
     }
   }
 
@@ -98,10 +157,48 @@ class RedeemPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Points',
+                    'Points Required',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text('${points}Pts'),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Your Current Points',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '${userPoints}Pts',
+                    style: TextStyle(
+                      color: canAfford ? Colors.green : Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (!canAfford) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      'You need ${points - userPoints} more points to redeem this reward',
+                      style: const TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ],
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Your Redemption Status',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '${userRedemptionCount}/${maxRedemptions} times redeemed',
+                    style: TextStyle(
+                      color: canRedeem ? Colors.green : Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (!canRedeem) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      'You have reached the maximum redemption limit for this reward',
+                      style: const TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ],
                   const SizedBox(height: 8),
                   const Text(
                     'Validity (per month)',
@@ -124,6 +221,9 @@ class RedeemPage extends StatelessWidget {
                     '• Rewards are subject to availability and may change without prior notice.',
                   ),
                   const Text(
+                    '• Each user has a limited number of redemptions per reward.',
+                  ),
+                  const Text(
                     '• Once points are redeemed for a reward, the redemption cannot be reversed or refunded.',
                   ),
                   const Text(
@@ -136,16 +236,17 @@ class RedeemPage extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD24545),
+                  backgroundColor:
+                      canProceed ? const Color(0xFFD24545) : Colors.grey,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                   minimumSize: const Size.fromHeight(48),
                 ),
-                onPressed: () => _handleRedeem(context),
-                child: const Text(
-                  'Redeem',
-                  style: TextStyle(
+                onPressed: canProceed ? () => _handleRedeem(context) : null,
+                child: Text(
+                  canProceed ? 'Redeem' : _getButtonText(),
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,

@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../screens/rewards/reward_detail_page.dart';
+import '../../services/database_service.dart';
+import '../../models/user_profile.dart';
 
-class RewardCard extends StatelessWidget {
+class RewardCard extends StatefulWidget {
   final String id;
   final String imagePath;
   final String itemName;
   final String description;
   final int points;
   final int validity;
+  final int userPoints;
+  final int maxRedemptions;
+  final VoidCallback? onRedeemSuccess;
 
   const RewardCard({
     super.key,
@@ -17,7 +22,63 @@ class RewardCard extends StatelessWidget {
     required this.description,
     required this.points,
     required this.validity,
+    required this.userPoints,
+    required this.maxRedemptions,
+    this.onRedeemSuccess,
   });
+
+  @override
+  State<RewardCard> createState() => _RewardCardState();
+}
+
+class _RewardCardState extends State<RewardCard> {
+  int _userRedemptionCount = 0;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserRedemptionCount();
+  }
+
+  @override
+  void didUpdateWidget(RewardCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Refresh redemption count when widget is updated (e.g., after redemption)
+    if (oldWidget.userPoints != widget.userPoints) {
+      _loadUserRedemptionCount();
+    }
+  }
+
+  Future<void> _loadUserRedemptionCount() async {
+    try {
+      final databaseService = DatabaseService();
+      String userId =
+          UserProfile.userId.isNotEmpty
+              ? UserProfile.userId
+              : UserProfile.email;
+      final count = await databaseService.getUserRewardRedemptionCount(
+        userId,
+        widget.id,
+      );
+      if (mounted) {
+        setState(() {
+          _userRedemptionCount = count;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  bool get canAfford => widget.userPoints >= widget.points;
+  bool get canRedeem => _userRedemptionCount < widget.maxRedemptions;
+  bool get isFullyRedeemed => !canRedeem;
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +89,16 @@ class RewardCard extends StatelessWidget {
           MaterialPageRoute(
             builder:
                 (context) => RedeemPage(
-                  id: id,
-                  imagePath: imagePath,
-                  itemName: itemName,
-                  description: description,
-                  points: points,
-                  validity: validity,
+                  id: widget.id,
+                  imagePath: widget.imagePath,
+                  itemName: widget.itemName,
+                  description: widget.description,
+                  points: widget.points,
+                  validity: widget.validity,
+                  userPoints: widget.userPoints,
+                  maxRedemptions: widget.maxRedemptions,
+                  userRedemptionCount: _userRedemptionCount,
+                  onRedeemSuccess: widget.onRedeemSuccess,
                 ),
           ),
         );
@@ -44,7 +109,10 @@ class RewardCard extends StatelessWidget {
         child: Container(
           width: 100,
           decoration: BoxDecoration(
-            color: const Color(0xFF8AB98F),
+            color:
+                !isFullyRedeemed
+                    ? const Color(0xFF8AB98F)
+                    : Colors.grey.shade400,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -57,9 +125,21 @@ class RewardCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFCA3202), width: 10),
+                  border: Border.all(
+                    color:
+                        !isFullyRedeemed
+                            ? const Color(0xFFCA3202)
+                            : Colors.grey.shade600,
+                    width: 10,
+                  ),
                 ),
-                child: Image.asset(imagePath, fit: BoxFit.cover),
+                child: Image.asset(
+                  widget.imagePath,
+                  fit: BoxFit.cover,
+                  color: !isFullyRedeemed ? null : Colors.grey.shade400,
+                  colorBlendMode:
+                      !isFullyRedeemed ? null : BlendMode.saturation,
+                ),
               ),
               const SizedBox(height: 6),
               Container(
@@ -68,14 +148,21 @@ class RewardCard extends StatelessWidget {
                   vertical: 3,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: !isFullyRedeemed ? Colors.white : Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFF7F7F7F), width: 1),
+                  border: Border.all(
+                    color:
+                        !isFullyRedeemed
+                            ? const Color(0xFF7F7F7F)
+                            : Colors.grey.shade400,
+                    width: 1,
+                  ),
                 ),
                 child: Text(
-                  '$points pts',
-                  style: const TextStyle(
-                    color: Colors.black,
+                  '${widget.points} pts',
+                  style: TextStyle(
+                    color:
+                        !isFullyRedeemed ? Colors.black : Colors.grey.shade600,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -83,16 +170,72 @@ class RewardCard extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                itemName,
-                style: const TextStyle(
+                widget.itemName,
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: !isFullyRedeemed ? Colors.black : Colors.grey.shade600,
                   fontSize: 13,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
+              if (!_isLoading) ...[
+                const SizedBox(height: 4),
+                Text(
+                  '${_userRedemptionCount}/${widget.maxRedemptions} redeemed',
+                  style: TextStyle(
+                    color:
+                        !isFullyRedeemed
+                            ? Colors.black87
+                            : Colors.grey.shade600,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+              if (!canAfford && !isFullyRedeemed) ...[
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade100,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    'Need ${widget.points - widget.userPoints} more pts',
+                    style: TextStyle(
+                      color: Colors.red.shade800,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+              if (isFullyRedeemed) ...[
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade100,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    'Limit reached',
+                    style: TextStyle(
+                      color: Colors.orange.shade800,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

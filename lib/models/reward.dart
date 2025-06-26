@@ -4,9 +4,9 @@ class Reward {
   final String description;
   final int points;
   final String imagePath;
-  final bool isRedeemed;
-  final DateTime? redeemedAt;
   final int validity;
+  final int
+  maxRedemptions; // Maximum number of times this reward can be redeemed per user
 
   Reward({
     required this.id,
@@ -15,8 +15,7 @@ class Reward {
     required this.points,
     required this.imagePath,
     required this.validity,
-    this.isRedeemed = false,
-    this.redeemedAt,
+    required this.maxRedemptions,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,9 +24,8 @@ class Reward {
       'description': description,
       'points': points,
       'imagePath': imagePath,
-      'isRedeemed': isRedeemed,
-      'redeemedAt': redeemedAt?.toIso8601String(),
       'validity': validity,
+      'maxRedemptions': maxRedemptions,
     };
   }
 
@@ -38,10 +36,8 @@ class Reward {
       description: map['description'] ?? '',
       points: map['points'] ?? 0,
       imagePath: map['imagePath'] ?? '',
-      isRedeemed: map['isRedeemed'] ?? false,
-      redeemedAt:
-          map['redeemedAt'] != null ? DateTime.parse(map['redeemedAt']) : null,
       validity: map['validity'] ?? 0,
+      maxRedemptions: map['maxRedemptions'] ?? 1,
     );
   }
 }

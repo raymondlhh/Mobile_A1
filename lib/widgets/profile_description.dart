@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/profile/edit_screen.dart';
-
 import '../models/user_profile.dart';
 
 class ProfileHeader extends StatefulWidget {
@@ -18,12 +17,38 @@ class ProfileHeader extends StatefulWidget {
 class _ProfileHeaderState extends State<ProfileHeader> {
   File? _selectedImage;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedImage();
+  }
+
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
       setState(() {
         _selectedImage = File(picked.path);
+      });
+      await _saveProfileImagePath(picked.path);
+    }
+  }
+
+  Future<void> _saveProfileImagePath(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('profile_image_path', path);
+  }
+
+  Future<String?> _loadProfileImagePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('profile_image_path');
+  }
+
+  void _loadSavedImage() async {
+    final path = await _loadProfileImagePath();
+    if (path != null) {
+      setState(() {
+        _selectedImage = File(path);
       });
     }
   }

@@ -16,21 +16,21 @@ class RewardsPointsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: const Color(0xFF7F7F7F), width: 2),
         ),
-        child: const Stack(
+        child: Stack(
           children: [
             Padding(
-              padding: EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Rewards Point:',
                     style: TextStyle(fontSize: 16, color: Colors.black87),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
-                    '3688 Pts',
-                    style: TextStyle(
+                    '${points} Pts',
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,

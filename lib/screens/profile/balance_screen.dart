@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
+import '../../services/balance_service.dart';
+import '../../services/notification_service.dart';
 
 class BalanceScreen extends StatefulWidget {
   const BalanceScreen({super.key});
@@ -11,18 +13,60 @@ class BalanceScreen extends StatefulWidget {
 class _BalanceScreenState extends State<BalanceScreen> {
   double balance = 0.0;
   final TextEditingController _controller = TextEditingController(text: '0.00');
+  final BalanceService _balanceService = BalanceService();
 
-  void addAmount(double amount) {
+  @override
+  void initState() {
+    super.initState();
+    _loadBalance();
+  }
+
+  void _loadBalance() async {
+    double savedBalance = await _balanceService.getBalance();
     setState(() {
-      _controller.text = (double.tryParse(_controller.text) ?? 0 + amount).toStringAsFixed(2);
+      balance = savedBalance;
     });
   }
 
-  void topUp() {
+  void setAmount(double amount) {
     setState(() {
-      balance += double.tryParse(_controller.text) ?? 0;
+      _controller.text = amount.toStringAsFixed(2);
+    });
+  }
+
+  String _todayDateString() {
+    final now = DateTime.now();
+    return '${now.day} ${_monthName(now.month)} ${now.year}';
+  }
+  String _currentTimeString() {
+    final now = DateTime.now();
+    return '${now.hour}:${now.minute.toString().padLeft(2, '0')}';
+  }
+  String _monthName(int month) {
+    const months = [
+      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return months[month];
+  }
+
+  void topUp() async {
+    double topUpAmount = double.tryParse(_controller.text) ?? 0;
+    setState(() {
+      balance += topUpAmount;
       _controller.text = '0.00';
     });
+    await _balanceService.setBalance(balance);
+    if (topUpAmount > 0) {
+      await NotificationService().addNotification(
+        NotificationItem(
+          name: 'Top-Up Successful',
+          description: 'RM ${topUpAmount.toStringAsFixed(2)} has been successfully topped-up',
+          date: _todayDateString(),
+          time: _currentTimeString(),
+        ),
+      );
+    }
   }
 
   @override
@@ -130,7 +174,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     children: [
                       for (var amount in [10, 50, 100, 200, 350, 500])
                         GestureDetector(
-                          onTap: () => addAmount(amount.toDouble()),
+                          onTap: () => setAmount(amount.toDouble()),
                           child: Image.asset(
                             'assets/images/buttons/${amount}rmButton.png',
                             width: 100,
