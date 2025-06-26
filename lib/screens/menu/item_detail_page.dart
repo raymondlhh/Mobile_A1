@@ -1,9 +1,9 @@
 // ignore_for_file: use_super_parameters
 
 import 'package:flutter/material.dart';
-import '../../../models/menu_item.dart';
-import '../../../services/favourite_service.dart';
-import '../../../widgets/title_appbar.dart';
+import '../../models/menu_item.dart';
+import '../../services/favourite_service.dart';
+import '../../widgets/title_appbar.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart_provider.dart';
 
