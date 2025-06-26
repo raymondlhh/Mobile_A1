@@ -135,6 +135,21 @@ const menuItems = [
     imagePath: 'assets/images/foods/appetizers/chuka_kurage.png',
   ),
   MenuItem(
+    name: 'CHUKA WAKAME',
+    price: 'RM 6.90',
+    ratings: 4.6,
+    reviews: [
+      Review(
+        reviewerName: 'Noraini Hashim',
+        reviewerAvatar: 'assets/images/avatars/aina.png',
+        comment: 'Seaweed is fresh and tasty, perfect appetizer!',
+      ),
+    ],
+    description:
+        'Seasoned seaweed salad with sesame seeds and a hint of chili.',
+    imagePath: 'assets/images/foods/appetizers/chuka_wakame.png',
+  ),
+  MenuItem(
     name: 'MOCHI (4PCS)',
     price: 'RM 6.90',
     ratings: 4.7,
