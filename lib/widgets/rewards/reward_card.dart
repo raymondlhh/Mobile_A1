@@ -12,6 +12,7 @@ class RewardCard extends StatefulWidget {
   final int validity;
   final int userPoints;
   final int maxRedemptions;
+  final VoidCallback? onRedeemSuccess;
 
   const RewardCard({
     super.key,
@@ -23,6 +24,7 @@ class RewardCard extends StatefulWidget {
     required this.validity,
     required this.userPoints,
     required this.maxRedemptions,
+    this.onRedeemSuccess,
   });
 
   @override
@@ -37,6 +39,15 @@ class _RewardCardState extends State<RewardCard> {
   void initState() {
     super.initState();
     _loadUserRedemptionCount();
+  }
+
+  @override
+  void didUpdateWidget(RewardCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Refresh redemption count when widget is updated (e.g., after redemption)
+    if (oldWidget.userPoints != widget.userPoints) {
+      _loadUserRedemptionCount();
+    }
   }
 
   Future<void> _loadUserRedemptionCount() async {
@@ -87,6 +98,7 @@ class _RewardCardState extends State<RewardCard> {
                   userPoints: widget.userPoints,
                   maxRedemptions: widget.maxRedemptions,
                   userRedemptionCount: _userRedemptionCount,
+                  onRedeemSuccess: widget.onRedeemSuccess,
                 ),
           ),
         );
@@ -98,7 +110,7 @@ class _RewardCardState extends State<RewardCard> {
           width: 100,
           decoration: BoxDecoration(
             color:
-                (canAfford && !isFullyRedeemed)
+                !isFullyRedeemed
                     ? const Color(0xFF8AB98F)
                     : Colors.grey.shade400,
             borderRadius: BorderRadius.circular(20),
@@ -115,7 +127,7 @@ class _RewardCardState extends State<RewardCard> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color:
-                        (canAfford && !isFullyRedeemed)
+                        !isFullyRedeemed
                             ? const Color(0xFFCA3202)
                             : Colors.grey.shade600,
                     width: 10,
@@ -124,14 +136,9 @@ class _RewardCardState extends State<RewardCard> {
                 child: Image.asset(
                   widget.imagePath,
                   fit: BoxFit.cover,
-                  color:
-                      (canAfford && !isFullyRedeemed)
-                          ? null
-                          : Colors.grey.shade400,
+                  color: !isFullyRedeemed ? null : Colors.grey.shade400,
                   colorBlendMode:
-                      (canAfford && !isFullyRedeemed)
-                          ? null
-                          : BlendMode.saturation,
+                      !isFullyRedeemed ? null : BlendMode.saturation,
                 ),
               ),
               const SizedBox(height: 6),
@@ -141,14 +148,11 @@ class _RewardCardState extends State<RewardCard> {
                   vertical: 3,
                 ),
                 decoration: BoxDecoration(
-                  color:
-                      (canAfford && !isFullyRedeemed)
-                          ? Colors.white
-                          : Colors.grey.shade200,
+                  color: !isFullyRedeemed ? Colors.white : Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color:
-                        (canAfford && !isFullyRedeemed)
+                        !isFullyRedeemed
                             ? const Color(0xFF7F7F7F)
                             : Colors.grey.shade400,
                     width: 1,
@@ -158,9 +162,7 @@ class _RewardCardState extends State<RewardCard> {
                   '${widget.points} pts',
                   style: TextStyle(
                     color:
-                        (canAfford && !isFullyRedeemed)
-                            ? Colors.black
-                            : Colors.grey.shade600,
+                        !isFullyRedeemed ? Colors.black : Colors.grey.shade600,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -171,10 +173,7 @@ class _RewardCardState extends State<RewardCard> {
                 widget.itemName,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color:
-                      (canAfford && !isFullyRedeemed)
-                          ? Colors.black
-                          : Colors.grey.shade600,
+                  color: !isFullyRedeemed ? Colors.black : Colors.grey.shade600,
                   fontSize: 13,
                 ),
                 textAlign: TextAlign.center,
@@ -187,7 +186,7 @@ class _RewardCardState extends State<RewardCard> {
                   '${_userRedemptionCount}/${widget.maxRedemptions} redeemed',
                   style: TextStyle(
                     color:
-                        (canAfford && !isFullyRedeemed)
+                        !isFullyRedeemed
                             ? Colors.black87
                             : Colors.grey.shade600,
                     fontSize: 10,

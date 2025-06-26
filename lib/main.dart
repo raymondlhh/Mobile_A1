@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'services/database_service.dart';
 import 'package:provider/provider.dart';
 import 'providers/cart_provider.dart';
+import 'services/rewards_service.dart';
+import 'models/user_profile.dart';
 
 import 'widgets/bottom_nav.dart';
 //import 'screens/home/home_screen.dart';
@@ -37,9 +39,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  // Initialize rewards in the database
+  // Initialize database with rewards
   final databaseService = DatabaseService();
-  await databaseService.initializeCurrentRewards();
+  await databaseService
+      .updateExistingRewardsWithMaxRedemptions(); // Update existing rewards with maxRedemptions
+  await databaseService.clearExistingRedemptions(); // Clear old redemption data
+  await databaseService.checkCurrentRewards(); // Check what's in the database
+
+  // Add some test points to the default user (for demonstration)
+  final rewardsService = RewardsService();
+  await rewardsService.addRewardsPoints(UserProfile.email, 5000);
 
   runApp(
     MultiProvider(

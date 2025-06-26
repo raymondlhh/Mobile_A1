@@ -5,8 +5,6 @@ class UserRewardRedemption {
   final String rewardName;
   final int pointsSpent;
   final DateTime redeemedAt;
-  final int
-  redemptionCount; // How many times this user has redeemed this reward
 
   UserRewardRedemption({
     required this.id,
@@ -15,7 +13,6 @@ class UserRewardRedemption {
     required this.rewardName,
     required this.pointsSpent,
     required this.redeemedAt,
-    required this.redemptionCount,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,7 +22,6 @@ class UserRewardRedemption {
       'rewardName': rewardName,
       'pointsSpent': pointsSpent,
       'redeemedAt': redeemedAt.toIso8601String(),
-      'redemptionCount': redemptionCount,
     };
   }
 
@@ -40,7 +36,6 @@ class UserRewardRedemption {
           map['redeemedAt'] != null
               ? DateTime.parse(map['redeemedAt'])
               : DateTime.now(),
-      redemptionCount: map['redemptionCount'] ?? 1,
     );
   }
 }
