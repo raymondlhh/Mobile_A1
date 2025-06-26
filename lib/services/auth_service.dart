@@ -49,7 +49,7 @@ class AuthService {
     required String email,
     required String password,
     required String phone,
-    required String address,
+    String address = '',
   }) async {
     try {
       // Check if email already exists
@@ -102,10 +102,9 @@ class AuthService {
     if (password.length < 8) return false;
 
     // Password should contain at least one uppercase letter
-    if (!password.contains(RegExp(r'[A-Z]'))) return false;
-
-    // Password should contain at least one lowercase letter
-    if (!password.contains(RegExp(r'[a-z]'))) return false;
+    if (!password.contains(RegExp(r'[A-Z]')) &&
+        !password.contains(RegExp(r'[a-z]')))
+      return false;
 
     // Password should contain at least one number
     if (!password.contains(RegExp(r'[0-9]'))) return false;
@@ -131,10 +130,11 @@ class AuthService {
     required String address,
   }) async {
     try {
-      final querySnapshot = await _usersCollection
-          .where('email', isEqualTo: currentEmail)
-          .limit(1)
-          .get();
+      final querySnapshot =
+          await _usersCollection
+              .where('email', isEqualTo: currentEmail)
+              .limit(1)
+              .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         final docId = querySnapshot.docs.first.id;

@@ -15,7 +15,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
   final AuthService _authService = AuthService();
   bool _isPasswordVisible = false;
   bool _isLoading = false;
@@ -27,7 +26,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _passwordController.dispose();
     _nameController.dispose();
     _phoneController.dispose();
-    _addressController.dispose();
     super.dispose();
   }
 
@@ -41,7 +39,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
     final phone = _phoneController.text.trim();
-    final address = _addressController.text.trim();
 
     // Validate all fields
     if (name.isEmpty) {
@@ -76,21 +73,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
-    if (address.isEmpty) {
-      setState(() {
-        _errorMessage = 'Please enter your address';
-        _isLoading = false;
-      });
-      return;
-    }
-
     try {
       await _authService.registerUser(
         name: name,
         email: email,
         password: password,
         phone: phone,
-        address: address,
       );
 
       if (mounted) {
@@ -333,48 +321,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
 
-            // Address Input
-            Positioned(
-              left: screenWidth * 41 / 430,
-              top: screenHeight * 700 / 932,
-              child: Container(
-                width: screenWidth * 337 / 430,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: TextField(
-                  controller: _addressController,
-                  enabled: !_isLoading,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    hintText: 'Delivery Address',
-                    hintStyle: TextStyle(
-                      fontSize: screenWidth * 16 / 430,
-                      color: Colors.grey,
-                    ),
-                    prefixIcon: const Icon(Icons.location_on_outlined),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 16 / 430,
-                      vertical: screenHeight * 10 / 932,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
             // Sign Up Button
             Positioned(
               left: screenWidth * 41 / 430,
-              top: screenHeight * 780 / 932,
+              top: screenHeight * 700 / 932,
               child: GestureDetector(
                 onTap: _isLoading ? null : _handleSignUp,
                 child: Container(
@@ -419,7 +369,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Already have an account?
             Positioned(
               left: screenWidth * 110 / 430,
-              top: screenHeight * 850 / 932,
+              top: screenHeight * 770 / 932,
               child: Row(
                 children: [
                   const Text('Already have an account?'),
