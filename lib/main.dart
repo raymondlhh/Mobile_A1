@@ -6,6 +6,7 @@ import 'providers/cart_provider.dart';
 import 'services/rewards_service.dart';
 import 'models/user_profile.dart';
 import 'services/notification_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'widgets/bottom_nav.dart';
 //import 'screens/home/home_screen.dart';
@@ -29,6 +30,8 @@ import 'package:firebase_core/firebase_core.dart';
 // ignore: unused_import
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -39,6 +42,15 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   // Initialize database with rewards
   final databaseService = DatabaseService();
