@@ -17,18 +17,87 @@ class ShoppingCart extends StatelessWidget {
       appBar: buildAppBar(context, 'Order Confirmation'),
       body: Column(
         children: [
-          // Cart Items List
           Expanded(
-            child:
-                cartItems.isEmpty
-                    ? const Center(child: Text('Your cart is empty'))
-                    : ListView.builder(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: cartItems.length,
-                      itemBuilder: (context, index) {
-                        return _CartItem(cartItem: cartItems[index]);
-                      },
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 16),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Selected Branch',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
                     ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Divider(thickness: 1.2, color: Color(0xFFBDBDBD)),
+                  ),
+                  const _BranchDetailsSection(),
+                  const SizedBox(height: 24),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Order Summary',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Divider(thickness: 1.2, color: Color(0xFFBDBDBD)),
+                  ),
+                  cartItems.isEmpty
+                      ? const Padding(
+                        padding: EdgeInsets.all(32),
+                        child: Center(child: Text('Your cart is empty')),
+                      )
+                      : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(16),
+                        itemCount: cartItems.length,
+                        itemBuilder: (context, index) {
+                          return _CartItem(cartItem: cartItems[index]);
+                        },
+                      ),
+                  // Remarks Section
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Remarks',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: _RemarksTextBox(),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
           ),
           // Bottom Summary
           Container(
@@ -103,6 +172,89 @@ class ShoppingCart extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _BranchDetailsSection extends StatelessWidget {
+  const _BranchDetailsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFFFF), // Example green background
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Details
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'AEON Nilai, Negeri Sembilan',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Lot G13, Ground Floor, Aeon Mall Nilai, Putra Point, 71800 Bandar Baru Nilai, Negeri Sembilan',
+                  style: TextStyle(fontSize: 14, fontFamily: 'Inter'),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  'Estimated Time: ~5 minutes',
+                  style: TextStyle(fontSize: 14, fontFamily: 'Inter'),
+                ),
+              ],
+            ),
+          ),
+          // Map Icon
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const FullScreenMapPage()),
+              );
+            },
+            child: Container(
+              width: 90,
+              height: 90,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(
+                Icons.location_on_outlined,
+                size: 56,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FullScreenMapPage extends StatelessWidget {
+  const FullScreenMapPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Branch Location')),
+      body: const Center(
+        child: Icon(Icons.location_on, size: 120, color: Colors.red),
       ),
     );
   }
@@ -215,6 +367,41 @@ class _CartItem extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _RemarksTextBox extends StatefulWidget {
+  const _RemarksTextBox();
+
+  @override
+  State<_RemarksTextBox> createState() => _RemarksTextBoxState();
+}
+
+class _RemarksTextBoxState extends State<_RemarksTextBox> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: _controller,
+      maxLines: 3,
+      decoration: InputDecoration(
+        hintText: 'Add any notes or instructions for your order...',
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 12,
+        ),
       ),
     );
   }
