@@ -4,6 +4,7 @@ import '../../providers/cart_provider.dart';
 import '../../models/cart_item.dart';
 import '../../../widgets/title_appbar.dart';
 import 'checkout_page.dart';
+import '../../services/balance_service.dart';
 
 class ShoppingCart extends StatelessWidget {
   const ShoppingCart({super.key});
@@ -69,14 +70,35 @@ class ShoppingCart extends StatelessWidget {
                     onPressed:
                         cartItems.isEmpty
                             ? null
-                            : () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const CheckoutPage(),
-                                ),
-                              );
-                            },
+                            : () async {
+                                final balanceService = BalanceService();
+                                double balance = await balanceService.getBalance();
+                                double total = cartProvider.totalAmount;
+
+                                if (balance >= total) {
+                                  // Deduct and save new balance
+                                  await balanceService.setBalance(balance - total);
+
+                                  // Optionally, clear the cart here if you want
+                                  // cartProvider.clearCart();
+
+                                  // Proceed to checkout page
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const CheckoutPage(),
+                                    ),
+                                  );
+                                } else {
+                                  // Show not enough balance message
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Not enough balance'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFCA3202),
                       padding: const EdgeInsets.symmetric(vertical: 16),

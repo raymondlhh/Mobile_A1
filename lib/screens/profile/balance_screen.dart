@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/title_appbar.dart';
+import '../../services/balance_service.dart';
 
 class BalanceScreen extends StatefulWidget {
   const BalanceScreen({super.key});
@@ -11,18 +12,33 @@ class BalanceScreen extends StatefulWidget {
 class _BalanceScreenState extends State<BalanceScreen> {
   double balance = 0.0;
   final TextEditingController _controller = TextEditingController(text: '0.00');
+  final BalanceService _balanceService = BalanceService();
 
-  void addAmount(double amount) {
+  @override
+  void initState() {
+    super.initState();
+    _loadBalance();
+  }
+
+  void _loadBalance() async {
+    double savedBalance = await _balanceService.getBalance();
     setState(() {
-      _controller.text = (double.tryParse(_controller.text) ?? 0 + amount).toStringAsFixed(2);
+      balance = savedBalance;
     });
   }
 
-  void topUp() {
+  void setAmount(double amount) {
+    setState(() {
+      _controller.text = amount.toStringAsFixed(2);
+    });
+  }
+
+  void topUp() async {
     setState(() {
       balance += double.tryParse(_controller.text) ?? 0;
       _controller.text = '0.00';
     });
+    await _balanceService.setBalance(balance);
   }
 
   @override
@@ -130,7 +146,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     children: [
                       for (var amount in [10, 50, 100, 200, 350, 500])
                         GestureDetector(
-                          onTap: () => addAmount(amount.toDouble()),
+                          onTap: () => setAmount(amount.toDouble()),
                           child: Image.asset(
                             'assets/images/buttons/${amount}rmButton.png',
                             width: 100,
