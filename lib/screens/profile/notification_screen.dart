@@ -33,30 +33,32 @@ class _NotificationScreenState extends State<NotificationScreen> {
     loadNotifications();
   }
 
-  String getLocalizedTitle(AppLocalizations l10n, String name) {
-    if (name == 'Points Earned') return l10n.pointsEarnedTitle;
-    if (name == 'Payment Successful') return l10n.paymentSuccessTitle;
-    if (name == 'Top-Up Successful') return l10n.topUpSuccessTitle;
-    return name;
+  String getLocalizedTitle(AppLocalizations l10n, NotificationItem item) {
+    switch (item.type) {
+      case 'pointsEarned':
+        return l10n.pointsEarnedTitle;
+      case 'paymentSuccess':
+        return l10n.paymentSuccessTitle;
+      case 'topUpSuccess':
+        return l10n.topUpSuccessTitle;
+      default:
+        // fallback to legacy name
+        return item.name;
+    }
   }
 
-  String getLocalizedDescription(AppLocalizations l10n, String name, String description) {
-    if (name == 'Points Earned') {
-      final match = RegExp(r'(\d+)').firstMatch(description);
-      final points = match != null ? match.group(1) ?? '' : '';
-      return l10n.pointsEarnedMsg(points);
+  String getLocalizedDescription(AppLocalizations l10n, NotificationItem item) {
+    switch (item.type) {
+      case 'pointsEarned':
+        return l10n.pointsEarnedMsg(item.params['points'] ?? '');
+      case 'paymentSuccess':
+        return l10n.paymentSuccessMsg(item.params['amount'] ?? '');
+      case 'topUpSuccess':
+        return l10n.topUpSuccessMsg(item.params['amount'] ?? '');
+      default:
+        // fallback to legacy description
+        return item.description;
     }
-    if (name == 'Payment Successful') {
-      final match = RegExp(r'RM ([\d.]+)').firstMatch(description);
-      final amount = match != null ? match.group(1) ?? '' : '';
-      return l10n.paymentSuccessMsg(amount);
-    }
-    if (name == 'Top-Up Successful') {
-      final match = RegExp(r'RM ([\d.]+)').firstMatch(description);
-      final amount = match != null ? match.group(1) ?? '' : '';
-      return l10n.topUpSuccessMsg(amount);
-    }
-    return description;
   }
 
   @override
@@ -92,7 +94,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          getLocalizedTitle(l10n, item.name),
+                          getLocalizedTitle(l10n, item),
                           style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w900,
@@ -102,7 +104,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          getLocalizedDescription(l10n, item.name, item.description),
+                          getLocalizedDescription(l10n, item),
                           style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,

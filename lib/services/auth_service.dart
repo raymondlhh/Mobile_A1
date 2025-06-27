@@ -119,8 +119,9 @@ class AuthService {
 
     // Password should contain at least one uppercase letter
     if (!password.contains(RegExp(r'[A-Z]')) &&
-        !password.contains(RegExp(r'[a-z]')))
+        !password.contains(RegExp(r'[a-z]'))) {
       return false;
+    }
 
     // Password should contain at least one number
     if (!password.contains(RegExp(r'[0-9]'))) return false;

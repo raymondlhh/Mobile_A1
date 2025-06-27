@@ -185,7 +185,7 @@ class _RewardCardState extends State<RewardCard> {
               if (!_isLoading) ...[
                 const SizedBox(height: 4),
                 Text(
-                  '${_userRedemptionCount}/${widget.maxRedemptions} ${l10n.redeemed}',
+                  '$_userRedemptionCount/${widget.maxRedemptions} ${l10n.redeemed}',
                   style: TextStyle(
                     color:
                         !isFullyRedeemed

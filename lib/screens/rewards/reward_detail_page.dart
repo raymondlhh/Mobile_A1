@@ -164,14 +164,14 @@ class RedeemPage extends StatelessWidget {
                     l10n.pointsRequired,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text('${points}${l10n.points}'),
+                  Text('$points${l10n.points}'),
                   const SizedBox(height: 8),
                   Text(
                     l10n.yourCurrentPoints,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '${userPoints}${l10n.points}',
+                    '$userPoints${l10n.points}',
                     style: TextStyle(
                       color: canAfford ? Colors.green : Colors.red,
                       fontWeight: FontWeight.bold,
@@ -190,7 +190,7 @@ class RedeemPage extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '${userRedemptionCount}/${maxRedemptions} ${l10n.redeemed}',
+                    '$userRedemptionCount/$maxRedemptions ${l10n.redeemed}',
                     style: TextStyle(
                       color: canRedeem ? Colors.green : Colors.red,
                       fontWeight: FontWeight.bold,

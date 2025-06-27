@@ -115,7 +115,7 @@ Widget _buildActionButtons(BuildContext context) {
 
 Widget _buildLogoutButton(BuildContext context) {
   return GestureDetector(
-    onTap: () => ProfileScreen()._logout(context),
+    onTap: () => const ProfileScreen()._logout(context),
     child: Image.asset(
       'assets/images/buttons/LogOutButton.png',
       width: 160, // adjust size as needed

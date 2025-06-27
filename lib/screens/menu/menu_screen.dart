@@ -36,8 +36,8 @@ class _MenuScreenState extends State<MenuScreen> {
     'DRINKS': GlobalKey(),
   };
 
-  Map<String, List<MenuItem>> _categoryItems = {};
-  Map<String, List<MenuItem>> _filteredItems = {};
+  final Map<String, List<MenuItem>> _categoryItems = {};
+  final Map<String, List<MenuItem>> _filteredItems = {};
   bool _isSearching = false;
   List<MenuItem> _allMenuItems = [];
 

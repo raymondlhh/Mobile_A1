@@ -7,8 +7,6 @@ import '../../../widgets/title_appbar.dart';
 import 'checkout_page.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import '../../services/balance_service.dart';
-import '../../services/notification_service.dart';
 
 class ShoppingCart extends StatelessWidget {
   const ShoppingCart({super.key});

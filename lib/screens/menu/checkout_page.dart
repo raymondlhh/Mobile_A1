@@ -246,9 +246,8 @@ class CheckoutPage extends StatelessWidget {
                                       // Add Payment Successful notification
                                       await NotificationService().addNotification(
                                         NotificationItem(
-                                          name: 'Payment Successful',
-                                          description:
-                                              'RM ${total.toStringAsFixed(2)} has been successfully paid',
+                                          type: 'paymentSuccess',
+                                          params: { 'amount': total.toStringAsFixed(2) },
                                           date: _todayDateString(),
                                           time: _currentTimeString(),
                                           timestamp: DateTime.now(),
@@ -258,9 +257,8 @@ class CheckoutPage extends StatelessWidget {
                                       // Add Points Earned notification
                                       await NotificationService().addNotification(
                                         NotificationItem(
-                                          name: 'Points Earned',
-                                          description:
-                                              'You earned $points points for this order',
+                                          type: 'pointsEarned',
+                                          params: { 'points': points.toString() },
                                           date: _todayDateString(),
                                           time: _currentTimeString(),
                                           timestamp: DateTime.now(),

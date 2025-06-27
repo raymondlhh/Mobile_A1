@@ -494,7 +494,7 @@ class DatabaseService {
           await _rewardsCollection.doc(doc.id).update({
             'maxRedemptions': maxRedemptions,
           });
-          print('Updated ${name} with maxRedemptions: $maxRedemptions');
+          print('Updated $name with maxRedemptions: $maxRedemptions');
         }
       }
     } catch (e) {

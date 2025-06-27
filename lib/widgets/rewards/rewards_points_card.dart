@@ -29,7 +29,7 @@ class RewardsPointsCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${points} Pts',
+                    '$points Pts',
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,

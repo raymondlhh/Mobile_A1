@@ -68,8 +68,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
     if (topUpAmount > 0) {
       await NotificationService().addNotification(
         NotificationItem(
-          name: l10n.topUpSuccessful,
-          description: l10n.topUpAmountSuccess(topUpAmount.toStringAsFixed(2)),
+          type: 'topUpSuccess',
+          params: { 'amount': topUpAmount.toStringAsFixed(2) },
           date: _todayDateString(),
           time: _currentTimeString(),
           timestamp: DateTime.now(),
