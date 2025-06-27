@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../screens/profile/edit_screen.dart';
 import '../models/user_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,6 +42,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
   }
 
   Future<void> _pickProfileAsset(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final List<String> assetNames = [
       'assets/images/others/Profile.png',
       'assets/images/others/Profile2.png',
@@ -50,7 +52,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     final selected = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Choose Profile Picture'),
+        title: Text(l10n.chooseProfilePicture),
         content: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: assetNames.map((asset) {

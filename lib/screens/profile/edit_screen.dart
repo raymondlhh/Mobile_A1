@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -77,10 +78,11 @@ class _EditScreenState extends State<EditScreen> {
       'assets/images/others/Profile3.png',
     ];
 
+    final l10n = AppLocalizations.of(context)!;
     final selected = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Choose Profile Picture'),
+        title: Text(l10n.chooseProfilePicture),
         content: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: assetNames.map((asset) {
@@ -114,6 +116,8 @@ class _EditScreenState extends State<EditScreen> {
     final phone = '+60 ${_phoneController.text}';
     final address = _addressController.text;
 
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       await _authService.updateUserData(
         currentEmail: UserProfile.email,
@@ -132,14 +136,14 @@ class _EditScreenState extends State<EditScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile saved successfully!')),
+          SnackBar(content: Text(l10n.profileSavedSuccess)),
         );
         Navigator.pop(context); // return to profile screen
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save profile: ${e.toString()}')),
+          SnackBar(content: Text(l10n.failedToSaveProfile(e.toString()))),
         );
       }
     }
@@ -147,8 +151,9 @@ class _EditScreenState extends State<EditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: buildAppBar(context, 'Edit Profile', actionType: AppBarActionType.saveProfileButton),
+      appBar: buildAppBar(context, l10n.editProfile, actionType: AppBarActionType.saveProfileButton),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -170,11 +175,11 @@ class _EditScreenState extends State<EditScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildInputField('Name', _nameController),
-                  buildInputField('Email', _emailController),
-                  buildPasswordField(),
-                  buildPhoneField(),
-                  buildInputField('Delivery Address', _addressController, maxLines: 2),
+                  buildInputField(l10n.name, _nameController),
+                  buildInputField(l10n.email, _emailController),
+                  buildPasswordField(l10n),
+                  buildPhoneField(l10n),
+                  buildInputField(l10n.deliveryAddress, _addressController, maxLines: 2),
                   const SizedBox(height: 30),
                 ],
               ),
@@ -215,13 +220,13 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 
-  Widget buildPasswordField() {
+  Widget buildPasswordField(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15),
-        const Text('Password',
-            style: TextStyle(
+        Text(l10n.password,
+            style: const TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 18,
             )),
@@ -265,13 +270,13 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 
-  Widget buildPhoneField() {
+  Widget buildPhoneField(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15),
-        const Text('Phone Number',
-            style: TextStyle(
+        Text(l10n.phoneNumber,
+            style: const TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 18,
             )),

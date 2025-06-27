@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../screens/home/detail_home_screen.dart';
 import '../screens/menu/menu_screen.dart';
 import '../screens/rewards/rewards_screen.dart';
@@ -25,6 +26,8 @@ class _BottomNavState extends State<BottomNav> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
@@ -46,46 +49,46 @@ class _BottomNavState extends State<BottomNav> {
               _selectedIndex = index;
             });
           },
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Padding(
+              icon: const Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 1),
                 child: ImageIcon(
                   AssetImage('assets/images/icons/Home.png'),
                   size: 20,
                 ),
               ),
-              label: 'Home',
+              label: l10n.home,
             ),
             BottomNavigationBarItem(
-              icon: Padding(
+              icon: const Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 1),
                 child: ImageIcon(
                   AssetImage('assets/images/icons/Menu.png'),
                   size: 20,
                 ),
               ),
-              label: 'Menu',
+              label: l10n.menu,
             ),
             BottomNavigationBarItem(
-              icon: Padding(
+              icon: const Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 1),
                 child: ImageIcon(
                   AssetImage('assets/images/icons/Reward.png'),
                   size: 20,
                 ),
               ),
-              label: 'Rewards',
+              label: l10n.rewards,
             ),
             BottomNavigationBarItem(
-              icon: Padding(
+              icon: const Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 1),
                 child: ImageIcon(
                   AssetImage('assets/images/icons/Profile.png'),
                   size: 20,
                 ),
               ),
-              label: 'Profile',
+              label: l10n.profile,
             ),
           ],
         ),

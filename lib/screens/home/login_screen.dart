@@ -15,6 +15,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/auth_service.dart';
 import '../../services/favourite_service.dart';
 
@@ -48,11 +49,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final email = _emailController.text.trim();
     final password = _passwordController.text;
+    final l10n = AppLocalizations.of(context)!;
 
     // Validate email format
     if (!_authService.isValidEmail(email)) {
       setState(() {
-        _errorMessage = 'Please enter a valid email address';
+        _errorMessage = l10n.pleaseEnterValidEmail;
         _isLoading = false;
       });
       return;
@@ -61,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // Validate password
     if (password.isEmpty) {
       setState(() {
-        _errorMessage = 'Please enter your password';
+        _errorMessage = l10n.pleaseEnterPassword;
         _isLoading = false;
       });
       return;
@@ -76,12 +78,12 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } else {
         setState(() {
-          _errorMessage = 'Invalid email or password';
+          _errorMessage = l10n.invalidEmailOrPassword;
         });
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'An error occurred. Please try again.';
+        _errorMessage = l10n.errorOccurredTryAgain;
       });
     } finally {
       if (mounted) {
@@ -96,6 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFDF3E7),
@@ -167,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   enabled: !_isLoading,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    hintText: 'Email',
+                    hintText: l10n.email,
                     hintStyle: TextStyle(
                       fontSize: screenWidth * 16 / 430,
                       color: Colors.grey,
@@ -205,31 +208,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   enabled: !_isLoading,
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
-                    hintText: 'Password',
+                    hintText: l10n.password,
                     hintStyle: TextStyle(
                       fontSize: screenWidth * 16 / 430,
                       color: Colors.grey,
                     ),
                     prefixIcon: const Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed:
-                          _isLoading
-                              ? null
-                              : () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
-                    ),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: screenWidth * 16 / 430,
                       vertical: screenHeight * 16 / 932,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -246,7 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: screenWidth * 337 / 430,
                   height: screenHeight * 53 / 932,
                   decoration: BoxDecoration(
-                    color: _isLoading ? Colors.grey : Colors.black,
+                    color: Colors.black,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
@@ -257,64 +256,34 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   child: Center(
-                    child:
-                        _isLoading
-                            ? const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                            : Text(
-                              'Login',
-                              style: TextStyle(
-                                fontFamily: 'InknutAntiqua',
-                                fontWeight: FontWeight.bold,
-                                fontSize: screenWidth * 30 / 430,
-                                color: Colors.white,
-                              ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            l10n.login,
+                            style: TextStyle(
+                              fontFamily: 'InknutAntiqua',
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenWidth * 30 / 430,
+                              color: Colors.white,
                             ),
+                          ),
                   ),
                 ),
               ),
             ),
 
-            // Forgot Password and Sign Up (in English, right below Login button)
+            // Forgot Password
             Positioned(
-              left: screenWidth * 41 / 430,
-              top: screenHeight * 710 / 932, // just below Login button
-              child: SizedBox(
-                width: screenWidth * 337 / 430,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pushNamed(context, '/forgot'),
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          color: Colors.black87,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Don't have an account?"),
-                        TextButton(
-                          onPressed:
-                              () => Navigator.pushReplacementNamed(
-                                context,
-                                '/signup',
-                              ),
-                          child: const Text('Sign Up'),
-                        ),
-                      ],
-                    ),
-                  ],
+              left: screenWidth * 120 / 430,
+              top: screenHeight * 720 / 932,
+              child: GestureDetector(
+                onTap: () => Navigator.pushNamed(context, '/forgot'),
+                child: Text(
+                  l10n.forgotPassword,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
               ),
             ),

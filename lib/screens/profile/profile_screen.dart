@@ -1,5 +1,6 @@
 // lib/screens/home/profile_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widgets/title_appbar.dart';
@@ -37,8 +38,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: buildAppBar(context, 'MY PROFILE'),
+      appBar: buildAppBar(context, l10n.myProfile),
       backgroundColor: const Color(0xFFFFF8E5), // also match screen background
       body: SingleChildScrollView(
         child: Column(

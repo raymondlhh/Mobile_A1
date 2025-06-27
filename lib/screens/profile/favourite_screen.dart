@@ -1,6 +1,7 @@
 // ignore_for_file: unused_import
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/menu_item.dart';
 import '../../services/favourite_service.dart';
 import '../../widgets/title_appbar.dart';
@@ -18,10 +19,11 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: buildAppBar(
         context,
-        'Favourites',
+        l10n.favourites,
         actionType: AppBarActionType.none,
       ),
       body: ListenableBuilder(
@@ -29,8 +31,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         builder: (context, child) {
           final favouriteItems = _favouriteService.favouriteItems;
           if (favouriteItems.isEmpty) {
-            return const Center(
-              child: Text('No favorites yet', style: TextStyle(fontSize: 18)),
+            return Center(
+              child: Text(l10n.noFavoritesYet, style: const TextStyle(fontSize: 18)),
             );
           }
           return ListView.builder(

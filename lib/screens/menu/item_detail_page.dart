@@ -1,6 +1,7 @@
 // ignore_for_file: use_super_parameters
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/menu_item.dart';
 import '../../services/favourite_service.dart';
 import '../../widgets/title_appbar.dart';
@@ -21,16 +22,17 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
   int _quantity = 1;
 
   void _addToCart(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     Provider.of<CartProvider>(
       context,
       listen: false,
     ).addItem(widget.menuItem, _quantity);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Added to cart!'),
+        content: Text(l10n.addedToCart),
         duration: const Duration(seconds: 1),
         action: SnackBarAction(
-          label: 'View Cart',
+          label: l10n.viewCart,
           onPressed: () {
             Navigator.push(
               context,
@@ -44,11 +46,12 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8E5),
       appBar: buildAppBar(
         context,
-        'Item Details',
+        l10n.itemDetails,
         actionType: AppBarActionType.saveFavButton,
         menuItem: widget.menuItem,
         favouriteService: _favouriteService,
@@ -123,7 +126,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${widget.menuItem.reviews.length} Reviews',
+                          '${widget.menuItem.reviews.length} ${l10n.reviews}',
                           style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 14,
@@ -160,10 +163,10 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
-                                "What's Included",
+                              Text(
+                                l10n.whatsIncluded,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                   fontFamily: 'Inter',

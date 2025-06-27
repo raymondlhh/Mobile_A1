@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -7,6 +8,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFDF3E7), // Light beige background
@@ -63,7 +65,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      'Sign up',
+                      l10n.signup,
                       style: TextStyle(
                         fontFamily: 'InknutAntiqua',
                         fontWeight: FontWeight.bold,
@@ -99,7 +101,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      'Login',
+                      l10n.login,
                       style: TextStyle(
                         fontFamily: 'InknutAntiqua',
                         fontWeight: FontWeight.bold,
@@ -118,9 +120,9 @@ class WelcomeScreen extends StatelessWidget {
               top: screenHeight * 760 / 932,
               child: GestureDetector(
                 onTap: () => Navigator.pushNamed(context, '/forgot'),
-                child: const Text(
-                  'Forget your password ?',
-                  style: TextStyle(
+                child: Text(
+                  l10n.forgotPassword,
+                  style: const TextStyle(
                     color: Colors.black87,
                     decoration: TextDecoration.underline,
                   ),

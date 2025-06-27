@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widgets/title_appbar.dart';
 import '../../widgets/rewards/rewards_points_card.dart';
 import '../../widgets/rewards/reward_card.dart';
@@ -66,9 +67,10 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8E5),
-      appBar: buildAppBar(context, 'MY REWARDS'),
+      appBar: buildAppBar(context, l10n.myRewards),
       body:
           _isLoading
               ? const Center(child: CircularProgressIndicator())
@@ -90,13 +92,13 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
                           if (snapshot.hasError) {
                             return Center(
-                              child: Text('Error: ${snapshot.error}'),
+                              child: Text('${l10n.error}: ${snapshot.error}'),
                             );
                           }
 
                           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                            return const Center(
-                              child: Text('No rewards available'),
+                            return Center(
+                              child: Text(l10n.noRewardsAvailable),
                             );
                           }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../services/database_service.dart';
@@ -42,12 +43,13 @@ class CheckoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final cartProvider = Provider.of<CartProvider>(context);
     final cartItems = cartProvider.items;
     final total = cartProvider.totalAmount;
 
     return Scaffold(
-      appBar: buildAppBar(context, 'Checkout'),
+      appBar: buildAppBar(context, l10n.checkout),
       backgroundColor: const Color(0xFFFFF8E5),
       body: FutureBuilder<double>(
         future: BalanceService().getBalance(),
@@ -59,9 +61,9 @@ class CheckoutPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Order Summary',
-                  style: TextStyle(
+                Text(
+                  l10n.orderSummary,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Inter',
@@ -92,13 +94,13 @@ class CheckoutPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 24),
                       // Payment Method Section
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'Payment Method',
-                            style: TextStyle(
+                            l10n.paymentMethod,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inter',
@@ -131,7 +133,7 @@ class CheckoutPage extends StatelessWidget {
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                'Current Balance: RM ${balance.toStringAsFixed(2)}',
+                                l10n.currentBalance(balance.toStringAsFixed(2)),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Inter',
@@ -142,13 +144,13 @@ class CheckoutPage extends StatelessWidget {
                         ),
                       ),
                       // Order Details Section
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'Order Details',
-                            style: TextStyle(
+                            l10n.orderDetails,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inter',
@@ -175,7 +177,7 @@ class CheckoutPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Item Count: ${cartItems.fold<int>(0, (sum, item) => sum + item.quantity)}',
+                              l10n.itemCount(cartItems.fold<int>(0, (sum, item) => sum + item.quantity).toString()),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontFamily: 'Inter',
@@ -183,7 +185,7 @@ class CheckoutPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Points Earned: $points',
+                              l10n.pointsEarned(points.toString()),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontFamily: 'Inter',
@@ -196,9 +198,9 @@ class CheckoutPage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Total:',
-                            style: TextStyle(
+                          Text(
+                            l10n.total,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inter',
@@ -300,12 +302,8 @@ class CheckoutPage extends StatelessWidget {
                                         context: context,
                                         builder:
                                             (context) => AlertDialog(
-                                              title: const Text(
-                                                'Order Successful!',
-                                              ),
-                                              content: const Text(
-                                                'Thank you for your purchase.',
-                                              ),
+                                              title: Text(l10n.orderSuccessTitle),
+                                              content: Text(l10n.orderSuccessMessage),
                                               actions: [
                                                 TextButton(
                                                   onPressed: () {
@@ -315,7 +313,7 @@ class CheckoutPage extends StatelessWidget {
                                                       (route) => route.isFirst,
                                                     );
                                                   },
-                                                  child: const Text('OK'),
+                                                  child: Text(l10n.ok),
                                                 ),
                                               ],
                                             ),
@@ -325,22 +323,14 @@ class CheckoutPage extends StatelessWidget {
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Not enough balance'),
+                                        SnackBar(
+                                          content: Text(l10n.notEnoughBalance),
                                           backgroundColor: Colors.red,
                                         ),
                                       );
                                     }
                                   },
-                          child: const Text(
-                            'Confirm Order',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Inter',
-                            ),
-                          ),
+                          child: Text(l10n.confirmOrder),
                         ),
                       ),
                     ],

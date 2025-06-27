@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../screens/rewards/reward_detail_page.dart';
 import '../../services/database_service.dart';
 import '../../models/user_profile.dart';
@@ -82,6 +83,7 @@ class _RewardCardState extends State<RewardCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -159,7 +161,7 @@ class _RewardCardState extends State<RewardCard> {
                   ),
                 ),
                 child: Text(
-                  '${widget.points} pts',
+                  '${widget.points} ${l10n.points}',
                   style: TextStyle(
                     color:
                         !isFullyRedeemed ? Colors.black : Colors.grey.shade600,
@@ -183,7 +185,7 @@ class _RewardCardState extends State<RewardCard> {
               if (!_isLoading) ...[
                 const SizedBox(height: 4),
                 Text(
-                  '${_userRedemptionCount}/${widget.maxRedemptions} redeemed',
+                  '${_userRedemptionCount}/${widget.maxRedemptions} ${l10n.redeemed}',
                   style: TextStyle(
                     color:
                         !isFullyRedeemed
@@ -206,31 +208,10 @@ class _RewardCardState extends State<RewardCard> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    'Need ${widget.points - widget.userPoints} more pts',
+                    l10n.insufficientPoints,
                     style: TextStyle(
                       color: Colors.red.shade800,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-              if (isFullyRedeemed) ...[
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade100,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    'Limit reached',
-                    style: TextStyle(
-                      color: Colors.orange.shade800,
-                      fontSize: 10,
+                      fontSize: 8,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

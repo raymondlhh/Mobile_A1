@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'services/database_service.dart';
 import 'package:provider/provider.dart';
 import 'providers/cart_provider.dart';
+import 'providers/language_provider.dart';
 import 'services/rewards_service.dart';
 import 'models/user_profile.dart';
 import 'services/notification_service.dart';
@@ -67,6 +70,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => NotificationService()),
         ChangeNotifierProvider.value(value: FavouriteService()),
       ],
@@ -83,27 +87,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFFFF8E5)),
-      initialRoute: initialRoute,
-      routes: {
-        '/': (context) => const BottomNav(),
-        '/welcome': (context) => const WelcomeScreen(),
-        '/signup': (context) => const SignUpScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/forgot': (context) => const ForgotPasswordScreen(),
-        '/bottomNav': (context) => const BottomNav(),
-        '/home': (context) => const DetailHomeScreen(),
-        '/edit': (context) => const EditScreen(),
-        '/notification': (context) => const NotificationScreen(),
-        '/favourite': (context) => const FavouriteScreen(),
-        '/balance': (context) => const BalanceScreen(),
-        '/setting': (context) => const SettingScreen(),
-        '/restaurant_menu': (context) => const RestaurantMenuScreen(),
-        '/videoSplash': (context) => const VideoSplashScreen(),
-        '/checkout': (context) => const CheckoutPage(),
-        '/splash': (context) => const SplashScreen(),
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFFFF8E5)),
+          locale: languageProvider.currentLocale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'), // English
+            Locale('zh'), // Chinese
+          ],
+          initialRoute: initialRoute,
+          routes: {
+            '/': (context) => const BottomNav(),
+            '/welcome': (context) => const WelcomeScreen(),
+            '/signup': (context) => const SignUpScreen(),
+            '/login': (context) => const LoginScreen(),
+            '/forgot': (context) => const ForgotPasswordScreen(),
+            '/bottomNav': (context) => const BottomNav(),
+            '/home': (context) => const DetailHomeScreen(),
+            '/edit': (context) => const EditScreen(),
+            '/notification': (context) => const NotificationScreen(),
+            '/favourite': (context) => const FavouriteScreen(),
+            '/balance': (context) => const BalanceScreen(),
+            '/setting': (context) => const SettingScreen(),
+            '/restaurant_menu': (context) => const RestaurantMenuScreen(),
+            '/videoSplash': (context) => const VideoSplashScreen(),
+            '/checkout': (context) => const CheckoutPage(),
+            '/splash': (context) => const SplashScreen(),
+          },
+        );
       },
     );
   }

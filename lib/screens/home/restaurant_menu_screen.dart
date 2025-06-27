@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RestaurantMenuScreen extends StatelessWidget {
   const RestaurantMenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -53,9 +55,9 @@ class RestaurantMenuScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'OUR MENU',
-                    style: TextStyle(
+                  Text(
+                    l10n.ourMenu,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
@@ -72,11 +74,11 @@ class RestaurantMenuScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  _buildMenuCategory(icon: Icons.local_cafe, label: 'Teas'),
-                  _buildMenuCategory(icon: Icons.rice_bowl, label: 'Rolls'),
-                  _buildMenuCategory(icon: Icons.restaurant, label: 'Salad'),
-                  _buildMenuCategory(icon: Icons.soup_kitchen, label: 'Soup'),
-                  _buildMenuCategory(icon: Icons.set_meal, label: 'Gyoza'),
+                  _buildMenuCategory(icon: Icons.local_cafe, label: l10n.teas),
+                  _buildMenuCategory(icon: Icons.rice_bowl, label: l10n.rolls),
+                  _buildMenuCategory(icon: Icons.restaurant, label: l10n.salad),
+                  _buildMenuCategory(icon: Icons.soup_kitchen, label: l10n.soup),
+                  _buildMenuCategory(icon: Icons.set_meal, label: l10n.gyoza),
                 ],
               ),
             ),
@@ -87,13 +89,15 @@ class RestaurantMenuScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   _buildMenuItem(
-                    title: 'PARTY SET A (41 PCS)',
+                    context: context,
+                    title: l10n.partySetA,
                     price: 'RM105.00',
                     imageUrl: 'assets/images/party_set_a.png', // You'll need to add this image
                   ),
                   const SizedBox(height: 16),
                   _buildMenuItem(
-                    title: 'MAKI SET (47 PCS)',
+                    context: context,
+                    title: l10n.makiSet,
                     price: 'RM50.00',
                     imageUrl: 'assets/images/maki_set.png', // You'll need to add this image
                   ),
@@ -129,10 +133,12 @@ class RestaurantMenuScreen extends StatelessWidget {
   }
 
   Widget _buildMenuItem({
+    required BuildContext context,
     required String title,
     required String price,
     required String imageUrl,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.green[100],
@@ -172,7 +178,7 @@ class RestaurantMenuScreen extends StatelessWidget {
           TextButton(
             onPressed: () {},
             // ignore: sort_child_properties_last
-            child: const Text('Description'),
+            child: Text(l10n.description),
             style: TextButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,

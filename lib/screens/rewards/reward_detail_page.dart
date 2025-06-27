@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widgets/title_appbar.dart';
 import '../../services/database_service.dart';
 import '../../models/user_profile.dart';
@@ -34,11 +35,12 @@ class RedeemPage extends StatelessWidget {
   bool get canProceed => canAfford && canRedeem;
 
   Future<void> _handleRedeem(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     if (!canAfford) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Insufficient points. You need ${points - userPoints} more points.',
+            l10n.insufficientPointsToRedeem(points - userPoints),
           ),
           backgroundColor: Colors.red,
         ),
@@ -50,7 +52,7 @@ class RedeemPage extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'You have reached the maximum redemption limit (${maxRedemptions}) for this reward.',
+            l10n.redemptionLimitReached(maxRedemptions),
           ),
           backgroundColor: Colors.red,
         ),
@@ -73,8 +75,8 @@ class RedeemPage extends StatelessWidget {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Reward redeemed successfully!'),
+          SnackBar(
+            content: Text(l10n.rewardRedeemedSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -87,7 +89,7 @@ class RedeemPage extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error redeeming reward: $e'),
+            content: Text(l10n.errorRedeemingReward(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -95,21 +97,23 @@ class RedeemPage extends StatelessWidget {
     }
   }
 
-  String _getButtonText() {
+  String _getButtonText(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (!canAfford) {
-      return 'Insufficient Points';
+      return l10n.insufficientPoints;
     } else if (!canRedeem) {
-      return 'Redemption Limit Reached';
+      return l10n.redemptionLimitReachedLabel;
     } else {
-      return 'Redeem';
+      return l10n.redeem;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF8F3E7),
-      appBar: buildAppBar(context, 'MY REWARDS'),
+      appBar: buildAppBar(context, l10n.myRewards),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -156,18 +160,18 @@ class RedeemPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Points Required',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Text(
+                    l10n.pointsRequired,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text('${points}Pts'),
+                  Text('${points}${l10n.points}'),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Your Current Points',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Text(
+                    l10n.yourCurrentPoints,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '${userPoints}Pts',
+                    '${userPoints}${l10n.points}',
                     style: TextStyle(
                       color: canAfford ? Colors.green : Colors.red,
                       fontWeight: FontWeight.bold,
@@ -176,17 +180,17 @@ class RedeemPage extends StatelessWidget {
                   if (!canAfford) ...[
                     const SizedBox(height: 4),
                     Text(
-                      'You need ${points - userPoints} more points to redeem this reward',
+                      l10n.insufficientPointsToRedeem(points - userPoints),
                       style: const TextStyle(color: Colors.red, fontSize: 12),
                     ),
                   ],
                   const SizedBox(height: 8),
-                  const Text(
-                    'Your Redemption Status',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Text(
+                    l10n.yourRedemptionStatus,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '${userRedemptionCount}/${maxRedemptions} times redeemed',
+                    '${userRedemptionCount}/${maxRedemptions} ${l10n.redeemed}',
                     style: TextStyle(
                       color: canRedeem ? Colors.green : Colors.red,
                       fontWeight: FontWeight.bold,
@@ -195,65 +199,54 @@ class RedeemPage extends StatelessWidget {
                   if (!canRedeem) ...[
                     const SizedBox(height: 4),
                     Text(
-                      'You have reached the maximum redemption limit for this reward',
+                      l10n.redemptionLimitReachedLabel,
                       style: const TextStyle(color: Colors.red, fontSize: 12),
                     ),
                   ],
                   const SizedBox(height: 8),
-                  const Text(
-                    'Validity (per month)',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Text(
+                    l10n.validityPerMonth,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text('$validity'),
                   const SizedBox(height: 12),
-                  const Text(
-                    'Terms and Conditions',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Text(
+                    l10n.termsAndConditions,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    '• Reward points can only be redeemed for available rewards as displayed within the app.',
-                  ),
-                  const Text(
-                    '• The number of points required for each reward is clearly indicated.',
-                  ),
-                  const Text(
-                    '• Rewards are subject to availability and may change without prior notice.',
-                  ),
-                  const Text(
-                    '• Each user has a limited number of redemptions per reward.',
-                  ),
-                  const Text(
-                    '• Once points are redeemed for a reward, the redemption cannot be reversed or refunded.',
-                  ),
-                  const Text(
-                    '• Reward points have no cash value and cannot be exchanged for cash.',
-                  ),
+                  Text(l10n.rewardTerms1),
+                  Text(l10n.rewardTerms2),
+                  Text(l10n.rewardTerms3),
+                  Text(l10n.rewardTerms4),
+                  Text(l10n.rewardTerms5),
+                  Text(l10n.rewardTerms6),
                 ],
               ),
             ),
+            const SizedBox(height: 24),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      canProceed ? const Color(0xFFD24545) : Colors.grey,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  minimumSize: const Size.fromHeight(48),
-                ),
                 onPressed: canProceed ? () => _handleRedeem(context) : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFD24545),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
                 child: Text(
-                  canProceed ? 'Redeem' : _getButtonText(),
+                  _getButtonText(context),
                   style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
                     color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
+            const SizedBox(height: 24),
           ],
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../providers/cart_provider.dart';
 import '../../models/cart_item.dart';
 import '../../../widgets/title_appbar.dart';
@@ -43,11 +44,12 @@ class ShoppingCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final cartProvider = Provider.of<CartProvider>(context);
     final cartItems = cartProvider.items;
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8E5),
-      appBar: buildAppBar(context, 'Shopping Cart'),
+      appBar: buildAppBar(context, l10n.shoppingCart),
       body: Column(
         children: [
           Expanded(
@@ -56,13 +58,13 @@ class ShoppingCart extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 16),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Selected Branch',
-                        style: TextStyle(
+                        l10n.selectedBranch,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Inter',
@@ -76,13 +78,13 @@ class ShoppingCart extends StatelessWidget {
                   ),
                   const _BranchDetailsSection(),
                   const SizedBox(height: 24),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Order Summary',
-                        style: TextStyle(
+                        l10n.orderSummary,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Inter',
@@ -95,9 +97,9 @@ class ShoppingCart extends StatelessWidget {
                     child: Divider(thickness: 1.2, color: Color(0xFFBDBDBD)),
                   ),
                   cartItems.isEmpty
-                      ? const Padding(
-                        padding: EdgeInsets.all(32),
-                        child: Center(child: Text('Your cart is empty')),
+                      ? Padding(
+                        padding: const EdgeInsets.all(32),
+                        child: Center(child: Text(l10n.cartEmpty)),
                       )
                       : ListView.builder(
                         shrinkWrap: true,
@@ -109,13 +111,13 @@ class ShoppingCart extends StatelessWidget {
                         },
                       ),
                   // Remarks Section
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Remarks',
-                        style: TextStyle(
+                        l10n.remarks,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Inter',
@@ -150,9 +152,9 @@ class ShoppingCart extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Grand Total',
-                      style: TextStyle(
+                    Text(
+                      l10n.grandTotal,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
@@ -190,9 +192,9 @@ class ShoppingCart extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      'Proceed to Checkout',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.proceedToCheckout,
+                      style: const TextStyle(
                         color: Color(0xFFFFFFFF),
                         fontSize: 20,
                         fontFamily: 'Inter',

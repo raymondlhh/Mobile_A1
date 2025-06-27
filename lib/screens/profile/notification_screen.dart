@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widgets/title_appbar.dart';
 import '../../services/notification_service.dart';
 
@@ -32,12 +33,39 @@ class _NotificationScreenState extends State<NotificationScreen> {
     loadNotifications();
   }
 
+  String getLocalizedTitle(AppLocalizations l10n, String name) {
+    if (name == 'Points Earned') return l10n.pointsEarnedTitle;
+    if (name == 'Payment Successful') return l10n.paymentSuccessTitle;
+    if (name == 'Top-Up Successful') return l10n.topUpSuccessTitle;
+    return name;
+  }
+
+  String getLocalizedDescription(AppLocalizations l10n, String name, String description) {
+    if (name == 'Points Earned') {
+      final match = RegExp(r'(\d+)').firstMatch(description);
+      final points = match != null ? match.group(1) ?? '' : '';
+      return l10n.pointsEarnedMsg(points);
+    }
+    if (name == 'Payment Successful') {
+      final match = RegExp(r'RM ([\d.]+)').firstMatch(description);
+      final amount = match != null ? match.group(1) ?? '' : '';
+      return l10n.paymentSuccessMsg(amount);
+    }
+    if (name == 'Top-Up Successful') {
+      final match = RegExp(r'RM ([\d.]+)').firstMatch(description);
+      final amount = match != null ? match.group(1) ?? '' : '';
+      return l10n.topUpSuccessMsg(amount);
+    }
+    return description;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: buildAppBar(
         context,
-        'NOTIFICATIONS',
+        l10n.notifications,
         actionType: AppBarActionType.readButton,
       ),
       body: ListView.separated(
@@ -64,7 +92,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.name,
+                          getLocalizedTitle(l10n, item.name),
                           style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w900,
@@ -74,7 +102,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          item.description,
+                          getLocalizedDescription(l10n, item.name, item.description),
                           style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,

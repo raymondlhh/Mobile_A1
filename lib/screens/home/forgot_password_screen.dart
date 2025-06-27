@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, unused_field
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -65,6 +66,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFDF3E7),
@@ -122,7 +124,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                       controller: _emailController,
                       enabled: !_emailFound,
                       decoration: InputDecoration(
-                        hintText: 'Email',
+                        hintText: l10n.email,
                         hintStyle: TextStyle(
                           fontSize: screenWidth * 16 / 430,
                           color: Colors.grey,
@@ -155,7 +157,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                         controller: _newPasswordController,
                         obscureText: true,
                         decoration: InputDecoration(
-                          hintText: 'New Password',
+                          hintText: l10n.newPassword,
                           hintStyle: TextStyle(
                             fontSize: screenWidth * 16 / 430,
                             color: Colors.grey,
@@ -183,8 +185,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                     final email = _emailController.text.trim();
                     if (email.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please enter your email'),
+                        SnackBar(
+                          content: Text(l10n.pleaseEnterEmail),
                         ),
                       );
                       return;
@@ -201,7 +203,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                       });
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Email not registered')),
+                        SnackBar(
+                          content: Text(l10n.emailNotFound),
+                        ),
                       );
                     }
                   },
@@ -219,13 +223,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                         ),
                       ],
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        'Find Email',
+                        l10n.findEmail,
                         style: TextStyle(
                           fontFamily: 'InknutAntiqua',
                           fontWeight: FontWeight.bold,
-                          fontSize: 22,
+                          fontSize: screenWidth * 30 / 430,
                           color: Colors.white,
                         ),
                       ),
@@ -233,35 +237,52 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                   ),
                 ),
               ),
-            // Reset Password 按钮
+            // 重置密码按钮
             if (_emailFound)
               Positioned(
                 left: screenWidth * 41 / 430,
-                top: screenHeight * 670 / 932,
+                top: screenHeight * 610 / 932,
                 child: GestureDetector(
                   onTap: () async {
-                    final newPassword = _newPasswordController.text.trim();
+                    final newPassword = _newPasswordController.text;
                     if (newPassword.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please enter a new password'),
+                        SnackBar(
+                          content: Text(l10n.pleaseEnterNewPassword),
                         ),
                       );
                       return;
                     }
-                    if (_userDocId == null) return;
-                    await FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(_userDocId)
-                        .update({'password': newPassword});
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Password has been reset. Please return to login.',
+                    if (newPassword.length < 6) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(l10n.passwordTooShort),
                         ),
-                      ),
-                    );
-                    Navigator.pushReplacementNamed(context, '/login');
+                      );
+                      return;
+                    }
+                    try {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(_userDocId)
+                          .update({'password': newPassword});
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(l10n.passwordResetSuccess),
+                          ),
+                        );
+                        Navigator.of(context).pop();
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(l10n.passwordResetFailed),
+                          ),
+                        );
+                      }
+                    }
                   },
                   child: Container(
                     width: screenWidth * 337 / 430,
@@ -277,13 +298,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                         ),
                       ],
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        'Reset Password',
+                        l10n.resetPassword,
                         style: TextStyle(
                           fontFamily: 'InknutAntiqua',
                           fontWeight: FontWeight.bold,
-                          fontSize: 22,
+                          fontSize: screenWidth * 30 / 430,
                           color: Colors.white,
                         ),
                       ),
@@ -291,25 +312,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                   ),
                 ),
               ),
-            // Back to Login Button
-            Positioned(
-              left: screenWidth * 41 / 430,
-              top: screenHeight * 730 / 932,
-              child: SizedBox(
-                width: screenWidth * 337 / 430,
-                child: Center(
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/login');
-                    },
-                    child: const Text(
-                      'Back to Login',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),

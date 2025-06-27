@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widgets/title_appbar.dart';
 import '../../services/balance_service.dart';
 import '../../services/notification_service.dart';
@@ -23,7 +24,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
   }
 
   void _loadBalance() async {
-    print('Current userId: ${_balanceService == null ? 'null' : UserProfile.userId}');
+    print('Current userId: \u0007${_balanceService == null ? 'null' : UserProfile.userId}');
     double savedBalance = await _balanceService.getBalance();
     print('Loaded balance from Firestore: $savedBalance');
     setState(() {
@@ -54,6 +55,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
   }
 
   void topUp() async {
+    final l10n = AppLocalizations.of(context)!;
     double topUpAmount = double.tryParse(_controller.text) ?? 0;
     setState(() {
       balance += topUpAmount;
@@ -66,8 +68,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
     if (topUpAmount > 0) {
       await NotificationService().addNotification(
         NotificationItem(
-          name: 'Top-Up Successful',
-          description: 'RM ${topUpAmount.toStringAsFixed(2)} has been successfully topped-up',
+          name: l10n.topUpSuccessful,
+          description: l10n.topUpAmountSuccess(topUpAmount.toStringAsFixed(2)),
           date: _todayDateString(),
           time: _currentTimeString(),
           timestamp: DateTime.now(),
@@ -77,12 +79,12 @@ class _BalanceScreenState extends State<BalanceScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Top-Up Successful!'),
-            content: const Text('Thank you for your top-up.'),
+            title: Text(l10n.topUpSuccessfulTitle),
+            content: Text(l10n.topUpThankYou),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
+                child: Text(l10n.ok),
               ),
             ],
           ),
@@ -93,9 +95,10 @@ class _BalanceScreenState extends State<BalanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8E5),
-      appBar: buildAppBar(context, 'Balance', actionType: AppBarActionType.none),
+      appBar: buildAppBar(context, l10n.balance, actionType: AppBarActionType.none),
       body: Column(
         children: [
           Stack(
@@ -109,9 +112,9 @@ class _BalanceScreenState extends State<BalanceScreen> {
               ),
               Column(
                 children: [
-                  const Text(
-                    'RM', 
-                    style: TextStyle(
+                  Text(
+                    l10n.rm,
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Inter',
@@ -135,14 +138,14 @@ class _BalanceScreenState extends State<BalanceScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Align(
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Enter your top-up amount* (RM)',
-                      style: TextStyle(
+                      l10n.enterTopUpAmount,
+                      style: const TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.w900, 
-                        fontFamily: 'Inter'
+                        fontWeight: FontWeight.w900,
+                        fontFamily: 'Inter',
                       ),
                     ),
                   ),
@@ -154,9 +157,9 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     padding: const EdgeInsets.only(bottom: 4),
                     child: Row(
                       children: [
-                        const Text(
-                          'RM ',
-                          style: TextStyle(
+                        Text(
+                          l10n.rm,
+                          style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w900,
                             fontSize: 14,
@@ -182,11 +185,11 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Align(
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '*Whole amount between RM10 and RM500',
-                      style: TextStyle(fontSize: 12, color: Colors.black54, fontFamily: 'Inter'),
+                      l10n.topUpHint,
+                      style: const TextStyle(fontSize: 12, color: Colors.black54, fontFamily: 'Inter'),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -199,64 +202,30 @@ class _BalanceScreenState extends State<BalanceScreen> {
                           onTap: () => setAmount(amount.toDouble()),
                           child: Image.asset(
                             'assets/images/buttons/${amount}rmButton.png',
-                            width: 100,
+                            width: 80,
                             height: 40,
-                            fit: BoxFit.contain,
                           ),
                         ),
                     ],
                   ),
                   const SizedBox(height: 30),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Payment Methods', 
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900, 
-                        fontFamily: 'Inter'
+                  ElevatedButton(
+                    onPressed: topUp,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFCA3202),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/others/PaymentBackground.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    child: Row(
-                      children: [
-                        Image.asset('assets/images/icons/TNG.png', width: 28),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Touch \'n Go eWallet',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600, 
-                            fontFamily: 'Inter',
-                            color: Color(0x80000000),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  const Align(
-                    alignment: Alignment.centerLeft,
                     child: Text(
-                      '*We accept Touch \'n Go eWallet only',
-                      style: TextStyle(fontSize: 12, color: Colors.black54, fontFamily: 'Inter'),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  GestureDetector(
-                    onTap: topUp,
-                    child: Image.asset(
-                      'assets/images/buttons/TopUpButton.png',
-                      height: 50,
+                      l10n.topUp,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   ),
                 ],
