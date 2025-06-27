@@ -180,5 +180,7 @@
   "paymentSuccessTitle": "支付成功",
   "paymentSuccessMsg": "RM {amount} 已成功支付",
   "topUpSuccessTitle": "充值成功",
-  "topUpSuccessMsg": "RM {amount} 已成功充值"
+  "topUpSuccessMsg": "RM {amount} 已成功充值",
+  "featured": "精选",
+  "categories": "分类"
 } 

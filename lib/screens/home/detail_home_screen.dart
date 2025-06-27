@@ -6,6 +6,7 @@ import '../../models/menu_item.dart';
 import '../../data/menu_data.dart';
 import '../../services/favourite_service.dart';
 import '../../models/user_profile.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DetailHomeScreen extends StatefulWidget {
   const DetailHomeScreen({super.key});
@@ -51,6 +52,7 @@ class _DetailHomeScreenState extends State<DetailHomeScreen> {
     // 设置基准尺寸
     const designWidth = 430.0;
     const designHeight = 932.0;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8E5),
@@ -187,11 +189,12 @@ class _DetailHomeScreenState extends State<DetailHomeScreen> {
                         Padding(
                           padding: EdgeInsets.only(left: 16 * scaleWidth),
                           child: Text(
-                            'Featured',
+                            l10n.featured,
                             style: TextStyle(
                               fontSize: 18 * scaleWidth,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inter',
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -242,11 +245,12 @@ class _DetailHomeScreenState extends State<DetailHomeScreen> {
                         Padding(
                           padding: EdgeInsets.only(left: 16 * scaleWidth),
                           child: Text(
-                            'Categories',
+                            l10n.categories,
                             style: TextStyle(
                               fontSize: 18 * scaleWidth,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inter',
+                              color: Colors.black,
                             ),
                           ),
                         ),
