@@ -269,7 +269,8 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                     ),
                     onChanged: _filterMenuItems,
-                    onSubmitted: _filterMenuItems,
+                    //onSubmitted: _filterMenuItems,
+                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   ),
                 ),
                 // Horizontal Divider
