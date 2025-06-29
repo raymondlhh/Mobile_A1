@@ -37,7 +37,9 @@ class _EditScreenState extends State<EditScreen> {
     _nameController = TextEditingController(text: UserProfile.name);
     _emailController = TextEditingController(text: UserProfile.email);
     _passwordController = TextEditingController(text: UserProfile.password);
-    _phoneController = TextEditingController(text: UserProfile.phone.replaceFirst('+60 ', ''));
+    _phoneController = TextEditingController(
+      text: UserProfile.phone.replaceFirst('+60 ', ''),
+    );
     _addressController = TextEditingController(text: UserProfile.address);
 
     _obscurePassword = true;
@@ -50,18 +52,21 @@ class _EditScreenState extends State<EditScreen> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return;
 
-    setState(() { _isUploadingPhoto = true; });
+    setState(() {
+      _isUploadingPhoto = true;
+    });
 
     final userId = UserProfile.userId;
-    final storageRef = FirebaseStorage.instance.ref().child('profile_photos/$userId.jpg');
+    final storageRef = FirebaseStorage.instance.ref().child(
+      'profile_photos/$userId.jpg',
+    );
     await storageRef.putFile(File(pickedFile.path));
     final photoUrl = await storageRef.getDownloadURL();
 
     // Save URL to Firestore
-    await FirebaseFirestore.instance.collection('users').doc(userId).set(
-      {'photoUrl': photoUrl},
-      SetOptions(merge: true),
-    );
+    await FirebaseFirestore.instance.collection('users').doc(userId).set({
+      'photoUrl': photoUrl,
+    }, SetOptions(merge: true));
 
     // Update in-memory profile
     UserProfile.photoUrl = photoUrl;
@@ -81,29 +86,30 @@ class _EditScreenState extends State<EditScreen> {
     final l10n = AppLocalizations.of(context)!;
     final selected = await showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.chooseProfilePicture),
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: assetNames.map((asset) {
-            return GestureDetector(
-              onTap: () => Navigator.of(context).pop(asset),
-              child: CircleAvatar(
-                backgroundImage: AssetImage(asset),
-                radius: 35,
-              ),
-            );
-          }).toList(),
-        ),
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: Text(l10n.chooseProfilePicture),
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children:
+                  assetNames.map((asset) {
+                    return GestureDetector(
+                      onTap: () => Navigator.of(context).pop(asset),
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage(asset),
+                        radius: 35,
+                      ),
+                    );
+                  }).toList(),
+            ),
+          ),
     );
 
     if (selected != null) {
       final userId = UserProfile.userId;
-      await FirebaseFirestore.instance.collection('users').doc(userId).set(
-        {'photoAsset': selected},
-        SetOptions(merge: true),
-      );
+      await FirebaseFirestore.instance.collection('users').doc(userId).set({
+        'photoAsset': selected,
+      }, SetOptions(merge: true));
       UserProfile.photoUrl = selected;
       setState(() {});
     }
@@ -135,9 +141,9 @@ class _EditScreenState extends State<EditScreen> {
       UserProfile.address = address;
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.profileSavedSuccess)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.profileSavedSuccess)));
         Navigator.pop(context); // return to profile screen
       }
     } catch (e) {
@@ -153,7 +159,11 @@ class _EditScreenState extends State<EditScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: buildAppBar(context, l10n.editProfile, actionType: AppBarActionType.saveProfileButton),
+      appBar: buildAppBar(
+        context,
+        l10n.editProfile,
+        actionType: AppBarActionType.saveProfileButton,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -179,7 +189,11 @@ class _EditScreenState extends State<EditScreen> {
                   buildInputField(l10n.email, _emailController),
                   buildPasswordField(l10n),
                   buildPhoneField(l10n),
-                  buildInputField(l10n.deliveryAddress, _addressController, maxLines: 2),
+                  buildInputField(
+                    l10n.deliveryAddress,
+                    _addressController,
+                    maxLines: 2,
+                  ),
                   const SizedBox(height: 30),
                 ],
               ),
@@ -190,16 +204,19 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 
-  Widget buildInputField(String label, TextEditingController controller, {int maxLines = 1}) {
+  Widget buildInputField(
+    String label,
+    TextEditingController controller, {
+    int maxLines = 1,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15),
-        Text(label,
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 18,
-            )),
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+        ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -211,9 +228,7 @@ class _EditScreenState extends State<EditScreen> {
             controller: controller,
             maxLines: maxLines,
             style: const TextStyle(fontWeight: FontWeight.w600),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-            ),
+            decoration: const InputDecoration(border: InputBorder.none),
           ),
         ),
       ],
@@ -225,11 +240,10 @@ class _EditScreenState extends State<EditScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15),
-        Text(l10n.password,
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 18,
-            )),
+        Text(
+          l10n.password,
+          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+        ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -244,9 +258,7 @@ class _EditScreenState extends State<EditScreen> {
                   controller: _passwordController,
                   obscureText: _obscurePassword,
                   style: const TextStyle(fontWeight: FontWeight.w600),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                  ),
+                  decoration: const InputDecoration(border: InputBorder.none),
                 ),
               ),
               GestureDetector(
@@ -275,11 +287,10 @@ class _EditScreenState extends State<EditScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15),
-        Text(l10n.phoneNumber,
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 18,
-            )),
+        Text(
+          l10n.phoneNumber,
+          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+        ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -289,8 +300,10 @@ class _EditScreenState extends State<EditScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
-              const Text('+60 ',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+              const Text(
+                '+60 ',
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              ),
               Expanded(
                 child: TextField(
                   controller: _phoneController,

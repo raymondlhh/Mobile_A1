@@ -10,6 +10,7 @@ import '../../services/database_service.dart';
 import '../../services/rewards_service.dart';
 import '../../models/reward.dart';
 import '../../models/user_reward_redemption.dart';
+import '../../models/users.dart';
 import '../../models/user_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -39,7 +40,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
       _userPoints = _rewardsService.getCurrentUserPoints();
 
       // If UserProfile has no email or points are 0, refresh from database
-      if (UserProfile.currentEmail.isEmpty || _userPoints == 0) {
+      if (UserProfile.email.isEmpty || _userPoints == 0) {
         await _rewardsService.refreshCurrentUserPoints();
         _userPoints = _rewardsService.getCurrentUserPoints();
       }
@@ -57,12 +58,11 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
   Future<void> _loadUserId() async {
     try {
-      if (UserProfile.currentUserId.isEmpty &&
-          UserProfile.currentEmail.isNotEmpty) {
+      if (UserProfile.userId.isEmpty && UserProfile.email.isNotEmpty) {
         // Load user ID from database using email
         final user = await DatabaseService().getCurrentUser();
         if (user != null) {
-          UserProfile.setCurrentUser(user);
+          UserProfile.userId = user.userId;
         }
       }
     } catch (e) {
@@ -207,9 +207,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
   Widget _buildRedeemedRewards() {
     String userId =
-        UserProfile.currentUserId.isNotEmpty
-            ? UserProfile.currentUserId
-            : UserProfile.currentEmail;
+        UserProfile.userId.isNotEmpty ? UserProfile.userId : UserProfile.email;
 
     return FutureBuilder<List<UserRewardRedemption>>(
       future: DatabaseService().getAllRedemptionRecords(),
