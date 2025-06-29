@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/reward.dart';
 import '../models/user_reward_redemption.dart';
+import '../models/users.dart';
 import '../models/order.dart' as app_models;
 import '../models/cart_item.dart';
 import '../models/user_profile.dart';
@@ -19,10 +20,6 @@ class DatabaseService {
   // Orders collection reference
   final CollectionReference _ordersCollection = FirebaseFirestore.instance
       .collection('orders');
-
-  // User rewards collection reference
-  final CollectionReference _userRewardsCollection = FirebaseFirestore.instance
-      .collection('userRewards');
 
   // User reward redemptions collection reference
   final CollectionReference _userRewardRedemptionsCollection = FirebaseFirestore
@@ -180,13 +177,17 @@ class DatabaseService {
       await _rewardsService.deductRewardsPointsById(userId, rewardPoints);
 
       // Record user reward redemption
-      await _userRewardRedemptionsCollection.add({
+      final redemptionData = {
         'userId': userId,
         'rewardId': rewardId,
         'rewardName': rewardName,
         'pointsSpent': rewardPoints,
         'redeemedAt': DateTime.now().toIso8601String(),
-      });
+      };
+
+      print('DEBUG: Saving redemption data: $redemptionData');
+      await _userRewardRedemptionsCollection.add(redemptionData);
+      print('DEBUG: Redemption data saved successfully');
 
       return true;
     } catch (e) {
@@ -232,13 +233,17 @@ class DatabaseService {
       await _rewardsService.deductRewardsPoints(userEmail, rewardPoints);
 
       // Record user reward redemption
-      await _userRewardRedemptionsCollection.add({
+      final redemptionData = {
         'userId': userEmail,
         'rewardId': rewardId,
         'rewardName': rewardName,
         'pointsSpent': rewardPoints,
         'redeemedAt': DateTime.now().toIso8601String(),
-      });
+      };
+
+      print('DEBUG: Saving redemption data (email): $redemptionData');
+      await _userRewardRedemptionsCollection.add(redemptionData);
+      print('DEBUG: Redemption data saved successfully (email)');
 
       return true;
     } catch (e) {
@@ -248,24 +253,21 @@ class DatabaseService {
   }
 
   // Get user's reward redemption history by user ID
-  Future<List<Map<String, dynamic>>> getUserRewardHistoryById(
+  Future<List<UserRewardRedemption>> getUserRewardHistoryById(
     String userId,
   ) async {
     try {
       final QuerySnapshot snapshot =
-          await _userRewardsCollection
+          await _userRewardRedemptionsCollection
               .where('userId', isEqualTo: userId)
               .orderBy('redeemedAt', descending: true)
               .get();
 
       return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        return {
-          'id': doc.id,
-          'rewardName': data['rewardName'] ?? '',
-          'pointsSpent': data['pointsSpent'] ?? 0,
-          'redeemedAt': data['redeemedAt'] ?? '',
-        };
+        return UserRewardRedemption.fromMap(
+          doc.id,
+          doc.data() as Map<String, dynamic>,
+        );
       }).toList();
     } catch (e) {
       print('Error getting user reward history: $e');
@@ -274,24 +276,21 @@ class DatabaseService {
   }
 
   // Get user's reward redemption history by email (for backward compatibility)
-  Future<List<Map<String, dynamic>>> getUserRewardHistory(
+  Future<List<UserRewardRedemption>> getUserRewardHistory(
     String userEmail,
   ) async {
     try {
       final QuerySnapshot snapshot =
-          await _userRewardsCollection
+          await _userRewardRedemptionsCollection
               .where('userId', isEqualTo: userEmail)
               .orderBy('redeemedAt', descending: true)
               .get();
 
       return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        return {
-          'id': doc.id,
-          'rewardName': data['rewardName'] ?? '',
-          'pointsSpent': data['pointsSpent'] ?? 0,
-          'redeemedAt': data['redeemedAt'] ?? '',
-        };
+        return UserRewardRedemption.fromMap(
+          doc.id,
+          doc.data() as Map<String, dynamic>,
+        );
       }).toList();
     } catch (e) {
       print('Error getting user reward history: $e');
@@ -502,6 +501,40 @@ class DatabaseService {
     }
   }
 
+  // Test method to add sample redemption data (for testing purposes)
+  Future<void> addTestRedemptionData(String userId) async {
+    try {
+      print('DEBUG: Adding test redemption data for user: $userId');
+
+      final testRedemptionData = {
+        'userId': userId,
+        'rewardId': 'test_reward_1',
+        'rewardName': 'Chuka Wakame',
+        'pointsSpent': 1500,
+        'redeemedAt':
+            DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+      };
+
+      await _userRewardRedemptionsCollection.add(testRedemptionData);
+      print('DEBUG: Test redemption data added successfully');
+
+      // Add another test redemption
+      final testRedemptionData2 = {
+        'userId': userId,
+        'rewardId': 'test_reward_2',
+        'rewardName': 'Ebi Curry Udon',
+        'pointsSpent': 2000,
+        'redeemedAt':
+            DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+      };
+
+      await _userRewardRedemptionsCollection.add(testRedemptionData2);
+      print('DEBUG: Second test redemption data added successfully');
+    } catch (e) {
+      print('Error adding test redemption data: $e');
+    }
+  }
+
   // Clear existing redemption data (for testing/fixing data structure)
   Future<void> clearExistingRedemptions() async {
     try {
@@ -513,6 +546,69 @@ class DatabaseService {
       print('Cleared existing redemption data');
     } catch (e) {
       print('Error clearing redemption data: $e');
+    }
+  }
+
+  // Clear old userRewards collection data (since we're now using userRewardRedemptions)
+  Future<void> clearOldUserRewardsData() async {
+    try {
+      final oldCollection = FirebaseFirestore.instance.collection(
+        'userRewards',
+      );
+      QuerySnapshot existingData = await oldCollection.get();
+      for (var doc in existingData.docs) {
+        await oldCollection.doc(doc.id).delete();
+      }
+      print('Cleared old userRewards collection data');
+    } catch (e) {
+      print('Error clearing old userRewards data: $e');
+    }
+  }
+
+  // Get all redemption records (for debugging purposes)
+  Future<List<UserRewardRedemption>> getAllRedemptionRecords() async {
+    try {
+      final QuerySnapshot snapshot =
+          await _userRewardRedemptionsCollection
+              .orderBy('redeemedAt', descending: true)
+              .get();
+
+      return snapshot.docs.map((doc) {
+        return UserRewardRedemption.fromMap(
+          doc.id,
+          doc.data() as Map<String, dynamic>,
+        );
+      }).toList();
+    } catch (e) {
+      print('Error getting all redemption records: $e');
+      return [];
+    }
+  }
+
+  // Get current user from database
+  Future<User?> getCurrentUser() async {
+    try {
+      final email = UserProfile.email;
+      if (email.isEmpty) {
+        return null;
+      }
+
+      final QuerySnapshot result =
+          await _firestore
+              .collection('users')
+              .where('email', isEqualTo: email)
+              .limit(1)
+              .get();
+
+      if (result.docs.isNotEmpty) {
+        final userData = result.docs.first.data() as Map<String, dynamic>;
+        return User.fromMap(result.docs.first.id, userData);
+      }
+
+      return null;
+    } catch (e) {
+      print('Error getting current user: $e');
+      return null;
     }
   }
 }
