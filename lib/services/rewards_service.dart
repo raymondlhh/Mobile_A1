@@ -70,8 +70,8 @@ class RewardsService {
         await _usersCollection.doc(docId).update({'rewardsPoints': newPoints});
 
         // Update UserProfile if this is the current user
-        if (UserProfile.currentUserId == userId) {
-          UserProfile.currentRewardsPoints = newPoints;
+        if (UserProfile.userId == userId) {
+          UserProfile.rewardsPoints = newPoints;
         }
 
         return true;
@@ -101,8 +101,8 @@ class RewardsService {
         await _usersCollection.doc(docId).update({'rewardsPoints': newPoints});
 
         // Update UserProfile if this is the current user
-        if (UserProfile.currentUserId == userId) {
-          UserProfile.currentRewardsPoints = newPoints;
+        if (UserProfile.email == email) {
+          UserProfile.rewardsPoints = newPoints;
         }
 
         return true;
@@ -137,8 +137,8 @@ class RewardsService {
         await _usersCollection.doc(docId).update({'rewardsPoints': newPoints});
 
         // Update UserProfile if this is the current user
-        if (UserProfile.currentUserId == userId) {
-          UserProfile.currentRewardsPoints = newPoints;
+        if (UserProfile.userId == userId) {
+          UserProfile.rewardsPoints = newPoints;
         }
 
         return true;
@@ -173,8 +173,8 @@ class RewardsService {
         await _usersCollection.doc(docId).update({'rewardsPoints': newPoints});
 
         // Update UserProfile if this is the current user
-        if (UserProfile.currentUserId == userId) {
-          UserProfile.currentRewardsPoints = newPoints;
+        if (UserProfile.email == email) {
+          UserProfile.rewardsPoints = newPoints;
         }
 
         return true;
@@ -201,8 +201,8 @@ class RewardsService {
         await _usersCollection.doc(docId).update({'rewardsPoints': points});
 
         // Update UserProfile if this is the current user
-        if (UserProfile.currentUserId == userId) {
-          UserProfile.currentRewardsPoints = points;
+        if (UserProfile.email == email) {
+          UserProfile.rewardsPoints = points;
         }
 
         return true;
@@ -216,17 +216,17 @@ class RewardsService {
 
   // Get current user's rewards points from UserProfile
   int getCurrentUserPoints() {
-    return UserProfile.currentRewardsPoints;
+    return UserProfile.rewardsPoints;
   }
 
   // Refresh current user's points from database
   Future<void> refreshCurrentUserPoints() async {
-    if (UserProfile.currentUserId.isNotEmpty) {
-      final points = await getUserRewardsPointsById(UserProfile.currentUserId);
-      UserProfile.currentRewardsPoints = points;
-    } else if (UserProfile.currentEmail.isNotEmpty) {
-      final points = await getUserRewardsPoints(UserProfile.currentEmail);
-      UserProfile.currentRewardsPoints = points;
+    if (UserProfile.userId.isNotEmpty) {
+      final points = await getUserRewardsPointsById(UserProfile.userId);
+      UserProfile.rewardsPoints = points;
+    } else if (UserProfile.email.isNotEmpty) {
+      final points = await getUserRewardsPoints(UserProfile.email);
+      UserProfile.rewardsPoints = points;
     }
   }
 }

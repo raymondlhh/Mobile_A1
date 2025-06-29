@@ -30,7 +30,9 @@ class _EditScreenState extends State<EditScreen> {
     _nameController = TextEditingController(text: UserProfile.name);
     _emailController = TextEditingController(text: UserProfile.email);
     _passwordController = TextEditingController(text: UserProfile.password);
-    _phoneController = TextEditingController(text: UserProfile.phone.replaceFirst('+60 ', ''));
+    _phoneController = TextEditingController(
+      text: UserProfile.phone.replaceFirst('+60 ', ''),
+    );
     _addressController = TextEditingController(text: UserProfile.address);
 
     _obscurePassword = true;
@@ -76,11 +78,14 @@ class _EditScreenState extends State<EditScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(context, 'Edit Profile', actionType: AppBarActionType.saveProfileButton),
+      appBar: buildAppBar(
+        context,
+        'Edit Profile',
+        actionType: AppBarActionType.saveProfileButton,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,7 +111,11 @@ class _EditScreenState extends State<EditScreen> {
                   buildInputField('Email', _emailController),
                   buildPasswordField(),
                   buildPhoneField(),
-                  buildInputField('Delivery Address', _addressController, maxLines: 2),
+                  buildInputField(
+                    'Delivery Address',
+                    _addressController,
+                    maxLines: 2,
+                  ),
                   const SizedBox(height: 30),
                 ],
               ),
@@ -117,16 +126,19 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 
-  Widget buildInputField(String label, TextEditingController controller, {int maxLines = 1}) {
+  Widget buildInputField(
+    String label,
+    TextEditingController controller, {
+    int maxLines = 1,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15),
-        Text(label,
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 18,
-            )),
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+        ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -138,9 +150,7 @@ class _EditScreenState extends State<EditScreen> {
             controller: controller,
             maxLines: maxLines,
             style: const TextStyle(fontWeight: FontWeight.w600),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-            ),
+            decoration: const InputDecoration(border: InputBorder.none),
           ),
         ),
       ],
@@ -152,11 +162,10 @@ class _EditScreenState extends State<EditScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15),
-        const Text('Password',
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 18,
-            )),
+        const Text(
+          'Password',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+        ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -171,9 +180,7 @@ class _EditScreenState extends State<EditScreen> {
                   controller: _passwordController,
                   obscureText: _obscurePassword,
                   style: const TextStyle(fontWeight: FontWeight.w600),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                  ),
+                  decoration: const InputDecoration(border: InputBorder.none),
                 ),
               ),
               GestureDetector(
@@ -202,11 +209,10 @@ class _EditScreenState extends State<EditScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 15),
-        const Text('Phone Number',
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 18,
-            )),
+        const Text(
+          'Phone Number',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+        ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -216,8 +222,10 @@ class _EditScreenState extends State<EditScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
-              const Text('+60 ',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+              const Text(
+                '+60 ',
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              ),
               Expanded(
                 child: TextField(
                   controller: _phoneController,

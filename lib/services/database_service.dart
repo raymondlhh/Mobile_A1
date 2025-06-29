@@ -586,7 +586,7 @@ class DatabaseService {
   }
 
   // Get current user from database
-  Future<User?> getCurrentUser() async {
+  Future<Users?> getCurrentUser() async {
     try {
       final email = UserProfile.email;
       if (email.isEmpty) {
@@ -602,7 +602,7 @@ class DatabaseService {
 
       if (result.docs.isNotEmpty) {
         final userData = result.docs.first.data() as Map<String, dynamic>;
-        return User.fromMap(result.docs.first.id, userData);
+        return Users.fromMap(result.docs.first.id, userData);
       }
 
       return null;
