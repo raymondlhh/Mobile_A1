@@ -177,7 +177,14 @@ class CheckoutPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.itemCount(cartItems.fold<int>(0, (sum, item) => sum + item.quantity).toString()),
+                              l10n.itemCount(
+                                cartItems
+                                    .fold<int>(
+                                      0,
+                                      (sum, item) => sum + item.quantity,
+                                    )
+                                    .toString(),
+                              ),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontFamily: 'Inter',
@@ -244,26 +251,34 @@ class CheckoutPage extends StatelessWidget {
                                       );
 
                                       // Add Payment Successful notification
-                                      await NotificationService().addNotification(
-                                        NotificationItem(
-                                          type: 'paymentSuccess',
-                                          params: { 'amount': total.toStringAsFixed(2) },
-                                          date: _todayDateString(),
-                                          time: _currentTimeString(),
-                                          timestamp: DateTime.now(),
-                                        ),
-                                      );
+                                      await NotificationService()
+                                          .addNotification(
+                                            NotificationItem(
+                                              type: 'paymentSuccess',
+                                              params: {
+                                                'amount': total.toStringAsFixed(
+                                                  2,
+                                                ),
+                                              },
+                                              date: _todayDateString(),
+                                              time: _currentTimeString(),
+                                              timestamp: DateTime.now(),
+                                            ),
+                                          );
 
                                       // Add Points Earned notification
-                                      await NotificationService().addNotification(
-                                        NotificationItem(
-                                          type: 'pointsEarned',
-                                          params: { 'points': points.toString() },
-                                          date: _todayDateString(),
-                                          time: _currentTimeString(),
-                                          timestamp: DateTime.now(),
-                                        ),
-                                      );
+                                      await NotificationService()
+                                          .addNotification(
+                                            NotificationItem(
+                                              type: 'pointsEarned',
+                                              params: {
+                                                'points': points.toString(),
+                                              },
+                                              date: _todayDateString(),
+                                              time: _currentTimeString(),
+                                              timestamp: DateTime.now(),
+                                            ),
+                                          );
 
                                       // Prepare order details
                                       final details =
@@ -300,8 +315,12 @@ class CheckoutPage extends StatelessWidget {
                                         context: context,
                                         builder:
                                             (context) => AlertDialog(
-                                              title: Text(l10n.orderSuccessTitle),
-                                              content: Text(l10n.orderSuccessMessage),
+                                              title: Text(
+                                                l10n.orderSuccessTitle,
+                                              ),
+                                              content: Text(
+                                                l10n.orderSuccessMessage,
+                                              ),
                                               actions: [
                                                 TextButton(
                                                   onPressed: () {
@@ -328,7 +347,15 @@ class CheckoutPage extends StatelessWidget {
                                       );
                                     }
                                   },
-                          child: Text(l10n.confirmOrder),
+                          child: Text(
+                            l10n.confirmOrder,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
                         ),
                       ),
                     ],
