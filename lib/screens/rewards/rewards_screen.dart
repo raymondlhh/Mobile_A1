@@ -269,68 +269,10 @@ class _RewardsScreenState extends State<RewardsScreen> {
                   child: Column(
                     children: [
                       RewardsPointsCard(points: _userPoints),
-<<<<<<< HEAD
-                      FutureBuilder<List<Reward>>(
-                        future: DatabaseService().getAvailableRewards(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-
-                          if (snapshot.hasError) {
-                            return Center(
-                              child: Text('${l10n.error}: ${snapshot.error}'),
-                            );
-                          }
-
-                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                            return Center(
-                              child: Text(l10n.noRewardsAvailable),
-                            );
-                          }
-
-                          final rewards = snapshot.data!;
-                          return GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 4,
-                            ),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 0.75,
-                                  crossAxisSpacing: 16,
-                                  mainAxisSpacing: 16,
-                                ),
-                            itemCount: rewards.length,
-                            itemBuilder: (context, index) {
-                              final reward = rewards[index];
-                              return RewardCard(
-                                id: reward.id,
-                                imagePath: reward.imagePath,
-                                itemName: reward.name,
-                                description: reward.description,
-                                points: reward.points,
-                                validity: reward.validity,
-                                userPoints: _userPoints,
-                                maxRedemptions: reward.maxRedemptions,
-                                onRedeemSuccess: _refreshAfterRedemption,
-                              );
-                            },
-                          );
-                        },
-                      ),
-=======
                       _buildToggleButtons(),
                       _showAvailableRewards
                           ? _buildAvailableRewards()
                           : _buildRedeemedRewards(),
->>>>>>> a25ad7e (Reward Update)
                       const HowItWorksSection(),
                       const FAQContainer(),
                     ],
