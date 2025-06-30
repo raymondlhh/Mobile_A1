@@ -63,15 +63,17 @@ class RedeemPage extends StatelessWidget {
     try {
       final databaseService = DatabaseService();
 
-      // Use user ID if available, otherwise fall back to email
-      if (UserProfile.userId.isNotEmpty) {
-        await databaseService.redeemRewardWithPointsById(
-          id,
-          UserProfile.userId,
-        );
-      } else {
-        await databaseService.redeemRewardWithPoints(id, UserProfile.email);
+      // Get user ID - use UserProfile.userId if available, otherwise get from database
+      String userId = UserProfile.userId;
+      if (userId.isEmpty) {
+        final user = await databaseService.getCurrentUser();
+        if (user == null) {
+          throw Exception('User not found');
+        }
+        userId = user.userId;
       }
+
+      await databaseService.redeemRewardWithPoints(id, userId);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -83,7 +85,7 @@ class RedeemPage extends StatelessWidget {
         Navigator.pop(context);
       }
 
-      // Call the callback to refresh the parent screen
+      //Call the callback to refresh the parent screen
       onRedeemSuccess?.call();
     } catch (e) {
       if (context.mounted) {
