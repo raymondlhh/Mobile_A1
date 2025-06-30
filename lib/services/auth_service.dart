@@ -47,7 +47,6 @@ class AuthService {
       }
       return false;
     } catch (e) {
-      debugPrint('Error validating user: $e');
       return false;
     }
   }
@@ -99,7 +98,6 @@ class AuthService {
 
       return true;
     } catch (e) {
-      debugPrint('Error registering user: $e');
       rethrow;
     }
   }
@@ -163,7 +161,6 @@ class AuthService {
         throw Exception('User not found');
       }
     } catch (e) {
-      debugPrint('Error updating user data: $e');
       rethrow;
     }
   }

@@ -26,7 +26,6 @@ import 'screens/home/video_splash_screen.dart';
 import 'screens/menu/checkout_page.dart';
 
 import 'package:firebase_core/firebase_core.dart';
-// ignore: unused_import
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
@@ -42,10 +41,6 @@ void main() async {
 
   // Initialize database with rewards
   final databaseService = DatabaseService();
-  await databaseService
-      .updateExistingRewardsWithMaxRedemptions(); // Update existing rewards with maxRedemptions
-  await databaseService.clearExistingRedemptions(); // Clear old redemption data
-  await databaseService.checkCurrentRewards(); // Check what's in the database
 
   // Add some test points to the default user (for demonstration)
   final rewardsService = RewardsService();

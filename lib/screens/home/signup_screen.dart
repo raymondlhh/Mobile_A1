@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 
@@ -113,7 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Logo
+            //Logo
             Positioned(
               left: (screenWidth - (screenWidth * 250 / 430)) / 2,
               top: screenHeight * -60 / 932,
@@ -124,7 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 fit: BoxFit.contain,
               ),
             ),
-            // Subtitle
+            //Subtitle
             Positioned(
               left: (screenWidth - (screenWidth * 294 / 430)) / 2,
               top: screenHeight * 200 / 932,
@@ -135,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
 
-            // Error Message
+            //Error Message
             if (_errorMessage != null)
               Positioned(
                 left: screenWidth * 41 / 430,
@@ -155,7 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
 
-            // Name Input
+            //Name Input
             Positioned(
               left: screenWidth * 41 / 430,
               top: screenHeight * 420 / 932,
@@ -192,7 +190,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
 
-            // Email Input
+            //Email Input
             Positioned(
               left: screenWidth * 41 / 430,
               top: screenHeight * 490 / 932,
@@ -230,7 +228,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
 
-            // Password Input
+            //Password Input
             Positioned(
               left: screenWidth * 41 / 430,
               top: screenHeight * 560 / 932,
@@ -283,7 +281,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
 
-            // Phone Input
+            //Phone Input
             Positioned(
               left: screenWidth * 41 / 430,
               top: screenHeight * 630 / 932,
@@ -321,7 +319,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
 
-            // Sign Up Button
+            //Sign Up Button
             Positioned(
               left: screenWidth * 41 / 430,
               top: screenHeight * 700 / 932,
@@ -366,7 +364,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
 
-            // Already have an account?
+            //Already have an account?
             Positioned(
               left: screenWidth * 110 / 430,
               top: screenHeight * 770 / 932,

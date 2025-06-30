@@ -24,7 +24,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
   final RewardsService _rewardsService = RewardsService();
   int _userPoints = 0;
   bool _isLoading = true;
-  bool _showAvailableRewards = true; // Toggle between available and redeemed
+  bool _showAvailableRewards = true; //Toggle between available and redeemed
 
   @override
   void initState() {
@@ -35,16 +35,14 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
   Future<void> _loadUserPoints() async {
     try {
-      // First try to get points from UserProfile
+      //Get points from UserProfile
       _userPoints = _rewardsService.getCurrentUserPoints();
 
-      // If UserProfile has no email or points are 0, refresh from database
       if (UserProfile.email.isEmpty || _userPoints == 0) {
         await _rewardsService.refreshCurrentUserPoints();
         _userPoints = _rewardsService.getCurrentUserPoints();
       }
     } catch (e) {
-      debugPrint('Error loading user points: $e');
       _userPoints = 0;
     } finally {
       if (mounted) {
@@ -65,17 +63,17 @@ class _RewardsScreenState extends State<RewardsScreen> {
         }
       }
     } catch (e) {
-      print('Error loading user ID: $e');
+      // Error loading user ID
     }
   }
 
-  // Method to refresh the entire screen after redemption
+  //Method to refresh the entire screen after redemption
   Future<void> _refreshAfterRedemption() async {
     setState(() {
       _isLoading = true;
     });
 
-    // Refresh user points from the database
+    //Refresh user points from the database
     await _rewardsService.refreshCurrentUserPoints();
     _userPoints = _rewardsService.getCurrentUserPoints();
 

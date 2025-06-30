@@ -63,12 +63,10 @@ class _MenuScreenState extends State<MenuScreen> {
   void _scrollToSection(String section) {
     final key = _sectionKeys[section];
     if (key == null) {
-      debugPrint('Section $section not found');
       return;
     }
 
     if (key.currentContext == null) {
-      debugPrint('Context for section $section is not available');
       return;
     }
 
@@ -80,7 +78,7 @@ class _MenuScreenState extends State<MenuScreen> {
         alignment: 0.0,
       );
     } catch (e) {
-      debugPrint('Error scrolling to section $section: $e');
+      // Error scrolling to section
     }
   }
 

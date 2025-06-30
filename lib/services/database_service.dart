@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field, avoid_print
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/reward.dart';
 import '../models/user_reward_redemption.dart';
@@ -13,30 +11,29 @@ class DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final RewardsService _rewardsService = RewardsService();
 
-  // Collection reference
+  //Collection reference
   final CollectionReference _rewardsCollection = FirebaseFirestore.instance
       .collection('rewards');
 
-  // Orders collection reference
+  //Orders collection reference
   final CollectionReference _ordersCollection = FirebaseFirestore.instance
       .collection('orders');
 
-  // User reward redemptions collection reference
+  //User reward redemptions collection reference
   final CollectionReference _userRewardRedemptionsCollection = FirebaseFirestore
       .instance
       .collection('userRewardRedemptions');
 
-  // Initialize current rewards
+  //Initialize current rewards
   Future<void> initializeCurrentRewards() async {
     try {
-      // Check if rewards already exist
+      //Check if rewards already exist
       QuerySnapshot existingRewards = await _rewardsCollection.get();
       if (existingRewards.docs.isNotEmpty) {
-        print('Rewards already exist in the database');
         return;
       }
 
-      // Current rewards data
+      //Current rewards data
       final List<Map<String, dynamic>> currentRewards = [
         {
           'name': 'Chuka Wakame',
@@ -72,23 +69,20 @@ class DatabaseService {
         },
       ];
 
-      // Add rewards to Firestore
+      //Add rewards to Firestore
       for (var rewardData in currentRewards) {
         await _rewardsCollection.add(rewardData);
       }
-      print('Current rewards added successfully');
     } catch (e) {
-      print('Error initializing current rewards: $e');
       rethrow;
     }
   }
 
-  // Reward CRUD operations
+  //Reward CRUD operations
   Future<void> addReward(Reward reward) async {
     try {
       await _rewardsCollection.add(reward.toMap());
     } catch (e) {
-      print('Error adding reward: $e');
       rethrow;
     }
   }
@@ -100,7 +94,6 @@ class DatabaseService {
         return Reward.fromMap(doc.id, doc.data() as Map<String, dynamic>);
       }).toList();
     } catch (e) {
-      print('Error getting rewards: $e');
       rethrow;
     }
   }
@@ -112,12 +105,11 @@ class DatabaseService {
         'redeemedAt': DateTime.now().toIso8601String(),
       });
     } catch (e) {
-      print('Error redeeming reward: $e');
       rethrow;
     }
   }
 
-  // Get user's redemption count for a specific reward
+  //Get user's redemption count for a specific reward
   Future<int> getUserRewardRedemptionCount(
     String userId,
     String rewardId,
@@ -129,21 +121,16 @@ class DatabaseService {
               .where('rewardId', isEqualTo: rewardId)
               .get();
 
-      // Simply count the number of documents (each document represents one redemption)
       return snapshot.docs.length;
     } catch (e) {
-      print('Error getting user reward redemption count: $e');
       return 0;
     }
   }
 
-  // Redeem reward with points deduction by user ID
-  Future<bool> redeemRewardWithPointsById(
-    String rewardId,
-    String userId,
-  ) async {
+  //Redeem reward with points deduction
+  Future<bool> redeemRewardWithPoints(String rewardId, String userId) async {
     try {
-      // Get reward details
+      //Get reward details
       final rewardDoc = await _rewardsCollection.doc(rewardId).get();
       if (!rewardDoc.exists) {
         throw Exception('Reward not found');
@@ -154,15 +141,13 @@ class DatabaseService {
       final rewardName = rewardData['name'] ?? '';
       final maxRedemptions = rewardData['maxRedemptions'] ?? 1;
 
-      // Check if user has enough points
-      final currentPoints = await _rewardsService.getUserRewardsPointsById(
-        userId,
-      );
+      //Check if user has enough points
+      final currentPoints = await _rewardsService.getUserRewardsPoints(userId);
       if (currentPoints < rewardPoints) {
         throw Exception('Insufficient rewards points');
       }
 
-      // Check if user has reached their redemption limit for this reward
+      //Check if user has reached their redemption limit for this reward
       final userRedemptionCount = await getUserRewardRedemptionCount(
         userId,
         rewardId,
@@ -173,10 +158,10 @@ class DatabaseService {
         );
       }
 
-      // Deduct points from user account
-      await _rewardsService.deductRewardsPointsById(userId, rewardPoints);
+      //Deduct points from user account
+      await _rewardsService.deductRewardsPoints(userId, rewardPoints);
 
-      // Record user reward redemption
+      //Record user reward redemption
       final redemptionData = {
         'userId': userId,
         'rewardId': rewardId,
@@ -185,77 +170,16 @@ class DatabaseService {
         'redeemedAt': DateTime.now().toIso8601String(),
       };
 
-      print('DEBUG: Saving redemption data: $redemptionData');
       await _userRewardRedemptionsCollection.add(redemptionData);
-      print('DEBUG: Redemption data saved successfully');
 
       return true;
     } catch (e) {
-      print('Error redeeming reward with points: $e');
       rethrow;
     }
   }
 
-  // Redeem reward with points deduction by email (for backward compatibility)
-  Future<bool> redeemRewardWithPoints(String rewardId, String userEmail) async {
-    try {
-      // Get reward details
-      final rewardDoc = await _rewardsCollection.doc(rewardId).get();
-      if (!rewardDoc.exists) {
-        throw Exception('Reward not found');
-      }
-
-      final rewardData = rewardDoc.data() as Map<String, dynamic>;
-      final rewardPoints = rewardData['points'] ?? 0;
-      final rewardName = rewardData['name'] ?? '';
-      final maxRedemptions = rewardData['maxRedemptions'] ?? 1;
-
-      // Check if user has enough points
-      final currentPoints = await _rewardsService.getUserRewardsPoints(
-        userEmail,
-      );
-      if (currentPoints < rewardPoints) {
-        throw Exception('Insufficient rewards points');
-      }
-
-      // Check if user has reached their redemption limit for this reward
-      final userRedemptionCount = await getUserRewardRedemptionCount(
-        userEmail,
-        rewardId,
-      );
-      if (userRedemptionCount >= maxRedemptions) {
-        throw Exception(
-          'You have reached the maximum redemption limit for this reward',
-        );
-      }
-
-      // Deduct points from user account
-      await _rewardsService.deductRewardsPoints(userEmail, rewardPoints);
-
-      // Record user reward redemption
-      final redemptionData = {
-        'userId': userEmail,
-        'rewardId': rewardId,
-        'rewardName': rewardName,
-        'pointsSpent': rewardPoints,
-        'redeemedAt': DateTime.now().toIso8601String(),
-      };
-
-      print('DEBUG: Saving redemption data (email): $redemptionData');
-      await _userRewardRedemptionsCollection.add(redemptionData);
-      print('DEBUG: Redemption data saved successfully (email)');
-
-      return true;
-    } catch (e) {
-      print('Error redeeming reward with points: $e');
-      rethrow;
-    }
-  }
-
-  // Get user's reward redemption history by user ID
-  Future<List<UserRewardRedemption>> getUserRewardHistoryById(
-    String userId,
-  ) async {
+  //Get user's reward redemption history
+  Future<List<UserRewardRedemption>> getUserRewardHistory(String userId) async {
     try {
       final QuerySnapshot snapshot =
           await _userRewardRedemptionsCollection
@@ -270,31 +194,7 @@ class DatabaseService {
         );
       }).toList();
     } catch (e) {
-      print('Error getting user reward history: $e');
-      return [];
-    }
-  }
-
-  // Get user's reward redemption history by email (for backward compatibility)
-  Future<List<UserRewardRedemption>> getUserRewardHistory(
-    String userEmail,
-  ) async {
-    try {
-      final QuerySnapshot snapshot =
-          await _userRewardRedemptionsCollection
-              .where('userId', isEqualTo: userEmail)
-              .orderBy('redeemedAt', descending: true)
-              .get();
-
-      return snapshot.docs.map((doc) {
-        return UserRewardRedemption.fromMap(
-          doc.id,
-          doc.data() as Map<String, dynamic>,
-        );
-      }).toList();
-    } catch (e) {
-      print('Error getting user reward history: $e');
-      return [];
+      rethrow;
     }
   }
 
@@ -309,12 +209,11 @@ class DatabaseService {
 
       return rewards;
     } catch (e) {
-      print('Error getting available rewards: $e');
       rethrow;
     }
   }
 
-  // Get available rewards for a specific user (considering user's redemption limits)
+  //Get available rewards for a specific user (considering user's redemption limits)
   Future<List<Reward>> getAvailableRewardsForUser(String userId) async {
     try {
       QuerySnapshot snapshot = await _rewardsCollection.get();
@@ -324,7 +223,7 @@ class DatabaseService {
         final rewardData = doc.data() as Map<String, dynamic>;
         final maxRedemptions = rewardData['maxRedemptions'] ?? 1;
 
-        // Check if user hasn't reached their personal limit
+        //Check if user hasn't reached their personal limit
         final userRedemptionCount = await getUserRewardRedemptionCount(
           userId,
           doc.id,
@@ -336,23 +235,19 @@ class DatabaseService {
 
       return availableRewards;
     } catch (e) {
-      print('Error getting available rewards for user: $e');
       rethrow;
     }
   }
 
   Future<List<Reward>> getRedeemedRewards() async {
     try {
-      // Since there's no total availability limit, this method now returns an empty list
-      // as all rewards are always available (only limited per user)
       return [];
     } catch (e) {
-      print('Error getting redeemed rewards: $e');
       rethrow;
     }
   }
 
-  // Get user's redeemed rewards
+  //Get user's redeemed rewards
   Future<List<UserRewardRedemption>> getUserRedeemedRewards(
     String userId,
   ) async {
@@ -370,8 +265,7 @@ class DatabaseService {
         );
       }).toList();
     } catch (e) {
-      print('Error getting user redeemed rewards: $e');
-      return [];
+      rethrow;
     }
   }
 
@@ -379,7 +273,6 @@ class DatabaseService {
     try {
       await _rewardsCollection.doc(rewardId).delete();
     } catch (e) {
-      print('Error deleting reward: $e');
       rethrow;
     }
   }
@@ -388,7 +281,6 @@ class DatabaseService {
     try {
       await _rewardsCollection.doc(rewardId).update(reward.toMap());
     } catch (e) {
-      print('Error updating reward: $e');
       rethrow;
     }
   }
@@ -397,175 +289,23 @@ class DatabaseService {
     try {
       await _ordersCollection.add(order.toMap());
 
-      // Add points to user for completing an order
-      // You can customize the points calculation based on order value
+      //Add points to user for completing an order
+      //You can customize the points calculation based on order value
       final orderValue = order.total;
       int pointsToAdd = (orderValue * 10).round(); // 1 point per $10 spent
       if (pointsToAdd < 1) pointsToAdd = 1; // Minimum 1 point per order
 
-      // Try to add points using user ID first, then fall back to email
-      bool pointsAdded = false;
+      //Add points using user ID
       if (UserProfile.userId.isNotEmpty &&
           UserProfile.email == order.userEmail) {
-        pointsAdded = await _rewardsService.addRewardsPointsById(
-          UserProfile.userId,
-          pointsToAdd,
-        );
-      }
-
-      if (!pointsAdded) {
-        await _rewardsService.addRewardsPoints(order.userEmail, pointsToAdd);
+        await _rewardsService.addRewardsPoints(UserProfile.userId, pointsToAdd);
       }
     } catch (e) {
-      print('Error adding order: $e');
       rethrow;
     }
   }
 
-  // Get user's current rewards points
-  Future<int> getUserRewardsPoints(String userEmail) async {
-    return await _rewardsService.getUserRewardsPoints(userEmail);
-  }
-
-  // Add points to user (for admin/testing purposes)
-  Future<bool> addPointsToUser(String userEmail, int points) async {
-    return await _rewardsService.addRewardsPoints(userEmail, points);
-  }
-
-  // Force re-initialize rewards (for development/testing)
-  Future<void> forceReinitializeRewards() async {
-    try {
-      // Delete all existing rewards
-      QuerySnapshot existingRewards = await _rewardsCollection.get();
-      for (var doc in existingRewards.docs) {
-        await _rewardsCollection.doc(doc.id).delete();
-      }
-      print('Deleted existing rewards');
-
-      // Re-initialize with new data
-      await initializeCurrentRewards();
-      print('Re-initialized rewards successfully');
-    } catch (e) {
-      print('Error re-initializing rewards: $e');
-      rethrow;
-    }
-  }
-
-  // Check current rewards in database (for debugging)
-  Future<void> checkCurrentRewards() async {
-    try {
-      QuerySnapshot snapshot = await _rewardsCollection.get();
-      print('=== Current Rewards in Database ===');
-      for (var doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
-        print('Reward ID: ${doc.id}');
-        print('  Name: ${data['name']}');
-        print('  Points: ${data['points']}');
-        print('  maxRedemptions: ${data['maxRedemptions']}');
-        print('  All fields: $data');
-        print('---');
-      }
-    } catch (e) {
-      print('Error checking current rewards: $e');
-    }
-  }
-
-  // Update existing rewards to include maxRedemptions field
-  Future<void> updateExistingRewardsWithMaxRedemptions() async {
-    try {
-      QuerySnapshot snapshot = await _rewardsCollection.get();
-      for (var doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
-        if (!data.containsKey('maxRedemptions')) {
-          // Set default maxRedemptions based on reward name
-          int maxRedemptions = 1; // default
-          String name = data['name'] ?? '';
-          if (name.contains('Chuka Wakame')) {
-            maxRedemptions = 3;
-          } else if (name.contains('Ebi Curry Udon')) {
-            maxRedemptions = 2;
-          } else if (name.contains('Chicken Teriyaki Ramen')) {
-            maxRedemptions = 4;
-          } else if (name.contains('Ebi Tempura')) {
-            maxRedemptions = 2;
-          }
-
-          await _rewardsCollection.doc(doc.id).update({
-            'maxRedemptions': maxRedemptions,
-          });
-          print('Updated ${name} with maxRedemptions: $maxRedemptions');
-        }
-      }
-    } catch (e) {
-      print('Error updating existing rewards: $e');
-    }
-  }
-
-  // Test method to add sample redemption data (for testing purposes)
-  Future<void> addTestRedemptionData(String userId) async {
-    try {
-      print('DEBUG: Adding test redemption data for user: $userId');
-
-      final testRedemptionData = {
-        'userId': userId,
-        'rewardId': 'test_reward_1',
-        'rewardName': 'Chuka Wakame',
-        'pointsSpent': 1500,
-        'redeemedAt':
-            DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
-      };
-
-      await _userRewardRedemptionsCollection.add(testRedemptionData);
-      print('DEBUG: Test redemption data added successfully');
-
-      // Add another test redemption
-      final testRedemptionData2 = {
-        'userId': userId,
-        'rewardId': 'test_reward_2',
-        'rewardName': 'Ebi Curry Udon',
-        'pointsSpent': 2000,
-        'redeemedAt':
-            DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
-      };
-
-      await _userRewardRedemptionsCollection.add(testRedemptionData2);
-      print('DEBUG: Second test redemption data added successfully');
-    } catch (e) {
-      print('Error adding test redemption data: $e');
-    }
-  }
-
-  // Clear existing redemption data (for testing/fixing data structure)
-  Future<void> clearExistingRedemptions() async {
-    try {
-      QuerySnapshot existingRedemptions =
-          await _userRewardRedemptionsCollection.get();
-      for (var doc in existingRedemptions.docs) {
-        await _userRewardRedemptionsCollection.doc(doc.id).delete();
-      }
-      print('Cleared existing redemption data');
-    } catch (e) {
-      print('Error clearing redemption data: $e');
-    }
-  }
-
-  // Clear old userRewards collection data (since we're now using userRewardRedemptions)
-  Future<void> clearOldUserRewardsData() async {
-    try {
-      final oldCollection = FirebaseFirestore.instance.collection(
-        'userRewards',
-      );
-      QuerySnapshot existingData = await oldCollection.get();
-      for (var doc in existingData.docs) {
-        await oldCollection.doc(doc.id).delete();
-      }
-      print('Cleared old userRewards collection data');
-    } catch (e) {
-      print('Error clearing old userRewards data: $e');
-    }
-  }
-
-  // Get all redemption records (for debugging purposes)
+  //Get all redemption records
   Future<List<UserRewardRedemption>> getAllRedemptionRecords() async {
     try {
       final QuerySnapshot snapshot =
@@ -580,12 +320,11 @@ class DatabaseService {
         );
       }).toList();
     } catch (e) {
-      print('Error getting all redemption records: $e');
-      return [];
+      rethrow;
     }
   }
 
-  // Get current user from database
+  //Get current user from database
   Future<Users?> getCurrentUser() async {
     try {
       final email = UserProfile.email;
@@ -607,8 +346,7 @@ class DatabaseService {
 
       return null;
     } catch (e) {
-      print('Error getting current user: $e');
-      return null;
+      rethrow;
     }
   }
 }

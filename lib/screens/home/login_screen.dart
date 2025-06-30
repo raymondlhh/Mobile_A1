@@ -1,19 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class LoginScreen extends StatelessWidget {
-//   const LoginScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('Login')),
-//       body: const Center(child: Text('This is the Login screen')),
-//     );
-//   }
-// }
-
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 
